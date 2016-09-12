@@ -9,7 +9,7 @@ typescript
 npm install typescript --global
 ```
 
-## Compile
+## Compilation 
 Compile the source code using the following command:
 ```
 tsc
