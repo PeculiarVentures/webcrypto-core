@@ -50,7 +50,7 @@ npm run minify
 npm test
 ```
 
-## Lib size
+## Size
 
 | Files                   | Size       |
 |-------------------------|------------|
