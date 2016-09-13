@@ -13,6 +13,7 @@
         "src/error.ts",
         "src/alg.ts",
         "src/base.ts",
+        "src/base64url.ts",
         "src/rsa/alg.ts",
         "src/rsa/crypto.ts",
         "src/aes/alg.ts",
