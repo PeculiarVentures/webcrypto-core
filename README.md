@@ -4,17 +4,55 @@ We have created a number of WebCrypto polyfills including: [node-webcrypto-ossl]
 Unless you intend to create a WebCrypto polyfill this library is probably not useful to you.
 
 ## Dependencies
+
+Install all dependencies
+```
+npm install
+```
+
+> NOTE: `npm install` command downloads and installs modules to local folder. 
+> You can install all dependancies globally 
+
 typescript
 ```
 npm install typescript --global
 ```
 
+uglifyjs
+```
+npm install uglifyjs --global
+```
+
+mocha
+```
+npm install mocha --global
+```
+
 ## Compilation 
 Compile the source code using the following command:
 ```
-tsc
+npm run build
 ```
+> NOTE: Command creates `webcrypto-core.js` and `webcrypto-core.min.js` files in `build` folder
+
 Compile the source code with declaration using the next command:
 ```
 tsc --declaration
 ```
+
+## Minify
+```
+npm run minify
+```
+
+## Test
+```
+npm test
+```
+
+## Lib size
+
+| Files                   | Size       |
+|-------------------------|------------|
+| webcrypto-core.js       | 58Kb       |
+| webcrypto-core.min.js   | 25Kb       |

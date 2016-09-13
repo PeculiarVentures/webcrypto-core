@@ -1,0 +1,38 @@
+{
+  "name": "webcrypto-core",
+  "version": "0.1.0",
+  "description": "Common layer to be used by crypto libraries based on WebCrypto API for input validation.",
+  "main": "build/webcrypto-core.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "build": "tsc && npm run minify",
+    "minify": "uglifyjs build/webcrypto-core.js -o build/webcrypto-core.min.js -m -c",
+    "test": "mocha test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PeculiarVentures/webcrypto-core.git"
+  },
+  "keywords": [
+    "webcrypto",
+    "crypto",
+    "polyfill",
+    "aes",
+    "rsa",
+    "sha",
+    "ec"
+  ],
+  "devDependencies": {
+    "mocha": "*",
+    "uglifyjs": "*",
+    "typescript": "*"
+  },
+  "author": "PeculiarVentures",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PeculiarVentures/webcrypto-core/issues"
+  },
+  "homepage": "https://github.com/PeculiarVentures/webcrypto-core#readme"
+}

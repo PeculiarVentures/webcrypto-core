@@ -162,3 +162,7 @@ namespace webcrypto {
     }
 
 }
+
+declare var module: any;
+if (typeof module !== "undefined")
+    module.exports = webcrypto;
