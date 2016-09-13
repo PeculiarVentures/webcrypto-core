@@ -14,8 +14,8 @@ describe("Subtle", function () {
             it(alg + " generate 128", function (done) {
                 generate({ name: alg, length: 128 }, ["encrypt", "decrypt", "wrapKey", "unwrapKey"], done, false);
             });
-            it(alg + " generate 196", function (done) {
-                generate({ name: alg, length: 196 }, ["encrypt", "decrypt", "wrapKey", "unwrapKey"], done, false);
+            it(alg + " generate 192", function (done) {
+                generate({ name: alg, length: 192 }, ["encrypt", "decrypt", "wrapKey", "unwrapKey"], done, false);
             });
             it(alg + " generate 256", function (done) {
                 generate({ name: alg, length: 256 }, ["encrypt", "decrypt", "wrapKey", "unwrapKey"], done, false);

@@ -16,7 +16,7 @@ namespace webcrypto.aes {
         static checkKeyGenParams(alg: AesKeyGenParams) {
             switch (alg.length) {
                 case 128:
-                case 196:
+                case 192:
                 case 256:
                     break;
                 default:
@@ -50,7 +50,19 @@ namespace webcrypto.aes {
             return new Promise((resolve, reject) => {
                 this.checkKey(key, this.ALG_NAME);
                 this.checkFormat(format, key.type);
-                resolve(null);
+                // Create template for JWK
+                if (format.toLowerCase() === "jwk") {
+                    let jwk: AesJWK = {
+                        alg: `A${(key.algorithm as AesKeyAlgorithm).length}${/-(\w+)/i.exec(key.algorithm.name.toUpperCase())[1]}`,
+                        ext: key.extractable,
+                        k: null,
+                        key_ops: key.usages,
+                        kty: "oct"
+                    };
+                    resolve(jwk);
+                }
+                else
+                    resolve(null);
             });
         }
         static importKey(format: string, keyData: JWK | Uint8Array, algorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {

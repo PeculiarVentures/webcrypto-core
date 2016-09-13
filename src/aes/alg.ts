@@ -97,4 +97,12 @@ namespace webcrypto.aes {
         iv: ArrayBufferView;
     };
 
+    export interface AesJWK extends JWK {
+        alg: string;
+        ext: boolean;
+        k: string;
+        key_ops: string[];
+        kty: string;
+    }
+
 }
