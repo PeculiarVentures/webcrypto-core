@@ -1,5 +1,6 @@
-var subtle = new (require("../built/subtle").Subtle);
+var helper = require("./helper");
 var assert = require("assert");
+var subtle = helper.subtle;
 
 describe("Subtle", function () {
     context("SHA", function (done) {
