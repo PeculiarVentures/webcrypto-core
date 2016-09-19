@@ -33,7 +33,7 @@ namespace webcrypto.ec {
         }
 
         static checkKeyGenUsages(keyUsages: string[]) {
-            this.checkKeyUsages(keyUsages);
+            // this.checkKeyUsages(keyUsages);
             for (let usage of keyUsages) {
                 let i = 0;
                 for (i; i < this.KEY_USAGES.length; i++)
