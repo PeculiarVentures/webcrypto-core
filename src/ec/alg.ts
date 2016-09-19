@@ -49,4 +49,17 @@ namespace webcrypto.ec {
         public: CryptoKey;
     }
 
+    export interface EcJWKPublicKey extends JWK {
+        crv: string;
+        ext: boolean;
+        x: string;
+        y: string;
+        key_ops: string[];
+        kty: string;
+    }
+
+    export interface EcJWKPrivateKey extends EcJWKPublicKey {
+        d: string;
+    }
+
 }
