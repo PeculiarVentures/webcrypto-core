@@ -27,7 +27,7 @@
   ],
   "devDependencies": {
     "mocha": "*",
-    "uglifyjs": "*",
+    "uglify-js": "*",
     "typescript": "*"
   },
   "author": "PeculiarVentures",
