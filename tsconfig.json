@@ -3,7 +3,7 @@
         "module": "amd",
         "target": "es5",
         "noImplicitAny": true,
-        "declaration": false,
+        "declaration": true,
         "sourceMap": false,
         "outFile": "build/webcrypto-core.js",
         "pretty": true

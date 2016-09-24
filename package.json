@@ -9,7 +9,8 @@
   "scripts": {
     "build": "tsc && npm run minify",
     "minify": "uglifyjs build/webcrypto-core.js -o build/webcrypto-core.min.js -m -c",
-    "test": "mocha test"
+    "test": "mocha test",
+    "install": "npm run build"
   },
   "repository": {
     "type": "git",
