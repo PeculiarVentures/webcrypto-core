@@ -1,4 +1,4 @@
-var subtle = new (require("../build/webcrypto-core").Subtle);
+var subtle = new (require("../build/webcrypto-core").SubtleCrypto);
 var assert = require("assert");
 
 module.exports.subtle = subtle;
