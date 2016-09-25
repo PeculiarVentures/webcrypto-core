@@ -3,36 +3,6 @@ namespace webcrypto.rsa {
         code = 2;
     }
 
-    const sha_algs = [AlgorithmNames.Sha1, AlgorithmNames.Sha256, AlgorithmNames.Sha384, AlgorithmNames.Sha512].join(" | ");
-
-    export class Sha extends BaseCrypto {
-
-        static checkAlgorithm(alg: AlgorithmIdentifier) {
-            let _alg: Algorithm;
-            if (typeof alg === "string")
-                _alg = { name: alg };
-            else
-                _alg = alg;
-            super.checkAlgorithm(alg);
-            switch (_alg.name.toUpperCase()) {
-                case AlgorithmNames.Sha1:
-                case AlgorithmNames.Sha256:
-                case AlgorithmNames.Sha384:
-                case AlgorithmNames.Sha512:
-                    break;
-                default:
-                    throw new AlgorithmError(AlgorithmError.WRONG_ALG_NAME, _alg.name, sha_algs);
-            }
-        }
-
-        static digest(algorithm: AlgorithmIdentifier, data: Uint8Array): PromiseLike<ArrayBuffer> {
-            return new Promise((resolve, reject) => {
-                this.checkAlgorithm(algorithm);
-                resolve(null);
-            });
-        }
-    }
-
     export class RsaHashedImportParamsError extends AlgorithmError {
         code = 6;
     }
@@ -57,7 +27,7 @@ namespace webcrypto.rsa {
             this.checkAlgorithm(alg as any);
             if (!alg.hash)
                 throw new RsaHashedImportParamsError(RsaHashedImportParamsError.PARAM_REQUIRED, "hash");
-            Sha.checkAlgorithm(alg.hash);
+            sha.Sha.checkAlgorithm(alg.hash);
         }
 
         static checkKeyGenParams(alg: RsaHashedKeyGenParams) {
@@ -80,8 +50,8 @@ namespace webcrypto.rsa {
                 throw new RsaKeyGenParamsError(RsaKeyGenParamsError.PARAM_WRONG_VALUE, "publicExponent", "Uint8Array([3]) | Uint8Array([1, 0, 1])");
             // hash
             if (!alg.hash)
-                throw new RsaKeyGenParamsError(RsaKeyGenParamsError.PARAM_REQUIRED, "hash", sha_algs);
-            Sha.checkAlgorithm(alg.hash);
+                throw new RsaKeyGenParamsError(RsaKeyGenParamsError.PARAM_REQUIRED, "hash", sha.ShaAlgorithms);
+            sha.Sha.checkAlgorithm(alg.hash);
         }
 
         static checkKeyGenUsages(keyUsages: string[]) {
@@ -102,7 +72,7 @@ namespace webcrypto.rsa {
                 this.checkAlgorithm(algorithm);
                 this.checkKeyGenParams(algorithm);
                 this.checkKeyGenUsages(keyUsages);
-                resolve(null);
+                resolve(undefined);
             });
         }
 
@@ -110,7 +80,7 @@ namespace webcrypto.rsa {
             return new Promise((resolve, reject) => {
                 this.checkKey(key, this.ALG_NAME);
                 this.checkFormat(format, key.type);
-                resolve(null);
+                resolve(undefined);
             });
         }
 
@@ -121,7 +91,7 @@ namespace webcrypto.rsa {
                 if (format.toLowerCase() === "raw")
                     throw new CryptoKeyError(CryptoKeyError.ALLOWED_FORMAT, format, "'JsonWebKey', 'pkcs8' or 'spki'");
                 this.checkKeyGenUsages(keyUsages);
-                resolve(null);
+                resolve(undefined);
             });
         }
 
@@ -135,7 +105,7 @@ namespace webcrypto.rsa {
             return new Promise((resolve, reject) => {
                 this.checkAlgorithmParams(algorithm);
                 this.checkKey(key, this.ALG_NAME, "private", "sign");
-                resolve(null);
+                resolve(undefined);
             });
         }
 
@@ -143,7 +113,7 @@ namespace webcrypto.rsa {
             return new Promise((resolve, reject) => {
                 this.checkAlgorithmParams(algorithm);
                 this.checkKey(key, this.ALG_NAME, "public", "verify");
-                resolve(null);
+                resolve(undefined);
             });
         }
     }
@@ -187,14 +157,14 @@ namespace webcrypto.rsa {
             return new Promise((resolve, reject) => {
                 this.checkAlgorithmParams(algorithm);
                 this.checkKey(key, this.ALG_NAME, "public", "encrypt");
-                resolve(null);
+                resolve(undefined);
             });
         }
         static decrypt(algorithm: RsaOaepParams, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer> {
             return new Promise((resolve, reject) => {
                 this.checkAlgorithmParams(algorithm);
                 this.checkKey(key, this.ALG_NAME, "private", "decrypt");
-                resolve(null);
+                resolve(undefined);
             });
         }
         static wrapKey(format: string, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: RsaOaepParams): PromiseLike<ArrayBuffer> {
@@ -203,7 +173,7 @@ namespace webcrypto.rsa {
                 this.checkKey(wrappingKey, this.ALG_NAME, "public", "wrapKey");
                 this.checkWrappedKey(key);
                 this.checkFormat(format, key.type);
-                resolve(null);
+                resolve(undefined);
             });
         }
         static unwrapKey(format: string, wrappedKey: Uint8Array, unwrappingKey: CryptoKey, unwrapAlgorithm: RsaOaepParams, unwrappedKeyAlgorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
@@ -213,7 +183,7 @@ namespace webcrypto.rsa {
                 this.checkFormat(format);
                 // TODO check unwrappedKeyAlgorithm
                 // TODO check keyUSages
-                resolve(null);
+                resolve(undefined);
             });
         }
     }

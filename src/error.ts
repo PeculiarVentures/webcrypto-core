@@ -3,7 +3,7 @@ namespace webcrypto {
     function printf(text: string, ...args: any[]) {
         let msg: string = text;
         let regFind = /[^%](%\d+)/g;
-        let match: RegExpExecArray = null;
+        let match: RegExpExecArray | null;
         let matches: { arg: string, index: number }[] = [];
         while (match = regFind.exec(msg)) {
             matches.push({ arg: match[1], index: match.index });

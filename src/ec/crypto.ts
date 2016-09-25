@@ -1,7 +1,7 @@
 namespace webcrypto.ec {
 
     const {AesCBC, AesCTR, AesGCM} = aes;
-    const {Sha} = rsa;
+    const {Sha} = sha;
 
     export class EcKeyGenParamsError extends AlgorithmError {
         code = 9;
@@ -50,7 +50,7 @@ namespace webcrypto.ec {
                 this.checkAlgorithm(algorithm);
                 this.checkKeyGenParams(algorithm);
                 this.checkKeyGenUsages(keyUsages);
-                resolve(null);
+                resolve(undefined);
             });
         }
 
@@ -58,7 +58,7 @@ namespace webcrypto.ec {
             return new Promise((resolve, reject) => {
                 this.checkKey(key, this.ALG_NAME);
                 this.checkFormat(format, key.type);
-                resolve(null);
+                resolve(undefined);
             });
         }
         static importKey(format: string, keyData: JsonWebKey | Uint8Array, algorithm: EcKeyGenParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
@@ -68,7 +68,7 @@ namespace webcrypto.ec {
                 if (format.toLowerCase() === "raw")
                     throw new CryptoKeyError(CryptoKeyError.ALLOWED_FORMAT, format, "'JsonWebKey', 'pkcs8' or 'spki'");
                 this.checkKeyGenUsages(keyUsages);
-                resolve(null);
+                resolve(undefined);
             });
         }
     }
@@ -90,7 +90,7 @@ namespace webcrypto.ec {
             return new Promise((resolve, reject) => {
                 this.checkAlgorithmParams(algorithm);
                 this.checkKey(key, this.ALG_NAME, "private", "sign");
-                resolve(null);
+                resolve(undefined);
             });
         }
 
@@ -98,7 +98,7 @@ namespace webcrypto.ec {
             return new Promise((resolve, reject) => {
                 this.checkAlgorithmParams(algorithm);
                 this.checkKey(key, this.ALG_NAME, "public", "verify");
-                resolve(null);
+                resolve(undefined);
             });
         }
 
@@ -120,7 +120,7 @@ namespace webcrypto.ec {
             return new Promise((resolve, reject) => {
                 this.checkDeriveParams(algorithm);
                 this.checkKey(baseKey, this.ALG_NAME, "private", "deriveBits");
-                resolve(null);
+                resolve(undefined);
             });
         }
         static deriveKey(algorithm: EcdhKeyDeriveParams, baseKey: CryptoKey, derivedKeyType: AesDerivedKeyParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
@@ -141,7 +141,7 @@ namespace webcrypto.ec {
                     default:
                         throw new EcAlgorithmError(`Unsupported name '${derivedKeyType.name}' for algoritm in param 'derivedKeyType'`);
                 }
-                resolve(null);
+                resolve(undefined);
             });
         }
     }

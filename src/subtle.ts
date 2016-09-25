@@ -3,7 +3,8 @@ type NativeSubtleCrypto = SubtleCrypto;
 
 namespace webcrypto {
 
-    const {RsaOAEP, RsaPSS, RsaSSA, Sha} = rsa;
+    const {Sha} = sha;
+    const {RsaOAEP, RsaPSS, RsaSSA} = rsa;
     const {AesCBC, AesCTR, AesGCM} = aes;
     const {EcDH, EcDSA} = ec;
 
@@ -188,7 +189,7 @@ namespace webcrypto {
                 if (!key.extractable)
                     throw new CryptoKeyError(CryptoKeyError.NOT_EXTRACTABLE);
                 let Class = BaseCrypto;
-                switch (key.algorithm.name.toUpperCase()) {
+                switch (key.algorithm.name!.toUpperCase()) {
                     case AlgorithmNames.RsaSSA.toUpperCase():
                         Class = RsaSSA;
                         break;

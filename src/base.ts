@@ -33,13 +33,14 @@ namespace webcrypto {
             this.checkAlgorithm(alg);
         }
 
-        static checkKey(key: CryptoKey, alg?: string, type: string = null, usage: string = null) {
+        static checkKey(key: CryptoKey, alg?: string, type: string | null = null, usage: string | null = null) {
             // check key empty
             if (!key)
                 throw new CryptoKeyError(CryptoKeyError.EMPTY_KEY);
             // check alg
             let keyAlg = key.algorithm;
-            if (alg && (!keyAlg || keyAlg.name.toUpperCase() !== alg.toUpperCase()))
+            this.checkAlgorithm(keyAlg as Algorithm);
+            if (alg && (!keyAlg || keyAlg.name!.toUpperCase() !== alg.toUpperCase()))
                 throw new CryptoKeyError(CryptoKeyError.WRONG_KEY_ALG, keyAlg.name, alg);
             // check type
             if (type && (!key.type || key.type.toUpperCase() !== type.toUpperCase()))
@@ -157,6 +158,6 @@ namespace webcrypto {
 
 }
 
-declare var module: any;
+declare var module: any | undefined;
 if (typeof module !== "undefined")
     module.exports = webcrypto;
