@@ -10,8 +10,7 @@
     "build": "tsc && npm run minify",
     "minify": "uglifyjs build/webcrypto-core.js -o build/webcrypto-core.min.js -m -c",
     "test": "mocha test",
-    "prepublish": "npm run build",
-    "install": "npm run build"
+    "prepublish": "npm run build && npm test && npm version patch"
   },
   "repository": {
     "type": "git",
