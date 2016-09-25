@@ -7,20 +7,25 @@ namespace webcrypto.rsa {
 
     export class Sha extends BaseCrypto {
 
-        static checkAlgorithm(alg: Algorithm) {
+        static checkAlgorithm(alg: AlgorithmIdentifier) {
+            let _alg: Algorithm;
+            if (typeof alg === "string")
+                _alg = { name: alg };
+            else
+                _alg = alg;
             super.checkAlgorithm(alg);
-            switch (alg.name.toUpperCase()) {
+            switch (_alg.name.toUpperCase()) {
                 case AlgorithmNames.Sha1:
                 case AlgorithmNames.Sha256:
                 case AlgorithmNames.Sha384:
                 case AlgorithmNames.Sha512:
                     break;
                 default:
-                    throw new AlgorithmError(AlgorithmError.WRONG_ALG_NAME, alg.name, sha_algs);
+                    throw new AlgorithmError(AlgorithmError.WRONG_ALG_NAME, _alg.name, sha_algs);
             }
         }
 
-        static digest(algorithm: HashAlgorithm, data: Uint8Array): PromiseLike<ArrayBuffer> {
+        static digest(algorithm: AlgorithmIdentifier, data: Uint8Array): PromiseLike<ArrayBuffer> {
             return new Promise((resolve, reject) => {
                 this.checkAlgorithm(algorithm);
                 resolve(null);
@@ -42,7 +47,14 @@ namespace webcrypto.rsa {
         }
 
         static checkImportAlgorithm(alg: RsaHashedImportParams) {
-            this.checkAlgorithm(alg);
+            /**
+             * Check alg name. Use the same way as Chrome uses.
+             * It throws error if algorithm doesn't have a `name` paramter
+             * But it's not a equal to W3 specification
+             * https://www.w3.org/TR/WebCryptoAPI/#dfn-RsaHashedImportParams
+             *   
+             */
+            this.checkAlgorithm(alg as any);
             if (!alg.hash)
                 throw new RsaHashedImportParamsError(RsaHashedImportParamsError.PARAM_REQUIRED, "hash");
             Sha.checkAlgorithm(alg.hash);
@@ -94,19 +106,20 @@ namespace webcrypto.rsa {
             });
         }
 
-        static exportKey(format: string, key: CryptoKey): PromiseLike<JWK | ArrayBuffer> {
+        static exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer> {
             return new Promise((resolve, reject) => {
                 this.checkKey(key, this.ALG_NAME);
                 this.checkFormat(format, key.type);
                 resolve(null);
             });
         }
-        static importKey(format: string, keyData: JWK | Uint8Array, algorithm: RsaHashedImportParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
+
+        static importKey(format: string, keyData: JsonWebKey | BufferSource, algorithm: string | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
             return new Promise((resolve, reject) => {
-                this.checkImportAlgorithm(algorithm);
+                this.checkImportAlgorithm(algorithm as RsaHashedImportParams);
                 this.checkFormat(format);
                 if (format.toLowerCase() === "raw")
-                    throw new CryptoKeyError(CryptoKeyError.ALLOWED_FORMAT, format, "'jwk', 'pkcs8' or 'spki'");
+                    throw new CryptoKeyError(CryptoKeyError.ALLOWED_FORMAT, format, "'JsonWebKey', 'pkcs8' or 'spki'");
                 this.checkKeyGenUsages(keyUsages);
                 resolve(null);
             });
@@ -143,7 +156,11 @@ namespace webcrypto.rsa {
         protected static ALG_NAME = AlgorithmNames.RsaPSS;
         protected static KEY_USAGES: string[] = ["sign", "verify"];
 
-        static checkAlgorithmParams(alg: RsaPssParams) {
+        static checkRsaPssParams(alg: RsaPssParams) {
+            /**
+             * TODO: Check alg verification in browser
+             */
+            super.checkAlgorithmParams(alg as any);
             if (!alg.saltLength)
                 return new RsaPSSParamsError(RsaPSSParamsError.PARAM_REQUIRED, "saltLength");
             if (alg.saltLength % 8)

@@ -1,11 +1,5 @@
 namespace webcrypto {
 
-    export type CryptoBuffer = ArrayBuffer | ArrayBufferView;
-
-    export interface JWK {
-        [key: string]: any;
-    }
-
     export function PrepareAlgorithm(alg: AlgorithmIdentifier): Algorithm {
         let res: Algorithm;
         if (typeof alg === "string")
@@ -16,7 +10,7 @@ namespace webcrypto {
         return res;
     }
 
-    export function PrepareData(data: CryptoBuffer, paramName: string): Uint8Array {
+    export function PrepareData(data: BufferSource, paramName: string): Uint8Array {
         if (!data)
             throw new WebCryptoError(`Parameter '${paramName}' is required and cant be empty`);
         if (ArrayBuffer.isView(data) || data instanceof ArrayBuffer)
@@ -26,7 +20,7 @@ namespace webcrypto {
 
     export class BaseCrypto {
 
-        static checkAlgorithm(alg: Algorithm) {
+        static checkAlgorithm(alg: AlgorithmIdentifier) {
             if (typeof alg !== "object")
                 throw new TypeError("Wrong algorithm data type. Must be Object");
             if (!("name" in alg))
@@ -139,12 +133,12 @@ namespace webcrypto {
                 throw new WebCryptoError(WebCryptoError.NOT_SUPPORTED);
             });
         }
-        static exportKey(format: string, key: CryptoKey): PromiseLike<JWK | ArrayBuffer> {
+        static exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer> {
             return new Promise((resolve, reject) => {
                 throw new WebCryptoError(WebCryptoError.NOT_SUPPORTED);
             });
         }
-        static importKey(format: string, keyData: JWK | Uint8Array, algorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
+        static importKey(format: string, keyData: JsonWebKey | BufferSource, algorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
             return new Promise((resolve, reject) => {
                 throw new WebCryptoError(WebCryptoError.NOT_SUPPORTED);
             });

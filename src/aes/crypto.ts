@@ -46,14 +46,14 @@ namespace webcrypto.aes {
             });
         }
 
-        static exportKey(format: string, key: CryptoKey): PromiseLike<JWK | ArrayBuffer> {
+        static exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer> {
             return new Promise((resolve, reject) => {
                 this.checkKey(key, this.ALG_NAME);
                 this.checkFormat(format, key.type);
                 resolve(null);
             });
         }
-        static importKey(format: string, keyData: JWK | Uint8Array, algorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
+        static importKey(format: string, keyData: JsonWebKey | Uint8Array, algorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
             return new Promise((resolve, reject) => {
                 this.checkAlgorithm(algorithm);
                 this.checkFormat(format);

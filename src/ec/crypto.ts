@@ -54,19 +54,19 @@ namespace webcrypto.ec {
             });
         }
 
-        static exportKey(format: string, key: CryptoKey): PromiseLike<JWK | ArrayBuffer> {
+        static exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer> {
             return new Promise((resolve, reject) => {
                 this.checkKey(key, this.ALG_NAME);
                 this.checkFormat(format, key.type);
                 resolve(null);
             });
         }
-        static importKey(format: string, keyData: JWK | Uint8Array, algorithm: EcKeyGenParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
+        static importKey(format: string, keyData: JsonWebKey | Uint8Array, algorithm: EcKeyGenParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
             return new Promise((resolve, reject) => {
                 this.checkKeyGenParams(algorithm);
                 this.checkFormat(format);
                 if (format.toLowerCase() === "raw")
-                    throw new CryptoKeyError(CryptoKeyError.ALLOWED_FORMAT, format, "'jwk', 'pkcs8' or 'spki'");
+                    throw new CryptoKeyError(CryptoKeyError.ALLOWED_FORMAT, format, "'JsonWebKey', 'pkcs8' or 'spki'");
                 this.checkKeyGenUsages(keyUsages);
                 resolve(null);
             });
@@ -123,7 +123,7 @@ namespace webcrypto.ec {
                 resolve(null);
             });
         }
-        static deriveKey(algorithm: EcdhKeyDeriveParams, baseKey: CryptoKey, derivedKeyType: aes.AesKeyGenParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
+        static deriveKey(algorithm: EcdhKeyDeriveParams, baseKey: CryptoKey, derivedKeyType: AesDerivedKeyParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
             return new Promise((resolve, reject) => {
                 this.checkDeriveParams(algorithm);
                 this.checkKey(baseKey, this.ALG_NAME, "private", "deriveKey");

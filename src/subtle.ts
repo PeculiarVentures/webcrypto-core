@@ -1,25 +1,13 @@
+type NativeCrypto = Crypto;
+type NativeSubtleCrypto = SubtleCrypto;
+
 namespace webcrypto {
 
     const {RsaOAEP, RsaPSS, RsaSSA, Sha} = rsa;
     const {AesCBC, AesCTR, AesGCM} = aes;
     const {EcDH, EcDSA} = ec;
 
-    export interface NodeSubtleCrypto extends SubtleCrypto {
-        generateKey(algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey | CryptoKeyPair>;
-        digest(algorithm: AlgorithmIdentifier, data: CryptoBuffer): PromiseLike<ArrayBuffer>;
-        sign(algorithm: AlgorithmIdentifier, key: CryptoKey, data: CryptoBuffer): PromiseLike<ArrayBuffer>;
-        verify(algorithm: AlgorithmIdentifier, key: CryptoKey, signature: CryptoBuffer, data: CryptoBuffer): PromiseLike<boolean>;
-        encrypt(algorithm: AlgorithmIdentifier, key: CryptoKey, data: CryptoBuffer): PromiseLike<ArrayBuffer>;
-        decrypt(algorithm: AlgorithmIdentifier, key: CryptoKey, data: CryptoBuffer): PromiseLike<ArrayBuffer>;
-        deriveBits(algorithm: AlgorithmIdentifier, baseKey: CryptoKey, length: number): PromiseLike<ArrayBuffer>;
-        deriveKey(algorithm: AlgorithmIdentifier, baseKey: CryptoKey, derivedKeyType: AlgorithmIdentifier, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
-        exportKey(format: string, key: CryptoKey): PromiseLike<JWK | ArrayBuffer>;
-        importKey(format: string, keyData: JWK | CryptoBuffer, algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
-        wrapKey(format: string, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: AlgorithmIdentifier): PromiseLike<ArrayBuffer>;
-        unwrapKey(format: string, wrappedKey: CryptoBuffer, unwrappingKey: CryptoKey, unwrapAlgorithm: AlgorithmIdentifier, unwrappedKeyAlgorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
-    }
-
-    export class Subtle implements NodeSubtleCrypto {
+    export class SubtleCrypto implements NativeSubtleCrypto {
         generateKey(algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey | CryptoKeyPair> {
             return new Promise((resolve, reject) => {
                 const alg = PrepareAlgorithm(algorithm);
@@ -55,7 +43,7 @@ namespace webcrypto {
                 Class.generateKey(alg, extractable, keyUsages).then(resolve, reject);
             });
         }
-        digest(algorithm: AlgorithmIdentifier, data: CryptoBuffer): PromiseLike<ArrayBuffer> {
+        digest(algorithm: AlgorithmIdentifier, data: BufferSource): PromiseLike<ArrayBuffer> {
             return new Promise((resolve, reject) => {
                 const alg = PrepareAlgorithm(algorithm);
                 const buf = PrepareData(data, "data");
@@ -74,9 +62,9 @@ namespace webcrypto {
             });
 
         }
-        sign(algorithm: AlgorithmIdentifier, key: CryptoKey, data: CryptoBuffer): PromiseLike<ArrayBuffer> {
+        sign(algorithm: string | RsaPssParams | EcdsaParams | AesCmacParams, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer> {
             return new Promise((resolve, reject) => {
-                const alg = PrepareAlgorithm(algorithm);
+                const alg = PrepareAlgorithm(algorithm as any);
                 const buf = PrepareData(data, "data");
                 let Class = BaseCrypto;
                 switch (alg.name.toUpperCase()) {
@@ -95,9 +83,9 @@ namespace webcrypto {
                 Class.sign(alg, key, buf).then(resolve, reject);
             });
         }
-        verify(algorithm: AlgorithmIdentifier, key: CryptoKey, signature: CryptoBuffer, data: CryptoBuffer): PromiseLike<boolean> {
+        verify(algorithm: string | RsaPssParams | EcdsaParams | AesCmacParams, key: CryptoKey, signature: BufferSource, data: BufferSource): PromiseLike<boolean> {
             return new Promise((resolve, reject) => {
-                const alg = PrepareAlgorithm(algorithm);
+                const alg = PrepareAlgorithm(algorithm as any);
                 const sigBuf = PrepareData(data, "signature");
                 const buf = PrepareData(data, "data");
                 let Class = BaseCrypto;
@@ -117,7 +105,7 @@ namespace webcrypto {
                 Class.verify(alg, key, sigBuf, buf).then(resolve, reject);
             });
         }
-        encrypt(algorithm: AlgorithmIdentifier, key: CryptoKey, data: CryptoBuffer): PromiseLike<ArrayBuffer> {
+        encrypt(algorithm: AlgorithmIdentifier, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer> {
             return new Promise((resolve, reject) => {
                 const alg = PrepareAlgorithm(algorithm);
                 const buf = PrepareData(data, "data");
@@ -141,7 +129,7 @@ namespace webcrypto {
                 Class.encrypt(alg, key, buf).then(resolve, reject);
             });
         }
-        decrypt(algorithm: AlgorithmIdentifier, key: CryptoKey, data: CryptoBuffer): PromiseLike<ArrayBuffer> {
+        decrypt(algorithm: AlgorithmIdentifier, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer> {
             return new Promise((resolve, reject) => {
                 const alg = PrepareAlgorithm(algorithm);
                 const buf = PrepareData(data, "data");
@@ -194,7 +182,7 @@ namespace webcrypto {
                 Class.deriveKey(alg, baseKey, derivedAlg, extractable, keyUsages).then(resolve, reject);
             });
         }
-        exportKey(format: string, key: CryptoKey): PromiseLike<JWK | ArrayBuffer> {
+        exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer> {
             return new Promise((resolve, reject) => {
                 BaseCrypto.checkKey(key);
                 if (!key.extractable)
@@ -231,7 +219,7 @@ namespace webcrypto {
                 Class.exportKey(format, key).then(resolve, reject);
             });
         }
-        importKey(format: string, keyData: JWK | CryptoBuffer, algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
+        importKey(format: string, keyData: JsonWebKey | BufferSource, algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
             return new Promise((resolve, reject) => {
                 const alg = PrepareAlgorithm(algorithm);
                 let Class = BaseCrypto;
@@ -290,7 +278,7 @@ namespace webcrypto {
                 Class.wrapKey(format, key, wrappingKey, alg).then(resolve, reject);
             });
         }
-        unwrapKey(format: string, wrappedKey: CryptoBuffer, unwrappingKey: CryptoKey, unwrapAlgorithm: AlgorithmIdentifier, unwrappedKeyAlgorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
+        unwrapKey(format: string, wrappedKey: BufferSource, unwrappingKey: CryptoKey, unwrapAlgorithm: AlgorithmIdentifier, unwrappedKeyAlgorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
             return new Promise((resolve, reject) => {
                 const unwrapAlg = PrepareAlgorithm(unwrapAlgorithm);
                 const unwrappedAlg = PrepareAlgorithm(unwrappedKeyAlgorithm);
