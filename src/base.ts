@@ -1,6 +1,6 @@
 namespace webcrypto {
 
-    export function PrepareAlgorithm(alg: AlgorithmIdentifier): Algorithm {
+    export function PrepareAlgorithm(alg: AlgorithmIdentifier | string): Algorithm {
         let res: Algorithm;
         if (typeof alg === "string")
             res = { name: alg };
