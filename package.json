@@ -43,7 +43,8 @@
     "live-server": "^1",
     "npm-run-all": "^3",
     "nyc": "^8",
-    "watch": "^0"
+    "watch": "^0",
+    "@types/node": "^6"
   },
   "author": "PeculiarVentures",
   "license": "MIT",
