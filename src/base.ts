@@ -7,6 +7,10 @@ namespace webcrypto {
         else
             res = alg;
         BaseCrypto.checkAlgorithm(res);
+        const hashedAlg: RsaHashedKeyAlgorithm = alg as any;
+        if (hashedAlg.hash) {
+            hashedAlg.hash = PrepareAlgorithm(hashedAlg.hash);
+        }
         return res;
     }
 
@@ -157,7 +161,3 @@ namespace webcrypto {
     }
 
 }
-
-declare var module: any | undefined;
-if (typeof module !== "undefined")
-    module.exports = webcrypto;
