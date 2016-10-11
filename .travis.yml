@@ -22,8 +22,6 @@ before_install:
   - export TSD_GITHUB_TOKEN=8591f447276e1caa1b9636b9c8053d768130464f
   - node --version
   - npm --version
-  - gcc --version
-  - bash ./.travis.sh
   - npm install coveralls
 
 script:
@@ -34,6 +32,5 @@ after_success:
 
 cache:
   directories:
-    - $HOME/.node-gyp
     - $HOME/.npm
     - node_modules
