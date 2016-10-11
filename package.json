@@ -1,6 +1,6 @@
 {
   "name": "webcrypto-core",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Common layer to be used by crypto libraries based on WebCrypto API for input validation.",
   "main": "build/webcrypto-core.js",
   "types": "./build/webcrypto-core.d.ts",
