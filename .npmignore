@@ -1,4 +1,7 @@
-/src
-/.vscode
+.nyc_output
+.vscode
+node_modules
+coverage
+src
 tsconfig.json
 tslint.json

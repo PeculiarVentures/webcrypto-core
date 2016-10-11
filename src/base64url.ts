@@ -1,4 +1,12 @@
 namespace webcrypto {
+
+    // Fix btoa and atob for NodeJS
+    if (typeof window === "undefined") {
+        let _global = global as any;
+        _global.btoa = (data: string) => new Buffer(data, "binary").toString("base64");
+        _global.atob = (data: string) => new Buffer(data, "base64").toString("binary");
+    }
+
     export class Base64Url {
 
         protected static buffer2string(buffer: Uint8Array) {

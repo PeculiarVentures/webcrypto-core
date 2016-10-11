@@ -12,6 +12,7 @@
         "pretty": true
     },
     "files": [
+        "node_modules/@types/node/index.d.ts",
         "src/error.ts",
         "src/alg.ts",
         "src/base.ts",
@@ -20,7 +21,6 @@
         "src/rsa/crypto.ts",
         "src/aes/crypto.ts",
         "src/ec/crypto.ts",
-        "src/subtle.ts",
-        "src/crypto.ts"
+        "src/subtle.ts"
     ]
 }
