@@ -3,7 +3,7 @@ namespace webcrypto.sha {
 
     export class Sha extends BaseCrypto {
 
-        static checkAlgorithm(alg: AlgorithmIdentifier) {
+        static checkAlgorithm(alg: Algorithm) {
             let _alg: Algorithm;
             if (typeof alg === "string")
                 _alg = { name: alg };
@@ -21,7 +21,7 @@ namespace webcrypto.sha {
             }
         }
 
-        static digest(algorithm: AlgorithmIdentifier, data: Uint8Array): PromiseLike<ArrayBuffer> {
+        static digest(algorithm: Algorithm, data: Uint8Array): PromiseLike<ArrayBuffer> {
             return new Promise((resolve, reject) => {
                 this.checkAlgorithm(algorithm);
                 resolve(undefined);

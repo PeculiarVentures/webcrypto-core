@@ -83,7 +83,7 @@ namespace webcrypto.ec {
 
         static checkAlgorithmParams(alg: EcdsaParams) {
             this.checkAlgorithm(alg);
-            Sha.checkAlgorithm(alg.hash);
+            Sha.checkAlgorithm(alg.hash as Algorithm);
         }
 
         static sign(algorithm: EcdsaParams, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer> {

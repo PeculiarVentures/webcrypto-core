@@ -27,7 +27,7 @@ namespace webcrypto.rsa {
             this.checkAlgorithm(alg as any);
             if (!alg.hash)
                 throw new RsaHashedImportParamsError(RsaHashedImportParamsError.PARAM_REQUIRED, "hash");
-            sha.Sha.checkAlgorithm(alg.hash);
+            sha.Sha.checkAlgorithm(alg.hash as Algorithm);
         }
 
         static checkKeyGenParams(alg: RsaHashedKeyGenParams) {
@@ -51,7 +51,7 @@ namespace webcrypto.rsa {
             // hash
             if (!alg.hash)
                 throw new RsaKeyGenParamsError(RsaKeyGenParamsError.PARAM_REQUIRED, "hash", sha.ShaAlgorithms);
-            sha.Sha.checkAlgorithm(alg.hash);
+            sha.Sha.checkAlgorithm(alg.hash as Algorithm);
         }
 
         static checkKeyGenUsages(keyUsages: string[]) {

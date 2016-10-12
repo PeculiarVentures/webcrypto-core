@@ -26,13 +26,11 @@ namespace webcrypto {
 
     export class BaseCrypto {
 
-        static checkAlgorithm(alg: AlgorithmIdentifier) {
+        static checkAlgorithm(alg: Algorithm) {
             if (typeof alg !== "object")
                 throw new TypeError("Wrong algorithm data type. Must be Object");
             if (!("name" in alg))
                 throw new AlgorithmError(AlgorithmError.PARAM_REQUIRED, "name");
-            if (typeof alg.name !== "string")
-                throw new AlgorithmError(AlgorithmError.PARAM_WRONG_VALUE, "name", "String");
         }
 
         static checkAlgorithmParams(alg: Algorithm) {

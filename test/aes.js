@@ -1,8 +1,13 @@
+var webcrypto = require("../build/webcrypto-core");
+var assert = require("assert");
+
 var helper = require("./helper");
 var generate = helper.generate;
 var encrypt = helper.encrypt;
 var exportKey = helper.exportKey;
 var importKey = helper.importKey;
+var wrapKey = helper.wrapKey;
+var unwrapKey = helper.unwrapKey;
 
 describe("Subtle", function () {
 
@@ -33,31 +38,31 @@ describe("Subtle", function () {
                 generate({ name: alg, length: 256 }, [], done, true);
             });
             it(alg + " export raw", function (done) {
-                var key = {algorithm: {name: alg}, type:"secret", extractable: true};
+                var key = { algorithm: { name: alg }, type: "secret", extractable: true };
                 exportKey("raw", key, done, false);
             });
             it(alg + " export jwk", function (done) {
-                var key = {algorithm: {name: alg}, type:"secret", extractable: true};
+                var key = { algorithm: { name: alg }, type: "secret", extractable: true };
                 exportKey("jwk", key, done, false);
             });
             it(alg + " export pkcs8, wrong format", function (done) {
-                var key = {algorithm: {name: alg}, type:"secret", extractable: true};
+                var key = { algorithm: { name: alg }, type: "secret", extractable: true };
                 exportKey("pkcs8", key, done, true);
             });
             it(alg + " import jwk", function (done) {
-                var _alg = {name: alg};
+                var _alg = { name: alg };
                 importKey("jwk", new Uint8Array(3), _alg, ["encrypt"], done, false);
             });
             it(alg + " import raw", function (done) {
-                var _alg = {name: alg};
+                var _alg = { name: alg };
                 importKey("raw", new Uint8Array(3), _alg, ["encrypt"], done, false);
             });
             it(alg + " import pkcs8, wrong format", function (done) {
-                var _alg = {name: alg};
+                var _alg = { name: alg };
                 importKey("pkcs8", new Uint8Array(3), _alg, ["encrypt"], done, true);
             });
             it(alg + " import raw, wrong key usage", function (done) {
-                var _alg = {name: alg};
+                var _alg = { name: alg };
                 importKey("raw", new Uint8Array(3), _alg, ["sign"], done, true);
             });
         });
@@ -142,6 +147,103 @@ describe("Subtle", function () {
                 usages: ["decrypt"]
             };
             encrypt("decrypt", alg, key, done, true);
+        });
+
+        it("AES-CTR wrapKey", function (done) {
+            var alg = { name: "AES-CTR", counter: new Uint8Array(16), length: 1 };
+            var key = {
+                algorithm: { name: "AES-CTR" },
+                type: "secret",
+                usages: ["wrapKey"]
+            };
+            var wkey = {
+                algorithm: { name: "RSA-OAEP", hash: "SHA-1", length: 16 },
+                type: "secret",
+                extractable: true,
+                usages: ["encrypt"]
+            };
+            wrapKey("jwk", alg, key, wkey, done, false);
+        });
+
+        it("AES-CTR unwrapKey", function (done) {
+            var alg = { name: "AES-CTR", counter: new Uint8Array(16), length: 1 };
+            var kalg = { name: "RSA-OAEP", hash: "SHA-1" };
+            var key = {
+                algorithm: { name: "AES-CTR" },
+                type: "secret",
+                usages: ["unwrapKey"]
+            };
+            var wkey = new Uint8Array(19);
+            unwrapKey("jwk", wkey, key, alg, kalg, true, ["encrypt"], done, false);
+        });
+
+        context("AES-CBC", () => {
+            var AesCBC = webcrypto.aes.AesCBC;
+
+            context("checkAlgorithmParams", () => {
+
+                it("correct", () => {
+                    AesCBC.checkAlgorithmParams({ name: "AES-CBC", iv: new Uint8Array(16) });
+                });
+
+                it("empty iv", () => {
+                    assert.throws(() => AesCBC.checkAlgorithmParams({ name: "AES-CBC" }), Error);
+                });
+
+                it("wrong iv length", () => {
+                    assert.throws(() => AesCBC.checkAlgorithmParams({ name: "AES-CBC", iv: new Uint8Array(20) }), Error);
+                });
+                it("wrong iv data", () => {
+                    assert.throws(() => AesCBC.checkAlgorithmParams({ name: "AES-CBC", iv: "wrong" }), Error);
+                });
+
+            })
+
+        });
+
+        context("AES-CTR", () => {
+            var AesCTR = webcrypto.aes.AesCTR;
+
+            context("checkAlgorithmParams", () => {
+
+                it("wrong counter data", () => {
+                    assert.throws(() => AesCTR.checkAlgorithmParams({ name: "AES-CTR", counter: "wrong" }), Error);
+                });
+
+            })
+
+        });
+
+        context("AES-GCM", () => {
+            var AesGCM = webcrypto.aes.AesGCM;
+
+            context("checkAlgorithmParams", () => {
+
+                it("valid with tagLength", () => {
+                    AesGCM.checkAlgorithmParams({ name: "AES-GCM", additionalData: new Uint8Array(4), iv: new Uint8Array(12), tagLength: 128 });
+                });
+                it("valid without tagLength", () => {
+                    AesGCM.checkAlgorithmParams({ name: "AES-GCM", additionalData: new Uint8Array(4), iv: new Uint8Array(12) });
+                });
+
+                it("valid without additionalData", () => {
+                    AesGCM.checkAlgorithmParams({ name: "AES-GCM", iv: new Uint8Array(12) });
+                });
+                it("valid without iv", () => {
+                    assert.throws(() => AesGCM.checkAlgorithmParams({ name: "AES-GCM" }), Error);
+                });
+                it("wrong type of iv", () => {
+                    assert.throws(() => AesGCM.checkAlgorithmParams({ name: "AES-GCM", iv: [1,2,3,4,5,6,7,8] }), Error);
+                });
+                it("wrong type of additionalData", () => {
+                    assert.throws(() => AesGCM.checkAlgorithmParams({ name: "AES-GCM", iv: new Uint8Array(12), additionalData: [1,2,3,4,5,6,7,8] }), Error);
+                });
+                it("wrong tagLength", () => {
+                    assert.throws(() => AesGCM.checkAlgorithmParams({ name: "AES-GCM", iv: new Uint8Array(12), tagLength: 130 }), Error);
+                });
+
+            });
+
         });
 
     })
