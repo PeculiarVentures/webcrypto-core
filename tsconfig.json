@@ -1,26 +1,26 @@
 {
     "compilerOptions": {
         "module": "amd",
-        "target": "es5",
+        "lib": [
+            "es5", "dom", "es2015.promise"
+        ],
         "noImplicitAny": true,
+        "strictNullChecks": true,
         "declaration": true,
         "sourceMap": false,
         "outFile": "build/webcrypto-core.js",
         "pretty": true
     },
     "files": [
-        "src/typings/promise.d.ts",
+        "node_modules/@types/node/index.d.ts",
         "src/error.ts",
         "src/alg.ts",
         "src/base.ts",
         "src/base64url.ts",
-        "src/rsa/alg.ts",
+        "src/sha/crypto.ts",
         "src/rsa/crypto.ts",
-        "src/aes/alg.ts",
         "src/aes/crypto.ts",
-        "src/ec/alg.ts",
         "src/ec/crypto.ts",
-        "src/subtle.ts",
-        "src/crypto.ts"
+        "src/subtle.ts"
     ]
 }

@@ -1,22 +1,5 @@
 namespace webcrypto {
 
-    export type AlgorithmIdentifier = Algorithm | string;
-
-    export interface Algorithm {
-        name: string;
-        [key: string]: any;
-    }
-
-    export interface HashAlgorithm extends Algorithm {
-        hash: Algorithm;
-    }
-
-    export type HashAlgorithmIdentifier = HashAlgorithm | string;
-
-    export interface KeyAlgorithm {
-        name: string;
-    }
-
     export const AlgorithmNames = {
         RsaSSA: "RSASSA-PKCS1-v1_5",
         RsaPSS: "RSA-PSS",

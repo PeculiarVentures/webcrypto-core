@@ -1,7 +1,7 @@
-var subtle = new (require("../build/webcrypto-core").Subtle);
+var subtle = new (require("../build/webcrypto-core").SubtleCrypto);
 var assert = require("assert");
 
-module.exports.subtle = subtle;
+module.exports.subtle = subtle; 
 
 function checkPromise(promise, done, error) {
     var _error = true;

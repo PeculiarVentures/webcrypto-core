@@ -1,16 +1,27 @@
 {
   "name": "webcrypto-core",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "Common layer to be used by crypto libraries based on WebCrypto API for input validation.",
   "main": "build/webcrypto-core.js",
+  "types": "./build/webcrypto-core.d.ts",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "build": "tsc && npm run minify",
+    "prepublish": "npm test && npm run minify",
+    "pretest": "npm run build",
+    "build": "tsc --sourceMap",
     "minify": "uglifyjs build/webcrypto-core.js -o build/webcrypto-core.min.js -m -c",
     "test": "mocha test",
-    "install": "npm run build"
+    "pub": "npm version patch && npm publish && git push",
+    "coverage": "nyc npm test",
+    "precoveragehtml": "npm run coverage",
+    "coveragehtml": "nyc report -r html",
+    "watch": "watch 'npm run coveragehtml' lib/ test/",
+    "live": "live-server -q --port=4005 --ignorePattern='(js|css|png)$' coverage",
+    "predev": "if [ ! -f coverage/index.html ]; then mkdir coverage; cp .waiting.html coverage/index.html; fi",
+    "dev": "npm-run-all -p --silent watch live",
+    "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -26,9 +37,14 @@
     "ec"
   ],
   "devDependencies": {
-    "mocha": "*",
-    "uglify-js": "*",
-    "typescript": "*"
+    "mocha": "latest",
+    "uglify-js": "latest",
+    "typescript": "^2",
+    "live-server": "^1",
+    "npm-run-all": "^3",
+    "nyc": "^8",
+    "watch": "^0",
+    "@types/node": "^6"
   },
   "author": "PeculiarVentures",
   "license": "MIT",

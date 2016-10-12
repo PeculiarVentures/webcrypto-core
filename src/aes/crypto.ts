@@ -42,25 +42,25 @@ namespace webcrypto.aes {
                 this.checkAlgorithm(algorithm);
                 this.checkKeyGenParams(algorithm);
                 this.checkKeyGenUsages(keyUsages);
-                resolve(null);
+                resolve(undefined);
             });
         }
 
-        static exportKey(format: string, key: CryptoKey): PromiseLike<JWK | ArrayBuffer> {
+        static exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer> {
             return new Promise((resolve, reject) => {
                 this.checkKey(key, this.ALG_NAME);
                 this.checkFormat(format, key.type);
-                resolve(null);
+                resolve(undefined);
             });
         }
-        static importKey(format: string, keyData: JWK | Uint8Array, algorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
+        static importKey(format: string, keyData: JsonWebKey | Uint8Array, algorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
             return new Promise((resolve, reject) => {
                 this.checkAlgorithm(algorithm);
                 this.checkFormat(format);
                 if (!(format.toLowerCase() === "raw" || format.toLowerCase() === "jwk"))
                     throw new CryptoKeyError(CryptoKeyError.ALLOWED_FORMAT, format, "'jwk' or 'raw'");
                 this.checkKeyGenUsages(keyUsages);
-                resolve(null);
+                resolve(undefined);
             });
         }
     }
@@ -76,14 +76,14 @@ namespace webcrypto.aes {
             return new Promise((resolve, reject) => {
                 this.checkAlgorithmParams(algorithm);
                 this.checkKey(key, this.ALG_NAME, "secret", "encrypt");
-                resolve(null);
+                resolve(undefined);
             });
         }
         static decrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer> {
             return new Promise((resolve, reject) => {
                 this.checkAlgorithmParams(algorithm);
                 this.checkKey(key, this.ALG_NAME, "secret", "decrypt");
-                resolve(null);
+                resolve(undefined);
             });
         }
         static wrapKey(format: string, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: Algorithm): PromiseLike<ArrayBuffer> {
@@ -92,7 +92,7 @@ namespace webcrypto.aes {
                 this.checkKey(wrappingKey, this.ALG_NAME, "secret", "wrapKey");
                 this.checkWrappedKey(key);
                 this.checkFormat(format, key.type);
-                resolve(null);
+                resolve(undefined);
             });
         }
         static unwrapKey(format: string, wrappedKey: Uint8Array, unwrappingKey: CryptoKey, unwrapAlgorithm: Algorithm, unwrappedKeyAlgorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
@@ -102,7 +102,7 @@ namespace webcrypto.aes {
                 this.checkFormat(format);
                 // TODO check unwrappedKeyAlgorithm
                 // TODO check keyUSages
-                resolve(null);
+                resolve(undefined);
             });
         }
     }

@@ -1,22 +1,20 @@
 namespace webcrypto {
 
-    export type CryptoBuffer = ArrayBuffer | ArrayBufferView;
-
-    export interface JWK {
-        [key: string]: any;
-    }
-
-    export function PrepareAlgorithm(alg: AlgorithmIdentifier): Algorithm {
+    export function PrepareAlgorithm(alg: AlgorithmIdentifier | string): Algorithm {
         let res: Algorithm;
         if (typeof alg === "string")
             res = { name: alg };
         else
             res = alg;
         BaseCrypto.checkAlgorithm(res);
+        const hashedAlg: RsaHashedKeyAlgorithm = alg as any;
+        if (hashedAlg.hash) {
+            hashedAlg.hash = PrepareAlgorithm(hashedAlg.hash);
+        }
         return res;
     }
 
-    export function PrepareData(data: CryptoBuffer, paramName: string): Uint8Array {
+    export function PrepareData(data: BufferSource, paramName: string): Uint8Array {
         if (!data)
             throw new WebCryptoError(`Parameter '${paramName}' is required and cant be empty`);
         if (ArrayBuffer.isView(data) || data instanceof ArrayBuffer)
@@ -26,7 +24,7 @@ namespace webcrypto {
 
     export class BaseCrypto {
 
-        static checkAlgorithm(alg: Algorithm) {
+        static checkAlgorithm(alg: AlgorithmIdentifier) {
             if (typeof alg !== "object")
                 throw new TypeError("Wrong algorithm data type. Must be Object");
             if (!("name" in alg))
@@ -39,13 +37,14 @@ namespace webcrypto {
             this.checkAlgorithm(alg);
         }
 
-        static checkKey(key: CryptoKey, alg?: string, type: string = null, usage: string = null) {
+        static checkKey(key: CryptoKey, alg?: string, type: string | null = null, usage: string | null = null) {
             // check key empty
             if (!key)
                 throw new CryptoKeyError(CryptoKeyError.EMPTY_KEY);
             // check alg
             let keyAlg = key.algorithm;
-            if (alg && (!keyAlg || keyAlg.name.toUpperCase() !== alg.toUpperCase()))
+            this.checkAlgorithm(keyAlg as Algorithm);
+            if (alg && (!keyAlg || keyAlg.name!.toUpperCase() !== alg.toUpperCase()))
                 throw new CryptoKeyError(CryptoKeyError.WRONG_KEY_ALG, keyAlg.name, alg);
             // check type
             if (type && (!key.type || key.type.toUpperCase() !== type.toUpperCase()))
@@ -139,12 +138,12 @@ namespace webcrypto {
                 throw new WebCryptoError(WebCryptoError.NOT_SUPPORTED);
             });
         }
-        static exportKey(format: string, key: CryptoKey): PromiseLike<JWK | ArrayBuffer> {
+        static exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer> {
             return new Promise((resolve, reject) => {
                 throw new WebCryptoError(WebCryptoError.NOT_SUPPORTED);
             });
         }
-        static importKey(format: string, keyData: JWK | Uint8Array, algorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
+        static importKey(format: string, keyData: JsonWebKey | BufferSource, algorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
             return new Promise((resolve, reject) => {
                 throw new WebCryptoError(WebCryptoError.NOT_SUPPORTED);
             });
@@ -162,7 +161,3 @@ namespace webcrypto {
     }
 
 }
-
-declare var module: any;
-if (typeof module !== "undefined")
-    module.exports = webcrypto;
