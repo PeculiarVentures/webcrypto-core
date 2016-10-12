@@ -147,15 +147,15 @@ describe("Webcrypto", () => {
             ["generateKey", "digest", "sign", "verify", "encrypt", "decrypt",
                 "exportKey", "importKey", "wrapKey", "unwrapKey",
                 "deriveKey", "deriveBits"].forEach(method =>
-                    it(`${method} not implemented`, done =>
+                    it(`${method} not implemented`, done => {
                         BaseCrypto[method]()
                             .then(() => {
                                 done(new Error("Must be error"))
                             })
                             .catch(e =>
                                 done()
-                            )
-                    )
+                            );
+                    })
                 );
 
         });
