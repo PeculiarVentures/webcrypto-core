@@ -17,8 +17,10 @@ namespace webcrypto {
     export function PrepareData(data: BufferSource, paramName: string): Uint8Array {
         if (!data)
             throw new WebCryptoError(`Parameter '${paramName}' is required and cant be empty`);
-        if (ArrayBuffer.isView(data) || data instanceof ArrayBuffer)
-            return new Uint8Array(data as any);
+        if (ArrayBuffer.isView(data))
+            return new Uint8Array(data.buffer);
+        if (data instanceof ArrayBuffer)
+            return new Uint8Array(data);
         throw new WebCryptoError(`Incoming parameter '${paramName}' has wrong data type. Must be ArrayBufferView or ArrayBuffer`);
     }
 
