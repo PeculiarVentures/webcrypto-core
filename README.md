@@ -1,7 +1,6 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/PeculiarVentures/webcrypto-core/master/LICENSE)
 [![Build Status](https://travis-ci.org/PeculiarVentures/webcrypto-core.svg?branch=master)](https://travis-ci.org/PeculiarVentures/webcrypto-core)
 [![Coverage Status](https://coveralls.io/repos/github/PeculiarVentures/webcrypto-core/badge.svg?branch=master)](https://coveralls.io/github/PeculiarVentures/webcrypto-core?branch=master)
-[![NPM version](https://badge.fury.io/js/nwebcrypto-core.png)](http://badge.fury.io/js/webcrypto-core)
 
 
 # webcrypto-core
