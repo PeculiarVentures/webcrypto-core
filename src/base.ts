@@ -44,7 +44,7 @@ namespace webcrypto {
             // check alg
             let keyAlg = key.algorithm;
             this.checkAlgorithm(keyAlg as Algorithm);
-            if (alg && (!keyAlg || keyAlg.name!.toUpperCase() !== alg.toUpperCase()))
+            if (alg && (keyAlg.name!.toUpperCase() !== alg.toUpperCase()))
                 throw new CryptoKeyError(CryptoKeyError.WRONG_KEY_ALG, keyAlg.name, alg);
             // check type
             if (type && (!key.type || key.type.toUpperCase() !== type.toUpperCase()))
@@ -88,14 +88,6 @@ namespace webcrypto {
                 default:
                     throw new CryptoKeyError(CryptoKeyError.UNKNOWN_FORMAT, format);
             }
-        }
-
-        static checkFormatImport(format: string, isBuffer: boolean, type: string) {
-            this.checkFormat(format);
-            if (isBuffer) {
-
-            }
-
         }
 
         static generateKey(algorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey | CryptoKeyPair> {
