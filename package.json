@@ -2,16 +2,14 @@
   "name": "webcrypto-core",
   "version": "0.1.2",
   "description": "Common layer to be used by crypto libraries based on WebCrypto API for input validation.",
-  "main": "build/webcrypto-core.js",
-  "types": "./build/webcrypto-core.d.ts",
+  "main": "build/index.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "prepublish": "npm test && npm run minify",
+    "prepublish": "npm test",
     "pretest": "npm run build",
-    "build": "tsc --sourceMap",
-    "minify": "uglifyjs build/webcrypto-core.js -o build/webcrypto-core.min.js -m -c",
+    "build": "tsc",
     "test": "mocha test",
     "pub": "npm version patch && npm publish && git push",
     "coverage": "nyc npm test",

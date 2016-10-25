@@ -1,4 +1,4 @@
-var webcrypto = require("../build/webcrypto-core");
+var webcrypto = require("../build");
 var assert = require("assert");
 
 describe("Webcrypto", () => {

@@ -1,4 +1,4 @@
-var webcrypto = require("../build/webcrypto-core");
+var webcrypto = require("../build");
 var assert = require("assert");
 
 var helper = require("./helper");
@@ -178,7 +178,7 @@ describe("Subtle", function () {
         });
 
         context("AES-CBC", () => {
-            var AesCBC = webcrypto.aes.AesCBC;
+            var AesCBC = webcrypto.AesCBC;
 
             context("checkAlgorithmParams", () => {
 
@@ -202,7 +202,7 @@ describe("Subtle", function () {
         });
 
         context("AES-CTR", () => {
-            var AesCTR = webcrypto.aes.AesCTR;
+            var AesCTR = webcrypto.AesCTR;
 
             context("checkAlgorithmParams", () => {
 
@@ -215,7 +215,7 @@ describe("Subtle", function () {
         });
 
         context("AES-GCM", () => {
-            var AesGCM = webcrypto.aes.AesGCM;
+            var AesGCM = webcrypto.AesGCM;
 
             context("checkAlgorithmParams", () => {
 
