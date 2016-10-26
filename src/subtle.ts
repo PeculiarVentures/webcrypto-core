@@ -1,11 +1,11 @@
-import {WebCryptoError, AlgorithmError, CryptoKeyError} from "./error";
-import {BaseCrypto, PrepareAlgorithm, PrepareData} from "./base";
-import {AlgorithmNames} from "./alg";
+import { WebCryptoError, AlgorithmError, CryptoKeyError } from "./error";
+import { BaseCrypto, PrepareAlgorithm, PrepareData } from "./base";
+import { AlgorithmNames } from "./alg";
 
-import {Sha} from "./sha/crypto";
-import {RsaOAEP, RsaPSS, RsaSSA} from "./rsa/crypto";
-import {AesCBC, AesCTR, AesGCM} from "./aes/crypto";
-import {EcDH, EcDSA} from "./ec/crypto";
+import { Sha } from "./sha/crypto";
+import { RsaOAEP, RsaPSS, RsaSSA } from "./rsa/crypto";
+import { AesCBC, AesCTR, AesGCM } from "./aes/crypto";
+import { EcDH, EcDSA } from "./ec/crypto";
 
 export class SubtleCrypto implements NativeSubtleCrypto {
 

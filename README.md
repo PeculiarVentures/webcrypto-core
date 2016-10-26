@@ -23,14 +23,24 @@ typescript
 npm install typescript --global
 ```
 
-uglifyjs
+rollup
 ```
-npm install uglifyjs --global
+npm install rollup --global
+```
+
+babel
+```
+npm install babel-cli --global
 ```
 
 mocha
 ```
 npm install mocha --global
+```
+
+Single line command for all modules
+```
+npm install typescript rollup babel-cli mocha --global
 ```
 
 ## Compilation 
