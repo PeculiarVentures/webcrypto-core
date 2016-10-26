@@ -23,6 +23,10 @@ before_install:
   - node --version
   - npm --version
   - npm install coveralls
+  - npm install babel-cli -g
+  - npm install rollup -g
+  - npm install typescript -g
+  - npm install mocha -g
 
 script:
   - npm run coverage
