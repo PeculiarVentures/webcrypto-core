@@ -8,9 +8,10 @@
   },
   "scripts": {
     "prepublish": "npm test",
-    "pretest": "npm run build:es5",
+    "pretest": "npm run build:test",
     "build": "tsc && rollup -c",
     "build:es5": "npm run build && babel index.js -o index.js",
+    "build:test": "tsc --target es5 --module commonjs --sourcemap",
     "test": "mocha test",
     "pub": "npm version patch && npm publish && git push",
     "coverage": "nyc npm test",

@@ -1,4 +1,4 @@
-var webcrypto = require("../index");
+var webcrypto = require("../build/index");
 var assert = require("assert");
 
 var helper = require("./helper");
