@@ -15,6 +15,7 @@
     "build:es2015": "tsc --module es2015 --target es2015",
     "build:test": "tsc --module commonjs --target es5 --sourcemap",
     "test": "mocha test",
+    "install": "npm run build:es5",
     "pub": "npm version patch && npm publish && git push",
     "coverage": "nyc npm test",
     "precoveragehtml": "npm run coverage",
