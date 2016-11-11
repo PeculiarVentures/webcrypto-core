@@ -2,7 +2,7 @@
   "name": "webcrypto-core",
   "version": "0.1.2",
   "description": "Common layer to be used by crypto libraries based on WebCrypto API for input validation.",
-  "main": "index.js",
+  "main": "build/index.js",
   "types": "src/index.ts",
   "directories": {
     "test": "test"
@@ -11,8 +11,9 @@
     "prepublish": "npm test",
     "pretest": "npm run build:test",
     "build": "tsc && rollup -c",
-    "build:es5": "npm run build && babel index.js -o index.js",
-    "build:test": "tsc --target es5 --module commonjs --sourcemap",
+    "build:es5": "tsc --module commonjs --target es5",
+    "build:es2015": "tsc --module es2015 --target es2015",
+    "build:test": "tsc --module commonjs --target es5 --sourcemap",
     "test": "mocha test",
     "pub": "npm version patch && npm publish && git push",
     "coverage": "nyc npm test",

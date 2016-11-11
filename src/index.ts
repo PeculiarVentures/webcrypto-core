@@ -1,3 +1,5 @@
+/// <reference path="typings.d.ts" />
+
 export * from "./error";
 export * from "./base";
 export * from "./alg";
