@@ -2,5 +2,3 @@
 .vscode
 node_modules
 coverage
-tsconfig.json
-tslint.json
