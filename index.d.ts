@@ -1,11 +1,9 @@
-export = WebcryptoCore
+declare type NativeCrypto = Crypto;
+declare type NativeSubtleCrypto = SubtleCrypto;
+declare type NativeCryptoKey = CryptoKey;
+declare type NativeCryptoKeyPair = CryptoKeyPair;
 
-type NativeCrypto = Crypto;
-type NativeSubtleCrypto = SubtleCrypto;
-type NativeCryptoKey = CryptoKey;
-type NativeCryptoKeyPair = CryptoKeyPair;
-
-declare namespace WebcryptoCore {
+declare module "webcrypto-core" {
 
     const AlgorithmNames: {
         RsaSSA: string;
