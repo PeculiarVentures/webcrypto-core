@@ -12,5 +12,9 @@
         "sourceMap": false,
         "outDir": "build",
         "pretty": true
-    }
+    },
+    "exclude": [
+        "node_modules",
+        "test"
+    ]
 }

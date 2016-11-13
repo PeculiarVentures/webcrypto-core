@@ -3,7 +3,7 @@ declare type NativeSubtleCrypto = SubtleCrypto;
 declare type NativeCryptoKey = CryptoKey;
 declare type NativeCryptoKeyPair = CryptoKeyPair;
 
-declare module "webcrypto-core" {
+declare namespace WebcryptoCore {
 
     const AlgorithmNames: {
         RsaSSA: string;
@@ -231,4 +231,8 @@ declare module "webcrypto-core" {
         static digest(algorithm: Algorithm, data: Uint8Array): PromiseLike<ArrayBuffer>;
     }
 
+}
+
+declare module "webcrypto-core" {
+    export = WebcryptoCore;
 }
