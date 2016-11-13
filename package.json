@@ -3,7 +3,6 @@
   "version": "0.1.2",
   "description": "Common layer to be used by crypto libraries based on WebCrypto API for input validation.",
   "main": "build/index.js",
-  "types": "src/index.ts",
   "directories": {
     "test": "test"
   },
