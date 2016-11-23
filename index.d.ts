@@ -19,6 +19,7 @@ declare namespace WebcryptoCore {
         Sha512: string;
         EcDSA: string;
         EcDH: string;
+        Hmac: string;
     };
 
     function PrepareAlgorithm(alg: AlgorithmIdentifier | string): Algorithm;

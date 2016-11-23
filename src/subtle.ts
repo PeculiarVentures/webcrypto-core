@@ -6,6 +6,7 @@ import { Sha } from "./sha/crypto";
 import { RsaOAEP, RsaPSS, RsaSSA } from "./rsa/crypto";
 import { AesCBC, AesCTR, AesGCM } from "./aes/crypto";
 import { EcDH, EcDSA } from "./ec/crypto";
+import { Hmac } from "./hmac/crypto";
 
 export class SubtleCrypto implements NativeSubtleCrypto {
 
@@ -40,6 +41,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.EcDH.toUpperCase():
                     Class = EcDH;
+                    break;
+                case AlgorithmNames.Hmac.toUpperCase():
+                    Class = Hmac;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
@@ -84,6 +88,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.EcDSA.toUpperCase():
                     Class = EcDSA;
                     break;
+                case AlgorithmNames.Hmac.toUpperCase():
+                    Class = Hmac;
+                    break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
             }
@@ -107,6 +114,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.EcDSA.toUpperCase():
                     Class = EcDSA;
+                    break;
+                case AlgorithmNames.Hmac.toUpperCase():
+                    Class = Hmac;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
@@ -234,6 +244,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.EcDH.toUpperCase():
                     Class = EcDH;
                     break;
+                case AlgorithmNames.Hmac.toUpperCase():
+                    Class = Hmac;
+                    break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, key.algorithm.name);
             }
@@ -273,6 +286,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.EcDH.toUpperCase():
                     Class = EcDH;
+                    break;
+                case AlgorithmNames.Hmac.toUpperCase():
+                    Class = Hmac;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
