@@ -1,6 +1,8 @@
 var helper = require("./helper");
 var assert = require("assert");
 var subtle = helper.subtle;
+var sign = helper.sign;
+var verify = helper.verify;
 
 describe("Subtle", function () {
     context("RSA", function (done) {
@@ -111,24 +113,7 @@ describe("Subtle", function () {
         });
 
         context("sign/verify", function () {
-
-            function sign(alg, key, done, error) {
-                var _error = true;
-                subtle.sign(alg, key, new Uint8Array([1, 2, 3]))
-                    .then(function (res) {
-                        assert.equal(res, null);
-                        _error = false;
-                    })
-                    .catch(function (err) {
-                        assert.equal(!!err, error, err.message);
-                    })
-                    .then(function () {
-                        assert.equal(_error, error, "Must be error");
-                    })
-                    .then(done, done);
-            }
-
-            it("RsaSSA", function (done) {
+            it("RsaSSA", done => {
                 var key = {
                     algorithm: {
                         name: "RSASSA-PKCS1-v1_5",
@@ -172,7 +157,7 @@ describe("Subtle", function () {
                 };
                 sign({ name: "RSASSA-PKCS1-v1_5" }, key, done, true);
             });
-            it("RsaPSS", function (done) {
+            it("RsaPSS sign", function (done) {
                 var key = {
                     algorithm: {
                         name: "RSA-PSS",
@@ -182,6 +167,17 @@ describe("Subtle", function () {
                     type: "private"
                 };
                 sign({ name: "RSA-PSS" }, key, done, false);
+            });
+            it("RsaPSS verify", function (done) {
+                var key = {
+                    algorithm: {
+                        name: "RSA-PSS",
+                        hash: { name: "sha-1" }
+                    },
+                    usages: ["verify"],
+                    type: "public"
+                };
+                verify({ name: "RSA-PSS" }, key, done, false);
             });
             it("RsaPSS wrong salt length", function (done) {
                 var key = {
