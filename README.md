@@ -56,11 +56,6 @@ Compile the source code with declaration using the next command:
 tsc --declaration
 ```
 
-## Minify
-```
-npm run minify
-```
-
 ## Test
 ```
 npm test
