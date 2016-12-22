@@ -10,7 +10,7 @@
   "scripts": {
     "prepublish": "npm test",
     "pretest": "npm run build:test",
-    "build": "tsc && rollup -c",
+    "build": "npm run build:es2015 && rollup -c",
     "build:es5": "tsc --module commonjs --target es5",
     "build:es2015": "tsc --module es2015 --target es2015",
     "build:test": "tsc --module commonjs --target es5 --sourcemap",
