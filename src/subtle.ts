@@ -7,7 +7,7 @@ import { RsaOAEP, RsaPSS, RsaSSA } from "./rsa/crypto";
 import { AesCBC, AesCTR, AesGCM, AesKW } from "./aes/crypto";
 import { EcDH, EcDSA } from "./ec/crypto";
 import { Hmac } from "./hmac/crypto";
-import { Pbkdf2 } from "./Pbkdf2/crypto";
+import { Pbkdf2 } from "./pbkdf2/crypto";
 
 export class SubtleCrypto implements NativeSubtleCrypto {
 
