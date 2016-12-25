@@ -14,6 +14,7 @@
     "build:es5": "tsc --module commonjs --target es5",
     "build:es2015": "tsc --module es2015 --target es2015",
     "build:test": "tsc --module commonjs --target es5 --sourcemap",
+    "build:source": "tsc --declaration --declarationDir types",
     "test": "mocha test",
     "install": "npm run build:es5",
     "pub": "npm version patch && npm publish && git push",

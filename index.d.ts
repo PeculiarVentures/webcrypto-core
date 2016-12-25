@@ -13,6 +13,7 @@ declare namespace WebcryptoCore {
         AesCMAC: string;
         AesGCM: string;
         AesCBC: string;
+        AesKW: string;
         Sha1: string;
         Sha256: string;
         Sha384: string;
@@ -20,6 +21,7 @@ declare namespace WebcryptoCore {
         EcDSA: string;
         EcDH: string;
         Hmac: string;
+        Pbkdf2: string;
     };
 
     function PrepareAlgorithm(alg: AlgorithmIdentifier | string): Algorithm;
@@ -102,9 +104,10 @@ declare namespace WebcryptoCore {
         unwrapKey(format: string, wrappedKey: BufferSource, unwrappingKey: CryptoKey, unwrapAlgorithm: AlgorithmIdentifier, unwrappedKeyAlgorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
     }
 
-    class Aes extends BaseCrypto {
+    export class Aes extends BaseCrypto {
         protected static ALG_NAME: string;
         protected static KEY_USAGES: string[];
+        static checkKeyUsages(keyUsages: string[]): void;
         static checkAlgorithm(alg: Algorithm): void;
         static checkKeyGenParams(alg: AesKeyGenParams): void;
         static checkKeyGenUsages(keyUsages: string[]): void;
@@ -112,33 +115,36 @@ declare namespace WebcryptoCore {
         static exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer>;
         static importKey(format: string, keyData: JsonWebKey | Uint8Array, algorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
     }
-
-    class AesAlgorithmError extends AlgorithmError {
+    export class AesAlgorithmError extends AlgorithmError {
         code: number;
     }
-
-    class AesEncrypt extends Aes {
-        protected static KEY_USAGES: string[];
-        static encrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer>;
-        static decrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer>;
+    export class AesWrapKey extends Aes {
         static wrapKey(format: string, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: Algorithm): PromiseLike<ArrayBuffer>;
         static unwrapKey(format: string, wrappedKey: Uint8Array, unwrappingKey: CryptoKey, unwrapAlgorithm: Algorithm, unwrappedKeyAlgorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
     }
-
-    class AesCBC extends AesEncrypt {
+    export class AesEncrypt extends AesWrapKey {
+        protected static KEY_USAGES: string[];
+        static encrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer>;
+        static decrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer>;
+    }
+    export class AesCBC extends AesEncrypt {
         protected static ALG_NAME: string;
         static checkAlgorithmParams(alg: AesCbcParams): void;
     }
-
-    class AesCTR extends AesEncrypt {
+    export class AesCTR extends AesEncrypt {
         protected static ALG_NAME: string;
         static checkAlgorithmParams(alg: AesCtrParams): void;
     }
-
-    class AesGCM extends AesEncrypt {
+    export class AesGCM extends AesEncrypt {
         protected static ALG_NAME: string;
         static checkAlgorithmParams(alg: AesGcmParams): void;
     }
+    export class AesKW extends AesWrapKey {
+        protected static ALG_NAME: string;
+        protected static KEY_USAGES: string[];
+        static checkAlgorithmParams(alg: AesGcmParams): void;
+    }
+
 
     class EcKeyGenParamsError extends AlgorithmError {
         code: number;
@@ -230,6 +236,30 @@ declare namespace WebcryptoCore {
     class Sha extends BaseCrypto {
         static checkAlgorithm(alg: Algorithm): void;
         static digest(algorithm: Algorithm, data: Uint8Array): PromiseLike<ArrayBuffer>;
+    }
+
+    export class Hmac extends BaseCrypto {
+        protected static ALG_NAME: string;
+        protected static KEY_USAGES: string[];
+        static checkAlgorithm(alg: Algorithm): void;
+        static checkKeyGenParams(alg: AesKeyGenParams): void;
+        static checkKeyGenUsages(keyUsages: string[]): void;
+        static generateKey(algorithm: AesKeyGenParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey | CryptoKeyPair>;
+        static exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer>;
+        static importKey(format: string, keyData: JsonWebKey | Uint8Array, algorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
+        static sign(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer>;
+        static verify(algorithm: Algorithm, key: CryptoKey, signature: Uint8Array, data: Uint8Array): PromiseLike<boolean>;
+    }
+
+    export class Pbkdf2 extends BaseCrypto {
+        protected static ALG_NAME: string;
+        protected static KEY_USAGES: string[];
+        static checkAlgorithm(alg: Algorithm): void;
+        static checkDeriveParams(alg: Pbkdf2Params): void;
+        static generateKey(algorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey | CryptoKeyPair>;
+        static importKey(format: string, keyData: JsonWebKey | BufferSource, algorithm: string | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
+        static deriveKey(algorithm: Pbkdf2Params, baseKey: CryptoKey, derivedKeyType: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
+        static deriveBits(algorithm: Pbkdf2Params, baseKey: CryptoKey, length: number): PromiseLike<ArrayBuffer>;
     }
 
 }
