@@ -7,6 +7,7 @@ import { RsaOAEP, RsaPSS, RsaSSA } from "./rsa/crypto";
 import { AesCBC, AesCTR, AesGCM, AesKW } from "./aes/crypto";
 import { EcDH, EcDSA } from "./ec/crypto";
 import { Hmac } from "./hmac/crypto";
+import { Pbkdf2 } from "./Pbkdf2/crypto";
 
 export class SubtleCrypto implements NativeSubtleCrypto {
 
@@ -47,6 +48,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.Hmac.toUpperCase():
                     Class = Hmac;
+                    break;
+                case AlgorithmNames.Pbkdf2.toUpperCase():
+                    Class = Pbkdf2;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
@@ -189,6 +193,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.EcDH.toUpperCase():
                     Class = EcDH;
                     break;
+                case AlgorithmNames.Pbkdf2.toUpperCase():
+                    Class = Pbkdf2;
+                    break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
             }
@@ -205,6 +212,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
             switch (alg.name.toUpperCase()) {
                 case AlgorithmNames.EcDH.toUpperCase():
                     Class = EcDH;
+                    break;
+                case AlgorithmNames.Pbkdf2.toUpperCase():
+                    Class = Pbkdf2;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
@@ -298,6 +308,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.Hmac.toUpperCase():
                     Class = Hmac;
+                    break;
+                case AlgorithmNames.Pbkdf2.toUpperCase():
+                    Class = Pbkdf2;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);

@@ -1,4 +1,4 @@
-import { AesCBC, AesCTR, AesGCM } from "../aes/crypto";
+import { AesCBC, AesCTR, AesGCM, AesKW } from "../aes/crypto";
 import { Sha } from "../sha/crypto";
 import { WebCryptoError, AlgorithmError, CryptoKeyError } from "../error";
 import { BaseCrypto } from "../base";
@@ -138,8 +138,11 @@ export class EcDH extends Ec {
                 case AlgorithmNames.AesGCM:
                     AesGCM.checkKeyGenParams(derivedKeyType);
                     break;
+                case AlgorithmNames.AesKW:
+                    AesKW.checkKeyGenParams(derivedKeyType);
+                    break;
                 default:
-                    throw new EcAlgorithmError(`Unsupported name '${derivedKeyType.name}' for algoritm in param 'derivedKeyType'`);
+                    throw new EcAlgorithmError(`Unsupported name '${derivedKeyType.name}' for algorithm in param 'derivedKeyType'`);
             }
             resolve(undefined);
         });

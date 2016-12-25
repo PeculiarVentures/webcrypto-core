@@ -6,13 +6,13 @@ export const ShaAlgorithms = [AlgorithmNames.Sha1, AlgorithmNames.Sha256, Algori
 
 export class Sha extends BaseCrypto {
 
-    static checkAlgorithm(alg: Algorithm) {
+    static checkAlgorithm(alg: AlgorithmIdentifier) {
         let _alg: Algorithm;
         if (typeof alg === "string")
             _alg = { name: alg };
         else
             _alg = alg;
-        super.checkAlgorithm(alg);
+        super.checkAlgorithm(_alg);
         switch (_alg.name.toUpperCase()) {
             case AlgorithmNames.Sha1:
             case AlgorithmNames.Sha256:

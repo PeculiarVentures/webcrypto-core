@@ -10,6 +10,13 @@ export class Aes extends BaseCrypto {
     protected static ALG_NAME = "";
     protected static KEY_USAGES: string[] = [];
 
+    static checkKeyUsages(keyUsages: string[]) {
+        super.checkKeyUsages(keyUsages);
+        const wron_usage = keyUsages.filter(usage => this.KEY_USAGES.indexOf(usage) === -1);
+        if (wron_usage.length)
+            throw new AlgorithmError(AlgorithmError.WRONG_USAGE, wron_usage.join(", "));
+    }
+
     static checkAlgorithm(alg: Algorithm) {
         if (alg.name.toUpperCase() !== this.ALG_NAME.toUpperCase())
             throw new AlgorithmError(AlgorithmError.WRONG_ALG_NAME, alg.name, this.ALG_NAME);

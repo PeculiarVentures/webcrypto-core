@@ -14,4 +14,5 @@ export const AlgorithmNames = {
     EcDSA: "ECDSA",
     EcDH: "ECDH",
     Hmac: "HMAC",
+    Pbkdf2: "PBKDF2",
 };

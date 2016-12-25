@@ -44,6 +44,7 @@ export class AlgorithmError extends WebCryptoError {
     static PARAM_WRONG_VALUE = "Algorithm has got wrong value for paramter '%1'. Must be %2";
     static WRONG_ALG_NAME = "Algorithm has got wrong name '%1'. Must be '%2'";
     static UNSUPPORTED_ALGORITHM = "Algorithm '%1' is not supported";
+    static WRONG_USAGE = "Algorithm doesn't support key usage '%1'";
 }
 
 export class CryptoKeyError extends WebCryptoError {

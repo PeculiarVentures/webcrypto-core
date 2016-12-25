@@ -33,6 +33,11 @@ function deriveKey(alg, key, derAlg, usages, done, error) {
 }
 module.exports.deriveKey = deriveKey;
 
+function deriveBits(alg, key, length, done, error) {
+    checkPromise(subtle.deriveBits(alg, key, length), done, error);
+}
+module.exports.deriveBits = deriveBits;
+
 function generate(alg, keyUsages, done, error) {
     checkPromise(subtle.generateKey(alg, false, keyUsages), done, error);
 }
