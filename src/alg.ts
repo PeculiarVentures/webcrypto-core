@@ -6,6 +6,7 @@ export const AlgorithmNames = {
     AesCMAC: "AES-CMAC",
     AesGCM: "AES-GCM",
     AesCBC: "AES-CBC",
+    AesKW: "AES-KW",
     Sha1: "SHA-1",
     Sha256: "SHA-256",
     Sha384: "SHA-384",

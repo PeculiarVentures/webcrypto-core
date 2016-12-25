@@ -4,7 +4,7 @@ import { AlgorithmNames } from "./alg";
 
 import { Sha } from "./sha/crypto";
 import { RsaOAEP, RsaPSS, RsaSSA } from "./rsa/crypto";
-import { AesCBC, AesCTR, AesGCM } from "./aes/crypto";
+import { AesCBC, AesCTR, AesGCM, AesKW } from "./aes/crypto";
 import { EcDH, EcDSA } from "./ec/crypto";
 import { Hmac } from "./hmac/crypto";
 
@@ -35,6 +35,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.AesGCM.toUpperCase():
                     Class = AesGCM;
+                    break;
+                case AlgorithmNames.AesKW.toUpperCase():
+                    Class = AesKW;
                     break;
                 case AlgorithmNames.EcDSA.toUpperCase():
                     Class = EcDSA;
@@ -238,6 +241,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.AesGCM.toUpperCase():
                     Class = AesGCM;
                     break;
+                case AlgorithmNames.AesKW.toUpperCase():
+                    Class = AesKW;
+                    break;
                 case AlgorithmNames.EcDSA.toUpperCase():
                     Class = EcDSA;
                     break;
@@ -281,6 +287,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.AesGCM.toUpperCase():
                     Class = AesGCM;
                     break;
+                case AlgorithmNames.AesKW.toUpperCase():
+                    Class = AesKW;
+                    break;
                 case AlgorithmNames.EcDSA.toUpperCase():
                     Class = EcDSA;
                     break;
@@ -314,6 +323,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.AesGCM.toUpperCase():
                     Class = AesGCM;
                     break;
+                case AlgorithmNames.AesKW.toUpperCase():
+                    Class = AesKW;
+                    break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
             }
@@ -339,6 +351,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.AesGCM.toUpperCase():
                     Class = AesGCM;
+                    break;
+                case AlgorithmNames.AesKW.toUpperCase():
+                    Class = AesKW;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, unwrapAlg.name);

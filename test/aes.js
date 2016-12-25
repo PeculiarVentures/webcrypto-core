@@ -9,65 +9,65 @@ var importKey = helper.importKey;
 var wrapKey = helper.wrapKey;
 var unwrapKey = helper.unwrapKey;
 
-describe("Subtle", function() {
+describe("Subtle", function () {
 
-    context("AES", function() {
+    context("AES", function () {
 
         var algs = ["AES-CBC", "AES-CTR", "AES-GCM"];
-        algs.forEach(function(alg) {
+        algs.forEach(function (alg) {
 
-            it(alg + " generate 128", function(done) {
+            it(alg + " generate 128", function (done) {
                 generate({ name: alg, length: 128 }, ["encrypt", "decrypt", "wrapKey", "unwrapKey"], done, false);
             });
-            it(alg + " generate 192", function(done) {
+            it(alg + " generate 192", function (done) {
                 generate({ name: alg, length: 192 }, ["encrypt", "decrypt", "wrapKey", "unwrapKey"], done, false);
             });
-            it(alg + " generate 256", function(done) {
+            it(alg + " generate 256", function (done) {
                 generate({ name: alg, length: 256 }, ["encrypt", "decrypt", "wrapKey", "unwrapKey"], done, false);
             });
-            it(alg + " generate 111, wrong length", function(done) {
+            it(alg + " generate 111, wrong length", function (done) {
                 generate({ name: alg, length: 111 }, ["encrypt", "decrypt", "wrapKey", "unwrapKey"], done, true);
             });
-            it(alg + " generate with wrong key usage", function(done) {
+            it(alg + " generate with wrong key usage", function (done) {
                 generate({ name: alg, length: 256 }, ["sign"], done, true);
             });
-            it(alg + " generate with key usage = null", function(done) {
+            it(alg + " generate with key usage = null", function (done) {
                 generate({ name: alg, length: 256 }, null, done, true);
             });
-            it(alg + " generate with empty key usage", function(done) {
+            it(alg + " generate with empty key usage", function (done) {
                 generate({ name: alg, length: 256 }, [], done, true);
             });
-            it(alg + " export raw", function(done) {
+            it(alg + " export raw", function (done) {
                 var key = { algorithm: { name: alg }, type: "secret", extractable: true };
                 exportKey("raw", key, done, false);
             });
-            it(alg + " export jwk", function(done) {
+            it(alg + " export jwk", function (done) {
                 var key = { algorithm: { name: alg }, type: "secret", extractable: true };
                 exportKey("jwk", key, done, false);
             });
-            it(alg + " export pkcs8, wrong format", function(done) {
+            it(alg + " export pkcs8, wrong format", function (done) {
                 var key = { algorithm: { name: alg }, type: "secret", extractable: true };
                 exportKey("pkcs8", key, done, true);
             });
-            it(alg + " import jwk", function(done) {
+            it(alg + " import jwk", function (done) {
                 var _alg = { name: alg };
                 importKey("jwk", new Uint8Array(3), _alg, ["encrypt"], done, false);
             });
-            it(alg + " import raw", function(done) {
+            it(alg + " import raw", function (done) {
                 var _alg = { name: alg };
                 importKey("raw", new Uint8Array(3), _alg, ["encrypt"], done, false);
             });
-            it(alg + " import pkcs8, wrong format", function(done) {
+            it(alg + " import pkcs8, wrong format", function (done) {
                 var _alg = { name: alg };
                 importKey("pkcs8", new Uint8Array(3), _alg, ["encrypt"], done, true);
             });
-            it(alg + " import raw, wrong key usage", function(done) {
+            it(alg + " import raw, wrong key usage", function (done) {
                 var _alg = { name: alg };
                 importKey("raw", new Uint8Array(3), _alg, ["sign"], done, true);
             });
         });
 
-        it("AES-CBC encrypt", function(done) {
+        it("AES-CBC encrypt", function (done) {
             var alg = { name: "AES-CBC", iv: new Uint8Array(16) };
             var key = {
                 algorithm: { name: "AES-CBC" },
@@ -76,7 +76,7 @@ describe("Subtle", function() {
             };
             encrypt("encrypt", alg, key, done, false);
         });
-        it("AES-CBC decrypt", function(done) {
+        it("AES-CBC decrypt", function (done) {
             var alg = { name: "AES-CBC", iv: new Uint8Array(16) };
             var key = {
                 algorithm: { name: "AES-CBC" },
@@ -85,7 +85,7 @@ describe("Subtle", function() {
             };
             encrypt("decrypt", alg, key, done, false);
         });
-        it("AES-CBC decrypt, wrong key", function(done) {
+        it("AES-CBC decrypt, wrong key", function (done) {
             var alg = { name: "AES-CBC", iv: new Uint8Array(16) };
             var key = {
                 algorithm: { name: "AES-GCM" },
@@ -94,7 +94,7 @@ describe("Subtle", function() {
             };
             encrypt("decrypt", alg, key, done, true);
         });
-        it("AES-CBC decrypt, wrong alg param, iv size 15", function(done) {
+        it("AES-CBC decrypt, wrong alg param, iv size 15", function (done) {
             var alg = { name: "AES-CBC", iv: new Uint8Array(15) };
             var key = {
                 algorithm: { name: "AES-CBC" },
@@ -103,7 +103,7 @@ describe("Subtle", function() {
             };
             encrypt("decrypt", alg, key, done, true);
         });
-        it("AES-CBC decrypt, wrong key usage", function(done) {
+        it("AES-CBC decrypt, wrong key usage", function (done) {
             var alg = { name: "AES-CBC", iv: new Uint8Array(16) };
             var key = {
                 algorithm: { name: "AES-CBC" },
@@ -112,7 +112,7 @@ describe("Subtle", function() {
             };
             encrypt("decrypt", alg, key, done, true);
         });
-        it("AES-CTR encrypt", function(done) {
+        it("AES-CTR encrypt", function (done) {
             var alg = { name: "AES-CTR", counter: new Uint8Array(16), length: 1 };
             var key = {
                 algorithm: { name: "AES-CTR" },
@@ -121,7 +121,7 @@ describe("Subtle", function() {
             };
             encrypt("encrypt", alg, key, done, false);
         });
-        it("AES-CTR decrypt", function(done) {
+        it("AES-CTR decrypt", function (done) {
             var alg = { name: "AES-CTR", counter: new Uint8Array(16), length: 1 };
             var key = {
                 algorithm: { name: "AES-CTR" },
@@ -130,7 +130,7 @@ describe("Subtle", function() {
             };
             encrypt("decrypt", alg, key, done, false);
         });
-        it("AES-CTR decrypt, wrong alg param, counter size 15", function(done) {
+        it("AES-CTR decrypt, wrong alg param, counter size 15", function (done) {
             var alg = { name: "AES-CTR", counter: new Uint8Array(15), length: 1 };
             var key = {
                 algorithm: { name: "AES-CTR" },
@@ -139,7 +139,7 @@ describe("Subtle", function() {
             };
             encrypt("decrypt", alg, key, done, true);
         });
-        it("AES-CTR decrypt, wrong alg param, length", function(done) {
+        it("AES-CTR decrypt, wrong alg param, length", function (done) {
             var alg = { name: "AES-CTR", counter: new Uint8Array(16), length: 256 };
             var key = {
                 algorithm: { name: "AES-CTR" },
@@ -149,7 +149,7 @@ describe("Subtle", function() {
             encrypt("decrypt", alg, key, done, true);
         });
 
-        it("AES-CTR wrapKey", function(done) {
+        it("AES-CTR wrapKey", function (done) {
             var alg = { name: "AES-CTR", counter: new Uint8Array(16), length: 1 };
             var key = {
                 algorithm: { name: "AES-CTR" },
@@ -165,7 +165,7 @@ describe("Subtle", function() {
             wrapKey("jwk", alg, key, wkey, done, false);
         });
 
-        it("AES-CTR unwrapKey", function(done) {
+        it("AES-CTR unwrapKey", function (done) {
             var alg = { name: "AES-CTR", counter: new Uint8Array(16), length: 1 };
             var kalg = { name: "RSA-OAEP", hash: "SHA-1" };
             var key = {
@@ -255,6 +255,88 @@ describe("Subtle", function() {
                     };
                     encrypt(type, alg, key, done, false);
                 });
+            });
+
+        });
+
+        context("AES-KW", () => {
+
+            context("generate", () => {
+
+                [
+                    { length: 128, error: false },
+                    { length: 192, error: false },
+                    { length: 256, error: false },
+                    { length: 129, error: true },
+                ].forEach(params => {
+                    it(`length: ${params.length}`, done => {
+                        generate({ name: "AES-KW", length: params.length }, ["wrapKey", "unwrapKey"], done, params.error);
+                    });
+                });
+
+            });
+
+            context("exportKey", () => {
+
+                // keyLength
+                [128, 192, 256].forEach(keyLength => {
+                    // format
+                    ["jwk", "raw"].forEach(format => {
+                        it(`length: ${keyLength} ${format}`, done => {
+                            exportKey(
+                                format,
+                                { type: "secret", algorithm: { name: "AES-KW", length: keyLength }, extractable: true, usages: ["wrapKey", "unwrapKey"] },
+                                done,
+                                false
+                            );
+                        });
+                    })
+                });
+            });
+
+            context("wrapKey", () => {
+
+                // keyLength
+                [128, 192, 256].forEach(keyLength => {
+                    // format
+                    ["jwk", "pkcs8"].forEach(format => {
+                        it(`length: ${keyLength} ${format}`, done => {
+                            wrapKey(
+                                format,
+                                { name: "AES-KW" },
+                                { type: "secret", algorithm: { name: "AES-KW", length: keyLength }, extractable: true, usages: ["wrapKey", "unwrapKey"] },
+                                { type: "private", algorithm: { name: "RSASSA-PKCS1-v1_5" }, extractable: true, usages: ["sign"] },
+                                done,
+                                false
+                            );
+                        });
+                    });
+                });
+
+            });
+
+            context("unwrapKey", () => {
+
+                // keyLength
+                [128, 192, 256].forEach(keyLength => {
+                    // format
+                    ["jwk", "pkcs8"].forEach(format => {
+                        it(`length: ${keyLength} ${format}`, done => {
+                            unwrapKey(
+                                format,
+                                new Uint8Array([1, 2, 3]),
+                                { type: "secret", algorithm: { name: "AES-KW", length: keyLength }, extractable: true, usages: ["wrapKey", "unwrapKey"] },
+                                { name: "AES-KW" },
+                                { name: "RSASSA-PKCS1-v1_5" },
+                                true,
+                                ["sign"],
+                                done,
+                                false
+                            );
+                        });
+                    });
+                });
+
             });
 
         });

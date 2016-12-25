@@ -73,23 +73,7 @@ export class AesAlgorithmError extends AlgorithmError {
     code = 8;
 }
 
-export class AesEncrypt extends Aes {
-    protected static KEY_USAGES: string[] = ["encrypt", "decrypt", "wrapKey", "unwrapKey"];
-
-    static encrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer> {
-        return new Promise((resolve, reject) => {
-            this.checkAlgorithmParams(algorithm);
-            this.checkKey(key, this.ALG_NAME, "secret", "encrypt");
-            resolve(undefined);
-        });
-    }
-    static decrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer> {
-        return new Promise((resolve, reject) => {
-            this.checkAlgorithmParams(algorithm);
-            this.checkKey(key, this.ALG_NAME, "secret", "decrypt");
-            resolve(undefined);
-        });
-    }
+export class AesWrapKey extends Aes {
     static wrapKey(format: string, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: Algorithm): PromiseLike<ArrayBuffer> {
         return new Promise((resolve, reject) => {
             this.checkAlgorithmParams(wrapAlgorithm);
@@ -106,6 +90,25 @@ export class AesEncrypt extends Aes {
             this.checkFormat(format);
             // TODO check unwrappedKeyAlgorithm
             // TODO check keyUSages
+            resolve(undefined);
+        });
+    }
+}
+
+export class AesEncrypt extends AesWrapKey {
+    protected static KEY_USAGES: string[] = ["encrypt", "decrypt", "wrapKey", "unwrapKey"];
+
+    static encrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer> {
+        return new Promise((resolve, reject) => {
+            this.checkAlgorithmParams(algorithm);
+            this.checkKey(key, this.ALG_NAME, "secret", "encrypt");
+            resolve(undefined);
+        });
+    }
+    static decrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer> {
+        return new Promise((resolve, reject) => {
+            this.checkAlgorithmParams(algorithm);
+            this.checkKey(key, this.ALG_NAME, "secret", "decrypt");
             resolve(undefined);
         });
     }
@@ -155,6 +158,16 @@ export class AesGCM extends AesEncrypt {
         if (alg.tagLength)
             if (!(alg.tagLength >= 0 && alg.tagLength <= 128))
                 throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_VALUE, "tagLength", "number [0-128]");
+    }
+
+}
+
+export class AesKW extends AesWrapKey {
+    protected static ALG_NAME = AlgorithmNames.AesKW;
+    protected static KEY_USAGES: string[] = ["wrapKey", "unwrapKey"];
+
+    static checkAlgorithmParams(alg: AesGcmParams) {
+        this.checkAlgorithm(alg);
     }
 
 }
