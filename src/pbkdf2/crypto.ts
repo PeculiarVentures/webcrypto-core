@@ -41,7 +41,7 @@ export class Pbkdf2 extends BaseCrypto {
         return Promise.resolve()
             .then(() => {
                 this.checkAlgorithm(algorithm);
-            });
+            }) as any;
     }
 
     static importKey(format: string, keyData: JsonWebKey | BufferSource, algorithm: string | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
@@ -52,7 +52,7 @@ export class Pbkdf2 extends BaseCrypto {
                 if (!(format.toLowerCase() === "jwk" || format.toLowerCase() === "raw"))
                     throw new CryptoKeyError(CryptoKeyError.ALLOWED_FORMAT, format, "'jwk' or 'raw'");
                 this.checkKeyUsages(keyUsages);
-            });
+            })  as any;
     }
 
     static deriveKey(algorithm: Pbkdf2Params, baseKey: CryptoKey, derivedKeyType: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
@@ -86,7 +86,7 @@ export class Pbkdf2 extends BaseCrypto {
                     default:
                         throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, derivedKeyType);
                 }
-            });
+            }) as any;
     }
     static deriveBits(algorithm: Pbkdf2Params, baseKey: CryptoKey, length: number): PromiseLike<ArrayBuffer> {
         return Promise.resolve()
@@ -95,6 +95,6 @@ export class Pbkdf2 extends BaseCrypto {
                 this.checkKey(baseKey, this.ALG_NAME, "secret", "deriveBits");
                 if (!(length && typeof length === "number"))
                     throw new WebCryptoError("Parameter 'length' must be Number and more than 0");
-            });
+            }) as any;
     }
 }
