@@ -9,14 +9,6 @@ var deriveBits = helper.deriveBits;
 
 context("PBKDF2", () => {
 
-    context("generateKey", () => {
-
-        it("default", done => {
-            generate({ name: "PBKDF2" }, ["deriveKey", "deriveBits"], done, false);
-        });
-
-    });
-
     context("importKey", () => {
         it("jwk", done => {
             importKey("jwk", {}, { name: "PBKDF2" }, ["deriveKey", "deriveBits"], done, false);

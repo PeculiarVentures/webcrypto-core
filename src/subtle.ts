@@ -49,9 +49,6 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.Hmac.toUpperCase():
                     Class = Hmac;
                     break;
-                case AlgorithmNames.Pbkdf2.toUpperCase():
-                    Class = Pbkdf2;
-                    break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
             }

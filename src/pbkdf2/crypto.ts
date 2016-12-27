@@ -37,16 +37,11 @@ export class Pbkdf2 extends BaseCrypto {
         Sha.checkAlgorithm(hash);
     }
 
-    static generateKey(algorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey | CryptoKeyPair> {
-        return Promise.resolve()
-            .then(() => {
-                this.checkAlgorithm(algorithm);
-            }) as any;
-    }
-
     static importKey(format: string, keyData: JsonWebKey | BufferSource, algorithm: string | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
         return Promise.resolve()
             .then(() => {
+                if (extractable)
+                    throw new WebCryptoError("KDF keys must set extractable=false");
                 this.checkAlgorithm(algorithm as Algorithm);
                 this.checkFormat(format);
                 if (!(format.toLowerCase() === "jwk" || format.toLowerCase() === "raw"))
