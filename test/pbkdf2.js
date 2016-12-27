@@ -10,14 +10,14 @@ var deriveBits = helper.deriveBits;
 context("PBKDF2", () => {
 
     context("importKey", () => {
-        it("jwk", done => {
-            importKey("jwk", {}, { name: "PBKDF2" }, ["deriveKey", "deriveBits"], done, false);
-        });
         it("raw", done => {
-            importKey("raw", new Uint8Array([1, 2, 3]), { name: "PBKDF2" }, ["deriveKey", "deriveBits"], done, false);
+            importKey("raw", new Uint8Array([1, 2, 3]), { name: "PBKDF2" }, ["deriveKey", "deriveBits"], done, false, false);
+        });
+        it("extractable true", done => {
+            importKey("raw", new Uint8Array([1, 2, 3]), { name: "PBKDF2" }, ["deriveKey", "deriveBits"], done, true, true);
         });
         it("wrong format", done => {
-            importKey("pkcs8", new Uint8Array([1, 2, 3]), { name: "PBKDF2" }, ["deriveKey", "deriveBits"], done, true);
+            importKey("pkcs8", new Uint8Array([1, 2, 3]), { name: "PBKDF2" }, ["deriveKey", "deriveBits"], done, true, false);
         });
     });
 

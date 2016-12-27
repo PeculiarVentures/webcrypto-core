@@ -53,8 +53,10 @@ function exportKey(format, key, done, error) {
 }
 module.exports.exportKey = exportKey;
 
-function importKey(format, keyData, alg, keyUsages, done, error) {
-    checkPromise(subtle.importKey(format, keyData, alg, true, keyUsages), done, error);
+function importKey(format, keyData, alg, keyUsages, done, error, extractable) {
+    if (extractable === void 0)
+        extractable = true;
+    checkPromise(subtle.importKey(format, keyData, alg, extractable, keyUsages), done, error);
 }
 module.exports.importKey = importKey;
 

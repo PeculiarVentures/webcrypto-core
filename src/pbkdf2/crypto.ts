@@ -44,8 +44,8 @@ export class Pbkdf2 extends BaseCrypto {
                     throw new WebCryptoError("KDF keys must set extractable=false");
                 this.checkAlgorithm(algorithm as Algorithm);
                 this.checkFormat(format);
-                if (!(format.toLowerCase() === "jwk" || format.toLowerCase() === "raw"))
-                    throw new CryptoKeyError(CryptoKeyError.ALLOWED_FORMAT, format, "'jwk' or 'raw'");
+                if (format.toLowerCase() !== "raw")
+                    throw new CryptoKeyError(CryptoKeyError.ALLOWED_FORMAT, format, "'raw'");
                 this.checkKeyUsages(keyUsages);
             })  as any;
     }
