@@ -69,7 +69,7 @@ export class BaseCrypto {
     static checkFormat(format: string, type?: string) {
         switch (format.toLowerCase()) {
             case "raw":
-                if (type && type.toLowerCase() !== "secret")
+                if (type && type.toLowerCase() !== "secret" && type && type.toLowerCase() !== "public")
                     throw new CryptoKeyError(CryptoKeyError.WRONG_FORMAT, type, "raw");
                 break;
             case "pkcs8":

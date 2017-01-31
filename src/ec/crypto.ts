@@ -65,8 +65,6 @@ export class Ec extends BaseCrypto {
         return new Promise((resolve, reject) => {
             this.checkKeyGenParams(algorithm);
             this.checkFormat(format);
-            if (format.toLowerCase() === "raw")
-                throw new CryptoKeyError(CryptoKeyError.ALLOWED_FORMAT, format, "'JsonWebKey', 'pkcs8' or 'spki'");
             this.checkKeyGenUsages(keyUsages);
             resolve(undefined);
         });

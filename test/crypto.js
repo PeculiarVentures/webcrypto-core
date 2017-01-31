@@ -118,9 +118,15 @@ describe("Webcrypto", () => {
         context("checkFormat", () => {
             var checkFormat = BaseCrypto.checkFormat;
 
-            ["public", "private"].forEach(type =>
+            ["private"].forEach(type =>
                 it(`raw for ${type}`, () => {
-                    assert.throws(() => checkFormat("rAw", type), Error);
+                    assert.throws(() => checkFormat("raw", type), Error);
+                })
+            );
+
+            ["private"].forEach(type =>
+                it(`jwk for ${type}`, () => {
+                    assert.throws(() => checkFormat("raw", type), Error);
                 })
             );
 

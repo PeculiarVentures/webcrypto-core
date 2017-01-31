@@ -281,7 +281,15 @@ describe("Subtle", function () {
 
         }); // deriveKey
 
-        context("import/export", function () {
+        context("import/export ECDSA", function () {
+
+            it("import raw", function (done) {
+                var alg = {
+                    name: "ecdsa",
+                    namedCurve: "p-256"
+                }
+                importKey("raw", {}, alg, ["sign"], done, false);
+            });
 
             it("import jwk", function (done) {
                 var alg = {
@@ -316,6 +324,17 @@ describe("Subtle", function () {
             });
 
             // export
+
+            it("export raw", function (done) {
+                var key = {
+                    algorithm: {
+                        name: "ecdsa"
+                    },
+                    type: "public",
+                    extractable: true
+                };
+                exportKey("raw", key, done, false);
+            });
 
             it("export", function (done) {
                 var key = {
