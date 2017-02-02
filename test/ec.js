@@ -20,7 +20,7 @@ describe("Subtle", function () {
             ["ecdsa", "ecdh"]
                 .forEach(function (alg) {
 
-                    ["P-256", "P-384", "P-521", "Wrong curve"]
+                    ["P-256", "P-384", "P-521", "X25519", "Wrong curve"]
                         .forEach(function (namedCurve, index) {
 
                             it(alg + " " + namedCurve, function (done) {
@@ -28,7 +28,7 @@ describe("Subtle", function () {
                                     name: alg,
                                     namedCurve: namedCurve
                                 };
-                                generate(_alg, keyUsages[alg], done, index === 3)
+                                generate(_alg, keyUsages[alg], done, index === 4)
                             });
 
                         });
@@ -316,27 +316,45 @@ describe("Subtle", function () {
             });
 
             // export
+            context("export", function () {
 
-            it("export", function (done) {
-                var key = {
-                    algorithm: {
-                        name: "ecdsa"
-                    },
-                    type: "public",
-                    extractable: true
-                };
-                exportKey("jwk", key, done, false);
-            });
+                ["jwk", "spki", "raw", "pkcs8"].forEach(function (format) {
+                    it(format, function (done) {
+                        var key = {
+                            algorithm: {
+                                name: "ecdsa"
+                            },
+                            type: "public",
+                            extractable: true
+                        };
+                        exportKey(format, key, done, format === "pkcs8");
+                    });
+                });
+                
+                ["jwk", "pkcs8", "spki", "raw"].forEach(function (format) {
+                    it(format, function (done) {
+                        var key = {
+                            algorithm: {
+                                name: "ecdsa"
+                            },
+                            type: "private",
+                            extractable: true
+                        };
+                        exportKey(format, key, done, format === "spki" || format === "raw");
+                    });
+                });
 
-            it("export not extractable", function (done) {
-                var key = {
-                    algorithm: {
-                        name: "ecdsa"
-                    },
-                    type: "public",
-                    extractable: false
-                };
-                exportKey("jwk", key, done, true);
+                it("not extractable", function (done) {
+                    var key = {
+                        algorithm: {
+                            name: "ecdsa"
+                        },
+                        type: "public",
+                        extractable: false
+                    };
+                    exportKey("jwk", key, done, true);
+                });
+
             });
 
         }); // import/export

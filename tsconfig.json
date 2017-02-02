@@ -11,7 +11,8 @@
         "declaration": false,
         "sourceMap": false,
         "outDir": "build",
-        "pretty": true
+        "pretty": true,
+        "importHelpers": true
     },
     "exclude": [
         "node_modules",
