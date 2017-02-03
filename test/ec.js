@@ -324,38 +324,47 @@ describe("Subtle", function () {
             });
 
             // export
+            context("export", function () {
 
-            it("export raw", function (done) {
-                var key = {
-                    algorithm: {
-                        name: "ecdsa"
-                    },
-                    type: "public",
-                    extractable: true
-                };
-                exportKey("raw", key, done, false);
-            });
+                // Test export of public keys
+                ["jwk", "spki", "raw", "pkcs8"].forEach(function (format) {
+                    it(format, function (done) {
+                        var key = {
+                            algorithm: {
+                                name: "ecdsa"
+                            },
+                            type: "public",
+                            extractable: true
+                        };
+                        exportKey(format, key, done, format === "pkcs8"); // pkcs8 only for private!
+                    });
+                });
+                
+                // Test export of private keys
+                ["jwk", "pkcs8", "spki", "raw"].forEach(function (format) {
+                    it(format, function (done) {
+                        var key = {
+                            algorithm: {
+                                name: "ecdsa"
+                            },
+                            type: "private",
+                            extractable: true
+                        };
+                        exportKey(format, key, done, format === "spki" || format === "raw"); // spki & raw only for public
+                    });
+                });
 
-            it("export", function (done) {
-                var key = {
-                    algorithm: {
-                        name: "ecdsa"
-                    },
-                    type: "public",
-                    extractable: true
-                };
-                exportKey("jwk", key, done, false);
-            });
+                it("not extractable", function (done) {
+                    var key = {
+                        algorithm: {
+                            name: "ecdsa"
+                        },
+                        type: "public",
+                        extractable: false
+                    };
+                    exportKey("jwk", key, done, true);
+                });
 
-            it("export not extractable", function (done) {
-                var key = {
-                    algorithm: {
-                        name: "ecdsa"
-                    },
-                    type: "public",
-                    extractable: false
-                };
-                exportKey("jwk", key, done, true);
             });
 
         }); // import/export ECDSA

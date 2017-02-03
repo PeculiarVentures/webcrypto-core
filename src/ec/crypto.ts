@@ -57,7 +57,9 @@ export class Ec extends BaseCrypto {
     static exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer> {
         return new Promise((resolve, reject) => {
             this.checkKey(key, this.ALG_NAME);
-            this.checkFormat(format, key.type);
+            if (!(format && format.toLowerCase() === "raw" && key.type === "public")) {
+                this.checkFormat(format, key.type);
+            }
             resolve(undefined);
         });
     }
