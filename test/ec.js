@@ -281,7 +281,15 @@ describe("Subtle", function () {
 
         }); // deriveKey
 
-        context("import/export", function () {
+        context("import/export ECDSA", function () {
+
+            it("import raw", function (done) {
+                var alg = {
+                    name: "ecdsa",
+                    namedCurve: "p-256"
+                }
+                importKey("raw", {}, alg, ["sign"], done, false);
+            });
 
             it("import jwk", function (done) {
                 var alg = {
@@ -318,6 +326,7 @@ describe("Subtle", function () {
             // export
             context("export", function () {
 
+                // Test export of public keys
                 ["jwk", "spki", "raw", "pkcs8"].forEach(function (format) {
                     it(format, function (done) {
                         var key = {
@@ -327,10 +336,11 @@ describe("Subtle", function () {
                             type: "public",
                             extractable: true
                         };
-                        exportKey(format, key, done, format === "pkcs8");
+                        exportKey(format, key, done, format === "pkcs8"); // pkcs8 only for private!
                     });
                 });
                 
+                // Test export of private keys
                 ["jwk", "pkcs8", "spki", "raw"].forEach(function (format) {
                     it(format, function (done) {
                         var key = {
@@ -340,7 +350,7 @@ describe("Subtle", function () {
                             type: "private",
                             extractable: true
                         };
-                        exportKey(format, key, done, format === "spki" || format === "raw");
+                        exportKey(format, key, done, format === "spki" || format === "raw"); // spki & raw only for public
                     });
                 });
 
@@ -357,7 +367,86 @@ describe("Subtle", function () {
 
             });
 
-        }); // import/export
+        }); // import/export ECDSA
+			
+        context("import/export ECDH", function () {
+
+            it("import raw", function (done) {
+                var alg = {
+                    name: "ecdh",
+                    namedCurve: "p-256"
+                }
+                importKey("raw", {}, alg, ["deriveKey", "deriveBits"], done, false);
+            });
+
+            it("import jwk", function (done) {
+                var alg = {
+                    name: "ecdh",
+                    namedCurve: "p-256"
+                }
+                importKey("jwk", {}, alg, ["deriveKey", "deriveBits"], done, false);
+            });
+
+            it("import spki", function (done) {
+                var alg = {
+                    name: "ecdh",
+                    namedCurve: "p-256"
+                }
+                importKey("spki", new Uint8Array(5), alg, ["deriveKey", "deriveBits"], done, false);
+            });
+
+            it("import wrong alg namedCurver", function (done) {
+                var alg = {
+                    name: "ecdh",
+                    namedCurve: "wrong"
+                }
+                importKey("jwk", {}, alg, ["deriveKey", "deriveBits"], done, true);
+            });
+
+            it("import", function (done) {
+                var alg = {
+                    name: "ecdh",
+                    namedCurve: "p-256"
+                }
+                importKey("jwk", {}, alg, ["deriveKey", "deriveBits"], done, false);
+            });
+
+            // export
+
+            it("export raw", function (done) {
+                var key = {
+                    algorithm: {
+                        name: "ecdh"
+                    },
+                    type: "public",
+                    extractable: true
+                };
+                exportKey("raw", key, done, false);
+            });
+
+            it("export", function (done) {
+                var key = {
+                    algorithm: {
+                        name: "ecdh"
+                    },
+                    type: "public",
+                    extractable: true
+                };
+                exportKey("jwk", key, done, false);
+            });
+
+            it("export not extractable", function (done) {
+                var key = {
+                    algorithm: {
+                        name: "ecdh"
+                    },
+                    type: "public",
+                    extractable: false
+                };
+                exportKey("jwk", key, done, true);
+            });
+
+        }); // import/export ECDSA			
 
     });
 
