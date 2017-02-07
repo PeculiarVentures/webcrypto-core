@@ -13,8 +13,8 @@ export default {
     banner: banner.join("\n"),
     targets: [
         {
-            dest: pkg.main,
-            format: "cjs",
+            dest: pkg.module,
+            format: "es",
         }
     ]
 };

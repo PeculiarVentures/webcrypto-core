@@ -2,22 +2,22 @@
   "name": "webcrypto-core",
   "version": "0.1.10",
   "description": "Common layer to be used by crypto libraries based on WebCrypto API for input validation.",
-  "main": "build/index.js",
+  "main": "dist/webcrypto-core.js",
+  "module": "dist/webcrypto-core.es.js",
   "types": "index.d.ts",
   "directories": {
     "test": "test"
   },
   "scripts": {
     "build": "npm run build:es5",
-    "build:es5": "tsc",
-    "build:es2015": "tsc -p tsconfig.es2015.json",
-    "build:rollup": "npm run build:es2015 && rollup -c",
-    "build:map": "tsc --sourcemap",
+    "build:es5": "rollup -c",
+    "build:map": "rollup -c -m",
+    "build:es2015": "rollup -c rollup.config.es.js",
+    "build:dist": "npm run build:es5 && npm run build:es2015",
     "build:source": "tsc --declaration --declarationDir types",
-    "pretest": "npm run build:map",
     "test": "mocha test",
-    "install": "npm run build",
     "pub": "npm version patch && npm publish && git push",
+    "precoverage": "npm run build:map",
     "coverage": "nyc npm test",
     "precoveragehtml": "npm run coverage",
     "coveragehtml": "nyc report -r html",
@@ -42,15 +42,15 @@
   ],
   "dependencies": {
     "@types/node": "^6",
-    "tslib": "^1.5.0",
-    "typescript": "^2"
+    "tslib": "^1.5.0"
   },
   "devDependencies": {
-    "@types/node": "^6.0.62",
-    "babel-preset-es2015": "^6.18.0",
     "live-server": "^1",
     "npm-run-all": "^3",
     "nyc": "^8",
+    "rollup": "^0.41.4",
+    "rollup-plugin-typescript": "^0.8.1",
+    "typescript": "^2.1.5",
     "watch": "^0"
   },
   "author": "PeculiarVentures",

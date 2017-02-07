@@ -1,5 +1,8 @@
 .nyc_output
 .vscode
 build
+src
 node_modules
 coverage
+rollup.*.js
+ts*.js

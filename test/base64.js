@@ -1,4 +1,4 @@
-var Base64Url = require("../build/index").Base64Url;
+var Base64Url = require("../").Base64Url;
 var assert = require("assert");
 
 describe("Base64 URL", function(){

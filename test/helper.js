@@ -1,4 +1,4 @@
-var subtle = new (require("../build/index").SubtleCrypto);
+var subtle = new (require("../").SubtleCrypto);
 var assert = require("assert");
 
 module.exports.subtle = subtle; 
