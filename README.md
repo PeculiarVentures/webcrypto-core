@@ -30,11 +30,6 @@ rollup
 npm install rollup --global
 ```
 
-babel
-```
-npm install babel-cli --global
-```
-
 mocha
 ```
 npm install mocha --global
@@ -42,7 +37,7 @@ npm install mocha --global
 
 Single line command for all modules
 ```
-npm install typescript rollup babel-cli mocha --global
+npm install typescript rollup mocha --global
 ```
 
 ## Compilation 
@@ -66,5 +61,5 @@ npm test
 
 | Files                   | Size       |
 |-------------------------|------------|
-| webcrypto-core.js       | 58Kb       |
+| webcrypto-core.js       | 59Kb       |
 | webcrypto-core.min.js   | 25Kb       |

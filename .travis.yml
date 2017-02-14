@@ -22,11 +22,6 @@ before_install:
   - export TSD_GITHUB_TOKEN=8591f447276e1caa1b9636b9c8053d768130464f
   - node --version
   - npm --version
-  - npm install coveralls
-  - npm install babel-cli -g
-  - npm install rollup -g
-  - npm install typescript -g
-  - npm install mocha -g
 
 script:
   - npm run coverage

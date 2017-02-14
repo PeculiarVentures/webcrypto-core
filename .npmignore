@@ -5,4 +5,5 @@ src
 node_modules
 coverage
 rollup.*.js
-ts*.js
+ts*.json
+.travis.yml
