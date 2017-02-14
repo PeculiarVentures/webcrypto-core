@@ -1,28 +1,31 @@
-import { AlgorithmError, WebCryptoError, CryptoKeyError } from "../error";
-import { BaseCrypto } from "../base";
 import { AlgorithmNames } from "../alg";
+import { BaseCrypto } from "../base";
+import { AlgorithmError, CryptoKeyError, WebCryptoError } from "../error";
 
 class AesKeyGenParamsError extends AlgorithmError {
-    code = 7;
+    public code = 7;
 }
 
 export class Aes extends BaseCrypto {
-    protected static ALG_NAME = "";
-    protected static KEY_USAGES: string[] = [];
 
-    static checkKeyUsages(keyUsages: string[]) {
+    public static ALG_NAME = "";
+    public static KEY_USAGES: string[] = [];
+
+    public static checkKeyUsages(keyUsages: string[]) {
         super.checkKeyUsages(keyUsages);
-        const wron_usage = keyUsages.filter(usage => this.KEY_USAGES.indexOf(usage) === -1);
-        if (wron_usage.length)
-            throw new AlgorithmError(AlgorithmError.WRONG_USAGE, wron_usage.join(", "));
+        const wrongUsage = keyUsages.filter((usage) => this.KEY_USAGES.indexOf(usage) === -1);
+        if (wrongUsage.length) {
+            throw new AlgorithmError(AlgorithmError.WRONG_USAGE, wrongUsage.join(", "));
+        }
     }
 
-    static checkAlgorithm(alg: Algorithm) {
-        if (alg.name.toUpperCase() !== this.ALG_NAME.toUpperCase())
+    public static checkAlgorithm(alg: Algorithm) {
+        if (alg.name.toUpperCase() !== this.ALG_NAME.toUpperCase()) {
             throw new AlgorithmError(AlgorithmError.WRONG_ALG_NAME, alg.name, this.ALG_NAME);
+        }
     }
 
-    static checkKeyGenParams(alg: AesKeyGenParams) {
+    public static checkKeyGenParams(alg: AesKeyGenParams) {
         switch (alg.length) {
             case 128:
             case 192:
@@ -33,55 +36,42 @@ export class Aes extends BaseCrypto {
         }
     }
 
-    static checkKeyGenUsages(keyUsages: string[]) {
-        this.checkKeyUsages(keyUsages);
-
-        keyUsages.forEach(usage => {
-            let i = 0;
-            for (i; i < this.KEY_USAGES.length; i++)
-                if (this.KEY_USAGES[i].toLowerCase() === usage.toLowerCase()) {
-                    break;
-                }
-            if (i === this.KEY_USAGES.length)
-                throw new WebCryptoError(`Unsuported key usage '${usage}'. Should be one of [${this.KEY_USAGES.join(", ")}]`);
-        });
-
-    }
-
-    static generateKey(algorithm: AesKeyGenParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey | CryptoKeyPair> {
+    public static generateKey(algorithm: AesKeyGenParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey | CryptoKeyPair> {
         return new Promise((resolve, reject) => {
             this.checkAlgorithm(algorithm);
             this.checkKeyGenParams(algorithm);
-            this.checkKeyGenUsages(keyUsages);
+            this.checkKeyUsages(keyUsages);
             resolve(undefined);
         });
     }
 
-    static exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer> {
+    public static exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer> {
         return new Promise((resolve, reject) => {
             this.checkKey(key, this.ALG_NAME);
             this.checkFormat(format, key.type);
             resolve(undefined);
         });
     }
-    static importKey(format: string, keyData: JsonWebKey | Uint8Array, algorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
+    public static importKey(format: string, keyData: JsonWebKey | Uint8Array, algorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
         return new Promise((resolve, reject) => {
             this.checkAlgorithm(algorithm);
             this.checkFormat(format);
-            if (!(format.toLowerCase() === "raw" || format.toLowerCase() === "jwk"))
+            if (!(format.toLowerCase() === "raw" || format.toLowerCase() === "jwk")) {
                 throw new CryptoKeyError(CryptoKeyError.ALLOWED_FORMAT, format, "'jwk' or 'raw'");
-            this.checkKeyGenUsages(keyUsages);
+            }
+            this.checkKeyUsages(keyUsages);
             resolve(undefined);
         });
     }
 }
 
 export class AesAlgorithmError extends AlgorithmError {
-    code = 8;
+    public code = 8;
 }
 
 export class AesWrapKey extends Aes {
-    static wrapKey(format: string, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: Algorithm): PromiseLike<ArrayBuffer> {
+
+    public static wrapKey(format: string, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: Algorithm): PromiseLike<ArrayBuffer> {
         return new Promise((resolve, reject) => {
             this.checkAlgorithmParams(wrapAlgorithm);
             this.checkKey(wrappingKey, this.ALG_NAME, "secret", "wrapKey");
@@ -90,7 +80,8 @@ export class AesWrapKey extends Aes {
             resolve(undefined);
         });
     }
-    static unwrapKey(format: string, wrappedKey: Uint8Array, unwrappingKey: CryptoKey, unwrapAlgorithm: Algorithm, unwrappedKeyAlgorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
+
+    public static unwrapKey(format: string, wrappedKey: Uint8Array, unwrappingKey: CryptoKey, unwrapAlgorithm: Algorithm, unwrappedKeyAlgorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
         return new Promise((resolve, reject) => {
             this.checkAlgorithmParams(unwrapAlgorithm);
             this.checkKey(unwrappingKey, this.ALG_NAME, "secret", "unwrapKey");
@@ -100,80 +91,108 @@ export class AesWrapKey extends Aes {
             resolve(undefined);
         });
     }
+
 }
 
 export class AesEncrypt extends AesWrapKey {
-    protected static KEY_USAGES: string[] = ["encrypt", "decrypt", "wrapKey", "unwrapKey"];
 
-    static encrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer> {
+    public static KEY_USAGES: string[] = ["encrypt", "decrypt", "wrapKey", "unwrapKey"];
+
+    public static encrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer> {
         return new Promise((resolve, reject) => {
             this.checkAlgorithmParams(algorithm);
             this.checkKey(key, this.ALG_NAME, "secret", "encrypt");
             resolve(undefined);
         });
     }
-    static decrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer> {
+
+    public static decrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer> {
         return new Promise((resolve, reject) => {
             this.checkAlgorithmParams(algorithm);
             this.checkKey(key, this.ALG_NAME, "secret", "decrypt");
             resolve(undefined);
         });
     }
+
 }
 
 export class AesCBC extends AesEncrypt {
-    protected static ALG_NAME = AlgorithmNames.AesCBC;
 
-    static checkAlgorithmParams(alg: AesCbcParams) {
+    public static ALG_NAME = AlgorithmNames.AesCBC;
+
+    public static checkAlgorithmParams(alg: AesCbcParams) {
         this.checkAlgorithm(alg);
-        if (!alg.iv)
+        if (!alg.iv) {
             throw new AesAlgorithmError(AesAlgorithmError.PARAM_REQUIRED, "iv");
-        if (!ArrayBuffer.isView(alg.iv))
-            throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_TYPE, "iv", "ArrayBufferView");
-        if (alg.iv.byteLength !== 16)
-            throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_VALUE, "iv", "ArrayBufferView with size 16");
+        }
+        if (!(ArrayBuffer.isView(alg.iv) || alg.iv instanceof ArrayBuffer)) {
+            throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_TYPE, "iv", "ArrayBufferView or ArrayBuffer");
+        }
+        if (alg.iv.byteLength !== 16) {
+            throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_VALUE, "iv", "ArrayBufferView or ArrayBuffer with size 16");
+        }
     }
 
 }
 
 export class AesCTR extends AesEncrypt {
-    protected static ALG_NAME = AlgorithmNames.AesCTR;
 
-    static checkAlgorithmParams(alg: AesCtrParams) {
+    public static ALG_NAME = AlgorithmNames.AesCTR;
+
+    public static checkAlgorithmParams(alg: AesCtrParams) {
         this.checkAlgorithm(alg);
-        if (!(alg.counter && ArrayBuffer.isView(alg.counter)))
-            throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_TYPE, "counter", "ArrayBufferView");
-        if (alg.counter.byteLength !== 16)
-            throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_VALUE, "counter", "ArrayBufferView with size 16");
-        if (!(alg.length > 0 && alg.length <= 128))
+        if (!(alg.counter && (ArrayBuffer.isView(alg.counter) || alg.counter instanceof ArrayBuffer))) {
+            throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_TYPE, "counter", "ArrayBufferView or ArrayBuffer");
+        }
+        if (alg.counter.byteLength !== 16) {
+            throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_VALUE, "counter", "ArrayBufferView or ArrayBuffer with size 16");
+        }
+        if (!(alg.length > 0 && alg.length <= 128)) {
             throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_VALUE, "length", "number [1-128]");
+        }
     }
 
 }
-export class AesGCM extends AesEncrypt {
-    protected static ALG_NAME = AlgorithmNames.AesGCM;
 
-    static checkAlgorithmParams(alg: AesGcmParams) {
+export class AesGCM extends AesEncrypt {
+
+    public static ALG_NAME = AlgorithmNames.AesGCM;
+
+    public static checkAlgorithmParams(alg: AesGcmParams) {
         this.checkAlgorithm(alg);
-        if (alg.additionalData)
-            if (!ArrayBuffer.isView(alg.additionalData))
-                throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_TYPE, "additionalData", "ArrayBufferView");
-        if (!alg.iv)
+        if (alg.additionalData) {
+            if (!(ArrayBuffer.isView(alg.additionalData) || alg.additionalData instanceof ArrayBuffer)) {
+                throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_TYPE, "additionalData", "ArrayBufferView or ArrayBuffer");
+            }
+        }
+        // If the iv member of normalizedAlgorithm has a length greater than 2^64 - 1 bytes, then throw an OperationError.
+        if (!alg.iv) {
             throw new AesAlgorithmError(AesAlgorithmError.PARAM_REQUIRED, "iv");
-        if (!ArrayBuffer.isView(alg.iv))
-            throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_TYPE, "iv", "ArrayBufferView");
-        if (alg.tagLength)
-            if (!(alg.tagLength >= 0 && alg.tagLength <= 128))
-                throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_VALUE, "tagLength", "number [0-128]");
+        }
+        if (!(ArrayBuffer.isView(alg.iv) || alg.iv instanceof ArrayBuffer)) {
+            throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_TYPE, "iv", "ArrayBufferView or ArrayBuffer");
+        }
+        // If the tagLength member of normalizedAlgorithm is not present: Let tagLength be 128.
+        if (alg.tagLength) {
+            // If the tagLength member of normalizedAlgorithm is one of 32, 64, 96, 104, 112, 120 or 128:
+            // Let tagLength be equal to the tagLength member of normalizedAlgorithm
+            const ok = [32, 64, 96, 104, 112, 120, 128].some((tagLength) => {
+                return tagLength === alg.tagLength;
+            });
+            if (!ok) {
+                throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_VALUE, "tagLength", "32, 64, 96, 104, 112, 120 or 128");
+            }
+        }
     }
 
 }
 
 export class AesKW extends AesWrapKey {
-    protected static ALG_NAME = AlgorithmNames.AesKW;
-    protected static KEY_USAGES: string[] = ["wrapKey", "unwrapKey"];
 
-    static checkAlgorithmParams(alg: AesGcmParams) {
+    public static ALG_NAME = AlgorithmNames.AesKW;
+    public static KEY_USAGES: string[] = ["wrapKey", "unwrapKey"];
+
+    public static checkAlgorithmParams(alg: AesGcmParams) {
         this.checkAlgorithm(alg);
     }
 

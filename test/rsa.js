@@ -3,29 +3,35 @@ var assert = require("assert");
 var subtle = helper.subtle;
 var sign = helper.sign;
 var verify = helper.verify;
+var generate = helper.generate;
+var importKey = helper.importKey;
+var exportKey = helper.exportKey;
+var encrypt = helper.encrypt;
+var wrapKey = helper.wrapKey;
+var unwrapKey = helper.unwrapKey;
 
 describe("Subtle", function () {
     context("RSA", function (done) {
 
         context("generateKey", function (done) {
-            function generateKey(alg, keyUsages, done, error) {
-                var _error = true;
-                subtle.generateKey(alg, false, keyUsages)
-                    .then(function (res) {
-                        assert.equal(res, null);
-                        _error = false;
-                    })
-                    .catch(function (err) {
-                        assert.equal(!!err, error, err.message);
-                    })
-                    .then(function () {
-                        assert.equal(_error, error, "Must be error");
-                    })
-                    .then(done, done);
-            }
 
+            it("with wrong publicExponent type ArrayBuffer", function (done) {
+                generate({
+                    name: "rsassa-pkcs1-v1_5",
+                    hash: "SHA-256",
+                    modulusLength: 1024,
+                    publicExponent: new ArrayBuffer(3),
+                }, ["sign"], done, true);
+            });
+            it("without hash param", function (done) {
+                generate({
+                    name: "rsassa-pkcs1-v1_5",
+                    modulusLength: 1024,
+                    publicExponent: new Uint8Array([3]),
+                }, ["sign"], done, true);
+            });
             it("RSA generate RSASSA 1024 [3] sign", function (done) {
-                generateKey({
+                generate({
                     name: "rsassa-pkcs1-v1_5",
                     modulusLength: 1024,
                     publicExponent: new Uint8Array([3]),
@@ -33,7 +39,7 @@ describe("Subtle", function () {
                 }, ["sign"], done, false);
             });
             it("RSA generate RSASSA 2048 [1, 0, 1] verify", function (done) {
-                generateKey({
+                generate({
                     name: "rsassa-pkcs1-v1_5",
                     modulusLength: 2048,
                     publicExponent: new Uint8Array([1, 0, 1]),
@@ -41,7 +47,7 @@ describe("Subtle", function () {
                 }, ["verify"], done, false);
             });
             it("RSA generate RSASSA 4048 [1, 0, 1] sign,verify(upper case)", function (done) {
-                generateKey({
+                generate({
                     name: "rsassa-pkcs1-v1_5",
                     modulusLength: 4096,
                     publicExponent: new Uint8Array([1, 0, 1]),
@@ -49,14 +55,14 @@ describe("Subtle", function () {
                 }, ["VERIFY", "SiGn"], done, false);
             });
             it("RSA generate RSASSA empty modulusLength", function (done) {
-                generateKey({
+                generate({
                     name: "rsassa-pkcs1-v1_5",
                     publicExponent: new Uint8Array([1, 0, 1]),
                     hash: { name: "sha-256" }
                 }, ["verify", "sign"], done, true);
             });
             it("RSA generate RSASSA wrong modulusLength", function (done) {
-                generateKey({
+                generate({
                     name: "rsassa-pkcs1-v1_5",
                     modulusLength: 10,
                     publicExponent: new Uint8Array([1, 0, 1]),
@@ -64,14 +70,14 @@ describe("Subtle", function () {
                 }, ["verify", "verify"], done, true);
             });
             it("RSA generate RSASSA empty publicExponent", function (done) {
-                generateKey({
+                generate({
                     name: "rsassa-pkcs1-v1_5",
                     modulusLength: 1024,
                     hash: { name: "sha-256" }
                 }, ["verify", "sign"], done, true);
             });
             it("RSA generate RSASSA wrong publicExponent", function (done) {
-                generateKey({
+                generate({
                     name: "rsassa-pkcs1-v1_5",
                     modulusLength: 1024,
                     publicExponent: new Uint8Array([1, 1, 1]),
@@ -79,14 +85,14 @@ describe("Subtle", function () {
                 }, ["verify", "sign"], done, true);
             });
             it("RSA generate RSASSA empty hash", function (done) {
-                generateKey({
+                generate({
                     name: "rsassa-pkcs1-v1_5",
                     modulusLength: 1024,
                     publicExponent: new Uint8Array([1, 0, 1])
                 }, ["verify", "sign"], done, true);
             });
             it("RSA generate RSASSA wrong keyUsage", function (done) {
-                generateKey({
+                generate({
                     name: "rsassa-pkcs1-v1_5",
                     modulusLength: 1024,
                     publicExponent: new Uint8Array([1, 0, 1]),
@@ -94,7 +100,7 @@ describe("Subtle", function () {
                 }, ["verify", "sign", "encrypt"], done, true);
             });
             it("RSA generate PSS sign,verify", function (done) {
-                generateKey({
+                generate({
                     name: "rsa-pss",
                     modulusLength: 1024,
                     publicExponent: new Uint8Array([1, 0, 1]),
@@ -102,7 +108,7 @@ describe("Subtle", function () {
                 }, ["verify", "sign"], done, false);
             });
             it("RSA generate OAEP decrypt,encrypt,wrapKey,unwrapKey", function (done) {
-                generateKey({
+                generate({
                     name: "rsa-oaep",
                     modulusLength: 1024,
                     publicExponent: new Uint8Array([1, 0, 1]),
@@ -123,6 +129,17 @@ describe("Subtle", function () {
                     type: "private"
                 };
                 sign({ name: "RSASSA-PKCS1-v1_5" }, key, done, false);
+            });
+            it("RsaSSA verify", done => {
+                var key = {
+                    algorithm: {
+                        name: "RSASSA-PKCS1-v1_5",
+                        hash: { name: "sha-1" }
+                    },
+                    usages: ["verify"],
+                    type: "public"
+                };
+                verify({ name: "RSASSA-PKCS1-v1_5" }, key, done, false);
             });
             it("RsaSSA wrong type", function (done) {
                 var key = {
@@ -166,7 +183,7 @@ describe("Subtle", function () {
                     usages: ["sign"],
                     type: "private"
                 };
-                sign({ name: "RSA-PSS" }, key, done, false);
+                sign({ name: "RSA-PSS", saltLength: 8 }, key, done, false);
             });
             it("RsaPSS verify", function (done) {
                 var key = {
@@ -177,7 +194,18 @@ describe("Subtle", function () {
                     usages: ["verify"],
                     type: "public"
                 };
-                verify({ name: "RSA-PSS" }, key, done, false);
+                verify({ name: "RSA-PSS", saltLength: 8 }, key, done, false);
+            });
+            it("RsaPSS empty salt length", function (done) {
+                var key = {
+                    algorithm: {
+                        name: "RSA-PSS",
+                        hash: { name: "sha-1" }
+                    },
+                    usages: ["sign"],
+                    type: "private"
+                };
+                sign({ name: "RSA-PSS" }, key, done, true);
             });
             it("RsaPSS wrong salt length", function (done) {
                 var key = {
@@ -188,27 +216,11 @@ describe("Subtle", function () {
                     usages: ["sign"],
                     type: "private"
                 };
-                sign({ name: "RSA-PSS" }, key, done, false);
+                sign({ name: "RSA-PSS", saltLength: 9 }, key, done, true);
             });
         })
 
         context("encrypt/decrypt", function () {
-
-            function encrypt(func, alg, key, done, error) {
-                var _error = true;
-                subtle[func](alg, key, new Uint8Array([1, 2, 3]))
-                    .then(function (res) {
-                        assert.equal(res, null);
-                        _error = false;
-                    })
-                    .catch(function (err) {
-                        assert.equal(!!err, error, err.message);
-                    })
-                    .then(function () {
-                        assert.equal(_error, error, "Must be error");
-                    })
-                    .then(done, done);
-            }
 
             it("OAEP encrypt", function (done) {
                 var key = {
@@ -224,6 +236,36 @@ describe("Subtle", function () {
                     label: new Uint8Array([1, 2, 3, 4, 5, 6])
                 }
                 encrypt("encrypt", alg, key, done, false);
+            });
+            it("OAEP encrypt label ArrayBuffer", function (done) {
+                var key = {
+                    algorithm: {
+                        name: "RSA-OAEP",
+                        hash: { name: "sha-1" }
+                    },
+                    usages: ["encrypt"],
+                    type: "public"
+                };
+                var alg = {
+                    name: "RSA-OAEP",
+                    label: new ArrayBuffer(6)
+                }
+                encrypt("encrypt", alg, key, done, false);
+            });
+            it("OAEP encrypt label wrong type", function (done) {
+                var key = {
+                    algorithm: {
+                        name: "RSA-OAEP",
+                        hash: { name: "sha-1" }
+                    },
+                    usages: ["encrypt"],
+                    type: "public"
+                };
+                var alg = {
+                    name: "RSA-OAEP",
+                    label: "label"
+                }
+                encrypt("encrypt", alg, key, done, true);
             });
             it("OAEP decrypt", function (done) {
                 var key = {
@@ -287,38 +329,6 @@ describe("Subtle", function () {
 
         context("wrap/unwrap", function () {
 
-            function wrap(format, key, wKey, alg, done, error) {
-                var _error = true;
-                subtle.wrapKey(format, key, wKey, alg)
-                    .then(function (res) {
-                        assert.equal(res, null);
-                        _error = false;
-                    })
-                    .catch(function (err) {
-                        assert.equal(!!err, error, err.message);
-                    })
-                    .then(function () {
-                        assert.equal(_error, error, "Must be error");
-                    })
-                    .then(done, done);
-            }
-
-            function unwrap(format, wKey, wAlg, alg, usages, done, error) {
-                var _error = true;
-                subtle.unwrapKey(format, new Uint8Array([1]), wKey, wAlg, alg, true, usages)
-                    .then(function (res) {
-                        assert.equal(res, null);
-                        _error = false;
-                    })
-                    .catch(function (err) {
-                        assert.equal(!!err, error, err.message);
-                    })
-                    .then(function () {
-                        assert.equal(_error, error, "Must be error");
-                    })
-                    .then(done, done);
-            }
-
             it("OAEP wrap AES raw", function (done) {
                 var wkey = {
                     algorithm: { name: "rsa-oaep" },
@@ -333,7 +343,7 @@ describe("Subtle", function () {
                 var alg = {
                     name: 'rsa-oaep'
                 }
-                wrap("raw", key, wkey, alg, done, false);
+                wrapKey("raw", alg, key, wkey, done, false);
             });
             it("OAEP wrap AES jwk", function (done) {
                 var wkey = {
@@ -349,7 +359,7 @@ describe("Subtle", function () {
                 var alg = {
                     name: 'rsa-oaep'
                 }
-                wrap("jwk", key, wkey, alg, done, false);
+                wrapKey("jwk", alg, key, wkey, done, false);
             });
             it("OAEP wrap AES wrong format pkcs8", function (done) {
                 var wkey = {
@@ -365,7 +375,7 @@ describe("Subtle", function () {
                 var alg = {
                     name: 'rsa-oaep'
                 }
-                wrap("pkcs8", key, wkey, alg, done, true);
+                wrapKey("pkcs8", alg, key, wkey, done, true);
             });
             it("OAEP wrap AES wrong wrap key alg", function (done) {
                 var wkey = {
@@ -381,7 +391,7 @@ describe("Subtle", function () {
                 var alg = {
                     name: 'rsa-oaep'
                 }
-                wrap("raw", key, wkey, alg, done, true);
+                wrapKey("raw", alg, key, wkey, done, true);
             });
             it("OAEP unwrap AES", function (done) {
                 var wkey = {
@@ -395,50 +405,16 @@ describe("Subtle", function () {
                 var walg = {
                     name: 'rsa-oaep'
                 }
-                unwrap("raw", wkey, walg, alg, ["sign"], done, false);
+                unwrapKey("raw", new ArrayBuffer(3), wkey, walg, alg, true, ["sign"], done, false);
             });
 
         })
 
         context("import/export", function () {
 
-            function exportKey(format, key, done, error) {
-                var _error = true;
-                subtle.exportKey(format, key)
-                    .then(function (res) {
-                        assert.equal(res, null);
-                        _error = false;
-                    })
-                    .catch(function (err) {
-                        assert.equal(!!err, error, err.message);
-                    })
-                    .then(function () {
-                        assert.equal(_error, error, "Must be error");
-                    })
-                    .then(done, done);
-            }
-            function importKey(format, keyData, alg, keyUsages, done, error) {
-                var _error = true;
-                subtle.importKey(format, keyData, alg, true, keyUsages)
-                    .then(function (res) {
-                        assert.equal(res, null);
-                        _error = false;
-                    })
-                    .catch(function (err) {
-                        assert.equal(!!err, error, err.message);
-                    })
-                    .then(function () {
-                        assert.equal(_error, error, "Must be error");
-                    })
-                    .then(done, done);
-            }
-
-            var algs = ["RSASSA-PKCS1-v1_5", "RSA-PSS", "RSA-OAEP"];
-            for (var i in algs) {
-                var alg = algs[i];
+            ["RSASSA-PKCS1-v1_5", "RSA-PSS", "RSA-OAEP"].forEach((alg) => {
 
                 context(alg, function () {
-
                     it("export jwk publicKey", function (done) {
                         var key = {
                             algorithm: {
@@ -490,8 +466,15 @@ describe("Subtle", function () {
                         exportKey("pkcs8", key, done, true);
                     });
                 })
-            }
 
+            });
+
+            it("import RSA without hash param", function (done) {
+                var alg = {
+                    name: "RSASSA-PKCS1-v1_5",
+                }
+                importKey("pkcs8", new Uint8Array([1]), alg, ["sign"], done, true);
+            });
             it("import pkcs8 RSASSA-PKCS1-v1_5", function (done) {
                 var alg = {
                     name: "RSASSA-PKCS1-v1_5",

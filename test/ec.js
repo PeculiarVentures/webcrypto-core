@@ -3,6 +3,7 @@ var generate = helper.generate;
 var sign = helper.sign;
 var verify = helper.verify;
 var deriveKey = helper.deriveKey;
+var deriveBits = helper.deriveBits;
 var exportKey = helper.exportKey;
 var importKey = helper.importKey;
 
@@ -20,7 +21,7 @@ describe("Subtle", function () {
             ["ecdsa", "ecdh"]
                 .forEach(function (alg) {
 
-                    ["P-256", "P-384", "P-521", "Wrong curve"]
+                    ["P-256", "P-384", "P-521", "Wrong curve", void 0, 123]
                         .forEach(function (namedCurve, index) {
 
                             it(alg + " " + namedCurve, function (done) {
@@ -28,7 +29,7 @@ describe("Subtle", function () {
                                     name: alg,
                                     namedCurve: namedCurve
                                 };
-                                generate(_alg, keyUsages[alg], done, index === 3)
+                                generate(_alg, keyUsages[alg], done, index >= 3)
                             });
 
                         });
@@ -152,9 +153,50 @@ describe("Subtle", function () {
             });
         });
 
+        context("ECDH deriveBits", () => {
+            it("optional length", (done) => {
+                var _alg = {
+                    name: "ecdh",
+                    public: {
+                        type: "public",
+                        algorithm: {
+                            name: "ecdh"
+                        }
+                    }
+                }
+                var _key = {
+                    algorithm: {
+                        name: "ecdh"
+                    },
+                    type: "private",
+                    usages: ["deriveBits"]
+                }
+                deriveBits(_alg, _key, void 0, done, false);
+            });
+            it("length", (done) => {
+                var _alg = {
+                    name: "ecdh",
+                    public: {
+                        type: "public",
+                        algorithm: {
+                            name: "ecdh"
+                        }
+                    }
+                }
+                var _key = {
+                    algorithm: {
+                        name: "ecdh"
+                    },
+                    type: "private",
+                    usages: ["deriveBits"]
+                }
+                deriveBits(_alg, _key, 128, done, false);
+            });
+        });
+
         context("ECDH deriveKey", function () {
 
-            ["aes-cbc", "aes-ctr", "aes-gcm"]
+            ["aes-cbc", "aes-ctr", "aes-gcm", "aes-kw"]
                 .forEach(function (aesAlg) {
 
                     it(aesAlg, function (done) {
@@ -178,7 +220,7 @@ describe("Subtle", function () {
                             name: aesAlg,
                             length: 128
                         }
-                        deriveKey(_alg, _key, derAlg, ["encrypt"], done, false);
+                        deriveKey(_alg, _key, derAlg, ["wrapKey"], done, false);
                     });
 
                 });
@@ -192,6 +234,24 @@ describe("Subtle", function () {
                             name: "wrong"
                         }
                     }
+                }
+                var _key = {
+                    algorithm: {
+                        name: "ecdh"
+                    },
+                    type: "private",
+                    usages: ["deriveKey"]
+                }
+                var derAlg = {
+                    name: "aes-ctr",
+                    length: 128
+                }
+                deriveKey(_alg, _key, derAlg, ["encrypt"], done, true);
+            });
+
+            it("empty param public", function (done) {
+                var _alg = {
+                    name: "ecdh",
                 }
                 var _key = {
                     algorithm: {
@@ -339,7 +399,7 @@ describe("Subtle", function () {
                         exportKey(format, key, done, format === "pkcs8"); // pkcs8 only for private!
                     });
                 });
-                
+
                 // Test export of private keys
                 ["jwk", "pkcs8", "spki", "raw"].forEach(function (format) {
                     it(format, function (done) {
@@ -368,7 +428,7 @@ describe("Subtle", function () {
             });
 
         }); // import/export ECDSA
-			
+
         context("import/export ECDH", function () {
 
             it("import raw", function (done) {

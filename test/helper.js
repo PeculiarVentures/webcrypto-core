@@ -61,7 +61,7 @@ function importKey(format, keyData, alg, keyUsages, done, error, extractable) {
 module.exports.importKey = importKey;
 
 function wrapKey(format, alg, key, wkey, done, error) {
-    checkPromise(subtle.wrapKey(format, wkey, key, alg), done, error);
+    checkPromise(subtle.wrapKey(format, key, wkey, alg), done, error);
 }
 module.exports.wrapKey = wrapKey;
 function unwrapKey(format, wkey, key, alg, kalg, ex, usages, done, error) {

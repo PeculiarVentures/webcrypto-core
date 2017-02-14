@@ -1,20 +1,20 @@
-import { WebCryptoError, AlgorithmError, CryptoKeyError } from "./error";
-import { BaseCrypto, PrepareAlgorithm, PrepareData } from "./base";
 import { AlgorithmNames } from "./alg";
+import { BaseCrypto, PrepareAlgorithm, PrepareData } from "./base";
+import { AlgorithmError, CryptoKeyError, WebCryptoError } from "./error";
 
-import { Sha } from "./sha/crypto";
-import { RsaOAEP, RsaPSS, RsaSSA } from "./rsa/crypto";
 import { AesCBC, AesCTR, AesGCM, AesKW } from "./aes/crypto";
 import { EcDH, EcDSA } from "./ec/crypto";
 import { Hmac } from "./hmac/crypto";
 import { Pbkdf2 } from "./pbkdf2/crypto";
+import { RsaOAEP, RsaPSS, RsaSSA } from "./rsa/crypto";
+import { Sha } from "./sha/crypto";
 
 export class SubtleCrypto implements NativeSubtleCrypto {
 
-    generateKey(algorithm: string, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKeyPair | CryptoKey>;
-    generateKey(algorithm: RsaHashedKeyGenParams | EcKeyGenParams | DhKeyGenParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKeyPair>;
-    generateKey(algorithm: AesKeyGenParams | HmacKeyGenParams | Pbkdf2Params, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
-    generateKey(algorithm: any, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKeyPair | CryptoKey> {
+    public generateKey(algorithm: string, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKeyPair | CryptoKey>;
+    public generateKey(algorithm: RsaHashedKeyGenParams | EcKeyGenParams | DhKeyGenParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKeyPair>;
+    public generateKey(algorithm: AesKeyGenParams | HmacKeyGenParams | Pbkdf2Params, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
+    public generateKey(algorithm: any, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKeyPair | CryptoKey> {
         return new Promise((resolve, reject) => {
             const alg = PrepareAlgorithm(algorithm);
             let Class = BaseCrypto;
@@ -56,7 +56,7 @@ export class SubtleCrypto implements NativeSubtleCrypto {
         });
     }
 
-    digest(algorithm: AlgorithmIdentifier, data: BufferSource): PromiseLike<ArrayBuffer> {
+    public digest(algorithm: AlgorithmIdentifier, data: BufferSource): PromiseLike<ArrayBuffer> {
         return new Promise((resolve, reject) => {
             const alg = PrepareAlgorithm(algorithm);
             const buf = PrepareData(data, "data");
@@ -76,8 +76,8 @@ export class SubtleCrypto implements NativeSubtleCrypto {
 
     }
 
-    sign(algorithm: string | RsaPssParams | EcdsaParams | AesCmacParams, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer>;
-    sign(algorithm: any, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer> {
+    public sign(algorithm: string | RsaPssParams | EcdsaParams | AesCmacParams, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer>;
+    public sign(algorithm: any, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer> {
         return new Promise((resolve, reject) => {
             const alg = PrepareAlgorithm(algorithm as any);
             const buf = PrepareData(data, "data");
@@ -102,8 +102,8 @@ export class SubtleCrypto implements NativeSubtleCrypto {
         });
     }
 
-    verify(algorithm: string | RsaPssParams | EcdsaParams | AesCmacParams, key: CryptoKey, signature: BufferSource, data: BufferSource): PromiseLike<boolean>;
-    verify(algorithm: any, key: CryptoKey, signature: BufferSource, data: BufferSource): PromiseLike<boolean> {
+    public verify(algorithm: string | RsaPssParams | EcdsaParams | AesCmacParams, key: CryptoKey, signature: BufferSource, data: BufferSource): PromiseLike<boolean>;
+    public verify(algorithm: any, key: CryptoKey, signature: BufferSource, data: BufferSource): PromiseLike<boolean> {
         return new Promise((resolve, reject) => {
             const alg = PrepareAlgorithm(algorithm as any);
             const sigBuf = PrepareData(data, "signature");
@@ -129,8 +129,8 @@ export class SubtleCrypto implements NativeSubtleCrypto {
         });
     }
 
-    encrypt(algorithm: string | RsaOaepParams | AesCtrParams | AesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer>;
-    encrypt(algorithm: any, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer> {
+    public encrypt(algorithm: string | RsaOaepParams | AesCtrParams | AesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer>;
+    public encrypt(algorithm: any, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer> {
         return new Promise((resolve, reject) => {
             const alg = PrepareAlgorithm(algorithm);
             const buf = PrepareData(data, "data");
@@ -155,8 +155,8 @@ export class SubtleCrypto implements NativeSubtleCrypto {
         });
     }
 
-    decrypt(algorithm: string | RsaOaepParams | AesCtrParams | AesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer>;
-    decrypt(algorithm: any, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer> {
+    public decrypt(algorithm: string | RsaOaepParams | AesCtrParams | AesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer>;
+    public decrypt(algorithm: any, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer> {
         return new Promise((resolve, reject) => {
             const alg = PrepareAlgorithm(algorithm);
             const buf = PrepareData(data, "data");
@@ -181,8 +181,8 @@ export class SubtleCrypto implements NativeSubtleCrypto {
         });
     }
 
-    deriveBits(algorithm: string | EcdhKeyDeriveParams | DhKeyDeriveParams | ConcatParams | HkdfCtrParams | Pbkdf2Params, baseKey: CryptoKey, length: number): PromiseLike<ArrayBuffer>;
-    deriveBits(algorithm: any, baseKey: CryptoKey, length: number): PromiseLike<ArrayBuffer> {
+    public deriveBits(algorithm: string | EcdhKeyDeriveParams | DhKeyDeriveParams | ConcatParams | HkdfCtrParams | Pbkdf2Params, baseKey: CryptoKey, length: number): PromiseLike<ArrayBuffer>;
+    public deriveBits(algorithm: any, baseKey: CryptoKey, length: number): PromiseLike<ArrayBuffer> {
         return new Promise((resolve, reject) => {
             const alg = PrepareAlgorithm(algorithm);
             let Class = BaseCrypto;
@@ -200,8 +200,8 @@ export class SubtleCrypto implements NativeSubtleCrypto {
         });
     }
 
-    deriveKey(algorithm: string | EcdhKeyDeriveParams | DhKeyDeriveParams | ConcatParams | HkdfCtrParams | Pbkdf2Params, baseKey: CryptoKey, derivedKeyType: string | AesDerivedKeyParams | HmacImportParams | ConcatParams | HkdfCtrParams | Pbkdf2Params, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
-    deriveKey(algorithm: any, baseKey: CryptoKey, derivedKeyType: any, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
+    public deriveKey(algorithm: string | EcdhKeyDeriveParams | DhKeyDeriveParams | ConcatParams | HkdfCtrParams | Pbkdf2Params, baseKey: CryptoKey, derivedKeyType: string | AesDerivedKeyParams | HmacImportParams | ConcatParams | HkdfCtrParams | Pbkdf2Params, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
+    public deriveKey(algorithm: any, baseKey: CryptoKey, derivedKeyType: any, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
         return new Promise((resolve, reject) => {
             const alg = PrepareAlgorithm(algorithm);
             const derivedAlg = PrepareAlgorithm(derivedKeyType);
@@ -220,14 +220,15 @@ export class SubtleCrypto implements NativeSubtleCrypto {
         });
     }
 
-    exportKey(format: "jwk", key: CryptoKey): PromiseLike<JsonWebKey>;
-    exportKey(format: "raw" | "pkcs8" | "spki", key: CryptoKey): PromiseLike<ArrayBuffer>;
-    exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer>;
-    exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer> {
+    public exportKey(format: "jwk", key: CryptoKey): PromiseLike<JsonWebKey>;
+    public exportKey(format: "raw" | "pkcs8" | "spki", key: CryptoKey): PromiseLike<ArrayBuffer>;
+    public exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer>;
+    public exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer> {
         return new Promise((resolve, reject) => {
             BaseCrypto.checkKey(key);
-            if (!key.extractable)
+            if (!key.extractable) {
                 throw new CryptoKeyError(CryptoKeyError.NOT_EXTRACTABLE);
+            }
             let Class = BaseCrypto;
             switch (key.algorithm.name!.toUpperCase()) {
                 case AlgorithmNames.RsaSSA.toUpperCase():
@@ -267,10 +268,10 @@ export class SubtleCrypto implements NativeSubtleCrypto {
         });
     }
 
-    importKey(format: "jwk", keyData: JsonWebKey, algorithm: string | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
-    importKey(format: "raw" | "pkcs8" | "spki", keyData: BufferSource, algorithm: string | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
-    importKey(format: string, keyData: JsonWebKey | BufferSource, algorithm: string | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
-    importKey(format: string, keyData: JsonWebKey | BufferSource, algorithm: any, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
+    public importKey(format: "jwk", keyData: JsonWebKey, algorithm: string | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
+    public importKey(format: "raw" | "pkcs8" | "spki", keyData: BufferSource, algorithm: string | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
+    public importKey(format: string, keyData: JsonWebKey | BufferSource, algorithm: string | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
+    public importKey(format: string, keyData: JsonWebKey | BufferSource, algorithm: any, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
         return new Promise((resolve, reject) => {
             const alg = PrepareAlgorithm(algorithm);
             let Class = BaseCrypto;
@@ -316,7 +317,7 @@ export class SubtleCrypto implements NativeSubtleCrypto {
         });
     }
 
-    wrapKey(format: string, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: AlgorithmIdentifier): PromiseLike<ArrayBuffer> {
+    public wrapKey(format: string, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: AlgorithmIdentifier): PromiseLike<ArrayBuffer> {
         return new Promise((resolve, reject) => {
             const alg = PrepareAlgorithm(wrapAlgorithm);
             let Class = BaseCrypto;
@@ -343,7 +344,7 @@ export class SubtleCrypto implements NativeSubtleCrypto {
         });
     }
 
-    unwrapKey(format: string, wrappedKey: BufferSource, unwrappingKey: CryptoKey, unwrapAlgorithm: AlgorithmIdentifier, unwrappedKeyAlgorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
+    public unwrapKey(format: string, wrappedKey: BufferSource, unwrappingKey: CryptoKey, unwrapAlgorithm: AlgorithmIdentifier, unwrappedKeyAlgorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
         return new Promise((resolve, reject) => {
             const unwrapAlg = PrepareAlgorithm(unwrapAlgorithm);
             const unwrappedAlg = PrepareAlgorithm(unwrappedKeyAlgorithm);

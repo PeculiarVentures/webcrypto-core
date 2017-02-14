@@ -1,56 +1,62 @@
-import { AlgorithmError, WebCryptoError, CryptoKeyError } from "../error";
-import { PrepareAlgorithm } from "../base";
-import { BaseCrypto } from "../base";
-import { AlgorithmNames } from "../alg";
-import { Sha } from "../sha/crypto";
 import * as Aes from "../aes/crypto";
+import { AlgorithmNames } from "../alg";
+import { BaseCrypto, PrepareAlgorithm } from "../base";
+import { AlgorithmError, CryptoKeyError, WebCryptoError } from "../error";
 import { Hmac } from "../hmac/crypto";
+import { Sha } from "../sha/crypto";
 
 export class Pbkdf2 extends BaseCrypto {
-    protected static ALG_NAME = AlgorithmNames.Pbkdf2;
-    protected static KEY_USAGES: string[] = ["deriveKey", "deriveBits"];
 
-    static checkAlgorithm(alg: Algorithm) {
-        if (alg.name.toUpperCase() !== this.ALG_NAME.toUpperCase())
+    public static ALG_NAME = AlgorithmNames.Pbkdf2;
+    public static KEY_USAGES: string[] = ["deriveKey", "deriveBits"];
+
+    public static checkAlgorithm(alg: Algorithm) {
+        if (alg.name.toUpperCase() !== this.ALG_NAME.toUpperCase()) {
             throw new AlgorithmError(AlgorithmError.WRONG_ALG_NAME, alg.name, this.ALG_NAME);
+        }
     }
 
-    static checkDeriveParams(alg: Pbkdf2Params) {
+    public static checkDeriveParams(alg: Pbkdf2Params) {
         this.checkAlgorithm(alg);
 
         // salt
         if (alg.salt) {
-            if (!(ArrayBuffer.isView(alg.salt) || alg.salt instanceof ArrayBuffer))
+            if (!(ArrayBuffer.isView(alg.salt) || alg.salt instanceof ArrayBuffer)) {
                 throw new AlgorithmError(AlgorithmError.PARAM_WRONG_TYPE, "salt", "ArrayBuffer or ArrayBufferView");
-        }
-        else
+            }
+        } else {
             throw new AlgorithmError(AlgorithmError.PARAM_REQUIRED, "salt");
+        }
 
         // iterations
-        if (!alg.iterations)
+        if (!alg.iterations) {
             throw new AlgorithmError(AlgorithmError.PARAM_REQUIRED, "iterations");
+        }
 
         // hash
-        if (!alg.hash)
+        if (!alg.hash) {
             throw new AlgorithmError(AlgorithmError.PARAM_REQUIRED, "hash");
+        }
         const hash = PrepareAlgorithm(alg.hash);
         Sha.checkAlgorithm(hash);
     }
 
-    static importKey(format: string, keyData: JsonWebKey | BufferSource, algorithm: string | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
+    public static importKey(format: string, keyData: JsonWebKey | BufferSource, algorithm: string | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
         return Promise.resolve()
             .then(() => {
-                if (extractable)
+                if (extractable) {
                     throw new WebCryptoError("KDF keys must set extractable=false");
+                }
                 this.checkAlgorithm(algorithm as Algorithm);
                 this.checkFormat(format);
-                if (format.toLowerCase() !== "raw")
+                if (format.toLowerCase() !== "raw") {
                     throw new CryptoKeyError(CryptoKeyError.ALLOWED_FORMAT, format, "'raw'");
+                }
                 this.checkKeyUsages(keyUsages);
-            })  as any;
+            }) as any;
     }
 
-    static deriveKey(algorithm: Pbkdf2Params, baseKey: CryptoKey, derivedKeyType: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
+    public static deriveKey(algorithm: Pbkdf2Params, baseKey: CryptoKey, derivedKeyType: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
         return Promise.resolve()
             .then(() => {
                 this.checkDeriveParams(algorithm);
@@ -83,13 +89,15 @@ export class Pbkdf2 extends BaseCrypto {
                 }
             }) as any;
     }
-    static deriveBits(algorithm: Pbkdf2Params, baseKey: CryptoKey, length: number): PromiseLike<ArrayBuffer> {
+
+    public static deriveBits(algorithm: Pbkdf2Params, baseKey: CryptoKey, length: number): PromiseLike<ArrayBuffer> {
         return Promise.resolve()
             .then(() => {
                 this.checkDeriveParams(algorithm);
                 this.checkKey(baseKey, this.ALG_NAME, "secret", "deriveBits");
-                if (!(length && typeof length === "number"))
+                if (!(length && typeof length === "number")) {
                     throw new WebCryptoError("Parameter 'length' must be Number and more than 0");
+                }
             }) as any;
     }
 }
