@@ -216,7 +216,7 @@ describe("Subtle", function () {
                     usages: ["sign"],
                     type: "private"
                 };
-                sign({ name: "RSA-PSS", saltLength: 9 }, key, done, true);
+                sign({ name: "RSA-PSS", saltLength: -1 }, key, done, true);
             });
         })
 
