@@ -148,8 +148,8 @@ export class RsaPSS extends RsaSSA {
         if (!alg.saltLength) {
             throw new RsaPSSParamsError(RsaPSSParamsError.PARAM_REQUIRED, "saltLength");
         }
-        if (alg.saltLength % 8) {
-            throw new RsaPSSParamsError("Parameter 'saltLength' should be a multiple of 8");
+        if (alg.saltLength < 0) {
+            throw new RsaPSSParamsError("Parameter 'saltLength' is outside of numeric range");
         }
     }
 }
