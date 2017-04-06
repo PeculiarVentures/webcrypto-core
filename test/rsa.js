@@ -61,14 +61,32 @@ describe("Subtle", function () {
                     hash: { name: "sha-256" }
                 }, ["verify", "sign"], done, true);
             });
-            it("RSA generate RSASSA wrong modulusLength", function (done) {
-                generate({
-                    name: "rsassa-pkcs1-v1_5",
-                    modulusLength: 10,
-                    publicExponent: new Uint8Array([1, 0, 1]),
-                    hash: { name: "sha-256" }
-                }, ["verify", "verify"], done, true);
-            });
+            context("RSA generate RSASSA wrong modulusLength", function () {
+                it("not multiple 8", function (done) {
+                    generate({
+                        name: "rsassa-pkcs1-v1_5",
+                        modulusLength: 257,
+                        publicExponent: new Uint8Array([1, 0, 1]),
+                        hash: { name: "sha-256" }
+                    }, ["verify", "verify"], done, true);
+                });
+                it("less than 256", function (done) {
+                    generate({
+                        name: "rsassa-pkcs1-v1_5",
+                        modulusLength: 128,
+                        publicExponent: new Uint8Array([1, 0, 1]),
+                        hash: { name: "sha-256" }
+                    }, ["verify", "verify"], done, true);
+                });
+                it("more than 16384", function (done) {
+                    generate({
+                        name: "rsassa-pkcs1-v1_5",
+                        modulusLength: 16392,
+                        publicExponent: new Uint8Array([1, 0, 1]),
+                        hash: { name: "sha-256" }
+                    }, ["verify", "verify"], done, true);
+                });
+            })
             it("RSA generate RSASSA empty publicExponent", function (done) {
                 generate({
                     name: "rsassa-pkcs1-v1_5",

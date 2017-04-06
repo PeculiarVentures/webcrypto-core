@@ -39,13 +39,9 @@ export class Rsa extends BaseCrypto {
 
     public static checkKeyGenParams(alg: RsaHashedKeyGenParams) {
         // modulusLength
-        switch (alg.modulusLength) {
-            case 1024:
-            case 2048:
-            case 4096:
-                break;
-            default:
-                throw new RsaKeyGenParamsError(RsaKeyGenParamsError.PARAM_WRONG_VALUE, "modulusLength", "1024, 2048 or 4096");
+        const modulusBits = alg.modulusLength;
+        if (!(modulusBits >= 256 && modulusBits <= 16384 && !(modulusBits % 8))) {
+            throw new RsaKeyGenParamsError(RsaKeyGenParamsError.PARAM_WRONG_VALUE, "modulusLength", " a multiple of 8 bits and >= 256 and <= 16384");
         }
         // publicExponent
         const pubExp = alg.publicExponent;
