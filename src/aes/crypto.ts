@@ -116,6 +116,10 @@ export class AesEncrypt extends AesWrapKey {
 
 }
 
+export class AesECB extends AesEncrypt {
+    public static ALG_NAME = AlgorithmNames.AesECB;
+}
+
 export class AesCBC extends AesEncrypt {
 
     public static ALG_NAME = AlgorithmNames.AesCBC;

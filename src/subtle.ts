@@ -2,7 +2,7 @@ import { AlgorithmNames } from "./alg";
 import { BaseCrypto, PrepareAlgorithm, PrepareData } from "./base";
 import { AlgorithmError, CryptoKeyError, WebCryptoError } from "./error";
 
-import { AesCBC, AesCTR, AesGCM, AesKW } from "./aes/crypto";
+import { AesCBC, AesCTR, AesECB, AesGCM, AesKW } from "./aes/crypto";
 import { EcDH, EcDSA } from "./ec/crypto";
 import { Hmac } from "./hmac/crypto";
 import { Pbkdf2 } from "./pbkdf2/crypto";
@@ -27,6 +27,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.RsaPSS.toUpperCase():
                     Class = RsaPSS;
+                    break;
+                case AlgorithmNames.AesECB.toUpperCase():
+                    Class = AesECB;
                     break;
                 case AlgorithmNames.AesCBC.toUpperCase():
                     Class = AesCBC;
@@ -139,6 +142,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.RsaOAEP.toUpperCase():
                     Class = RsaOAEP;
                     break;
+                case AlgorithmNames.AesECB.toUpperCase():
+                    Class = AesECB;
+                    break;
                 case AlgorithmNames.AesCBC.toUpperCase():
                     Class = AesCBC;
                     break;
@@ -164,6 +170,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
             switch (alg.name.toUpperCase()) {
                 case AlgorithmNames.RsaOAEP.toUpperCase():
                     Class = RsaOAEP;
+                    break;
+                case AlgorithmNames.AesECB.toUpperCase():
+                    Class = AesECB;
                     break;
                 case AlgorithmNames.AesCBC.toUpperCase():
                     Class = AesCBC;
@@ -237,6 +246,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.RsaPSS.toUpperCase():
                     Class = RsaPSS;
                     break;
+                case AlgorithmNames.AesECB.toUpperCase():
+                    Class = AesECB;
+                    break;
                 case AlgorithmNames.RsaOAEP.toUpperCase():
                     Class = RsaOAEP;
                     break;
@@ -286,6 +298,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.RsaOAEP.toUpperCase():
                     Class = RsaOAEP;
                     break;
+                case AlgorithmNames.AesECB.toUpperCase():
+                    Class = AesECB;
+                    break;
                 case AlgorithmNames.AesCBC.toUpperCase():
                     Class = AesCBC;
                     break;
@@ -325,6 +340,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.RsaOAEP.toUpperCase():
                     Class = RsaOAEP;
                     break;
+                case AlgorithmNames.AesECB.toUpperCase():
+                    Class = AesECB;
+                    break;
                 case AlgorithmNames.AesCBC.toUpperCase():
                     Class = AesCBC;
                     break;
@@ -353,6 +371,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
             switch (unwrapAlg.name.toUpperCase()) {
                 case AlgorithmNames.RsaOAEP.toUpperCase():
                     Class = RsaOAEP;
+                    break;
+                case AlgorithmNames.AesECB.toUpperCase():
+                    Class = AesECB;
                     break;
                 case AlgorithmNames.AesCBC.toUpperCase():
                     Class = AesCBC;

@@ -9,6 +9,7 @@ declare namespace WebcryptoCore {
         RsaSSA: string;
         RsaPSS: string;
         RsaOAEP: string;
+        AesECB: string;
         AesCTR: string;
         AesCMAC: string;
         AesGCM: string;
