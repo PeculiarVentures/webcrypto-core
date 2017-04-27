@@ -2,6 +2,7 @@ export const AlgorithmNames = {
     RsaSSA: "RSASSA-PKCS1-v1_5",
     RsaPSS: "RSA-PSS",
     RsaOAEP: "RSA-OAEP",
+    AesECB: "AES-ECB",
     AesCTR: "AES-CTR",
     AesCMAC: "AES-CMAC",
     AesGCM: "AES-GCM",

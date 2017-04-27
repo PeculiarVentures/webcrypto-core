@@ -13,7 +13,7 @@ describe("Subtle", function () {
 
     context("AES", function () {
 
-        var algs = ["AES-CBC", "AES-CTR", "AES-GCM"];
+        var algs = ["AES-CBC", "AES-CTR", "AES-GCM", "AES-ECB"];
         algs.forEach(function (alg) {
 
             it(alg + " generate 128", function (done) {
@@ -67,6 +67,27 @@ describe("Subtle", function () {
             it(alg + " import raw, wrong key usage", function (done) {
                 var _alg = { name: alg };
                 importKey("raw", new Uint8Array(3), _alg, ["sign"], done, true);
+            });
+        });
+
+        context("AES-ECB", () => {
+            it("encrypt", (done) => {
+                var alg = { name: "AES-ECB" };
+                var key = {
+                    algorithm: { name: "AES-ECB" },
+                    type: "secret",
+                    usages: ["encrypt"]
+                };
+                encrypt("encrypt", alg, key, done, false);
+            });
+            it("decrypt", (done) => {
+                var alg = { name: "AES-ECB" };
+                var key = {
+                    algorithm: { name: "AES-ECB" },
+                    type: "secret",
+                    usages: ["decrypt"]
+                };
+                encrypt("decrypt", alg, key, done, false);
             });
         });
 
@@ -377,7 +398,7 @@ describe("Subtle", function () {
                     // format
                     ["jwk", "raw"].forEach(format => {
                         it(`length: ${keyLength} ${format}`, done => {
-                            importKey(format, new Uint8Array(3), {name: "AES-KW", length: keyLength}, ["wrapKey"], done, false);
+                            importKey(format, new Uint8Array(3), { name: "AES-KW", length: keyLength }, ["wrapKey"], done, false);
                         });
                     })
                 });
