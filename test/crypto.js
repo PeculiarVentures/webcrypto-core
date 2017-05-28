@@ -35,28 +35,38 @@ describe("Webcrypto", () => {
 
         context("Data", () => {
 
+            function TestPrepareData(inData, byteLength) {
+                const outData = webcrypto.PrepareData(inData);
+                assert.equal(outData.byteLength, byteLength);
+                assert.equal(ArrayBuffer.isView(outData), true);
+                const bufInData = new Buffer(Buffer.isBuffer(inData) || inData instanceof ArrayBuffer ? inData : inData.buffer);
+                const bufOutData = new Buffer(outData);
+                assert.equal(Buffer.compare(bufInData, bufOutData), 0);
+            }
+
             it("from Uint8Array", () => {
-                var data = webcrypto.PrepareData(new Uint8Array(10));
-                assert.equal(data.length, 10);
-                assert.equal(ArrayBuffer.isView(data), true);
+                const data = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
+                TestPrepareData(data, 10);
             });
 
             it("from Uint16Array", () => {
-                var data = webcrypto.PrepareData(new Uint16Array(10));
-                assert.equal(data.byteLength, 20);
-                assert.equal(ArrayBuffer.isView(data), true);
+                const data = new Uint16Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
+                TestPrepareData(data, 20);
             });
 
             it("from Uint32Array", () => {
-                var data = webcrypto.PrepareData(new Uint32Array(10));
-                assert.equal(data.byteLength, 40);
-                assert.equal(ArrayBuffer.isView(data), true);
+                const data = new Uint32Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
+                TestPrepareData(data, 40);
             });
 
             it("from ArrayBuffer", () => {
-                var data = webcrypto.PrepareData(new Uint8Array(10).buffer);
-                assert.equal(data.byteLength, 10);
-                assert.equal(ArrayBuffer.isView(data), true);
+                const data = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]).buffer;
+                TestPrepareData(data, 10);
+            });
+
+            it("from Buffer", () => {
+                const data = new Buffer([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
+                TestPrepareData(data, 10);
             });
 
             it("from wrong data", () => {

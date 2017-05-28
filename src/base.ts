@@ -19,6 +19,9 @@ export function PrepareData(data: BufferSource, paramName: string): Uint8Array {
     if (!data) {
         throw new WebCryptoError(`Parameter '${paramName}' is required and cant be empty`);
     }
+    if (typeof Buffer !== "undefined" && Buffer.isBuffer(data)) {
+        return new Uint8Array(data as Buffer);
+    }
     if (ArrayBuffer.isView(data)) {
         return new Uint8Array(data.buffer);
     }
