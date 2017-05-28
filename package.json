@@ -9,7 +9,6 @@
     "test": "test"
   },
   "scripts": {
-    "prepublish": "npm run build:dist",
     "build": "npm run build:es5",
     "build:es5": "rollup -c",
     "build:map": "rollup -c -m",
@@ -17,6 +16,7 @@
     "build:dist": "npm run build:es5 && npm run build:es2015",
     "build:source": "tsc --declaration --declarationDir types",
     "test": "mocha test",
+    "prepub": "npm run build:dist",
     "pub": "npm version patch && npm publish && git push",
     "precoverage": "npm run build:map",
     "coverage": "nyc npm test",
