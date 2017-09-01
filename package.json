@@ -9,23 +9,21 @@
     "test": "test"
   },
   "scripts": {
-    "build": "npm run build:es5",
+    "prepare": "npm run build",
+    "build": "npm run build:dist",
     "build:es5": "rollup -c",
     "build:map": "rollup -c -m",
     "build:es2015": "rollup -c rollup.config.es.js",
     "build:dist": "npm run build:es5 && npm run build:es2015",
     "build:source": "tsc --declaration --declarationDir types",
     "test": "mocha test",
-    "prepub": "npm run build:dist",
+    "prepub": "npm run build",
     "pub": "npm version patch && npm publish && git push",
     "precoverage": "npm run build:map",
     "coverage": "nyc npm test",
     "precoveragehtml": "npm run coverage",
     "coveragehtml": "nyc report -r html",
-    "watch": "watch 'npm run coveragehtml' lib/ test/",
-    "live": "live-server -q --port=4005 --ignorePattern='(js|css|png)$' coverage",
     "predev": "if [ ! -f coverage/index.html ]; then mkdir coverage; cp .waiting.html coverage/index.html; fi",
-    "dev": "npm-run-all -p --silent watch live",
     "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
@@ -42,24 +40,22 @@
     "ec"
   ],
   "dependencies": {
-    "@types/node": "^6",
-    "tslib": "^1.5.0"
+    "tslib": "^1.7.1"
   },
   "devDependencies": {
-    "coveralls": "^2",
-    "live-server": "^1",
-    "npm-run-all": "^3",
+    "@types/node": "^8",
+    "coveralls": "^2.13.1",
+    "mocha": "^3.5.0",
     "nyc": "^8",
-    "mocha": "^3.2.0",
-    "rollup": "^0.41.4",
+    "rollup": "^0.49.2",
     "rollup-plugin-typescript": "^0.8.1",
-    "typescript": "^2.1.5",
-    "watch": "^0"
+    "typescript": "^2.5.2"
   },
   "author": "PeculiarVentures",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/PeculiarVentures/webcrypto-core/issues"
   },
-  "homepage": "https://github.com/PeculiarVentures/webcrypto-core#readme"
+  "homepage": "https://github.com/PeculiarVentures/webcrypto-core#readme",
+  "banner": "// Copyright (c) 2017, Peculiar Ventures, All rights reserved."
 }
