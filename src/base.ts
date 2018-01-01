@@ -23,7 +23,9 @@ export function PrepareData(data: BufferSource, paramName: string): Uint8Array {
         return new Uint8Array(data as Buffer);
     }
     if (ArrayBuffer.isView(data)) {
-        return new Uint8Array(data.buffer);
+        // Copy data, because `data.buffer` can has another buffer size after ArrayBufferView.subarray
+        const copy = (data as Uint8Array).map((i) => i);
+        return new Uint8Array(copy.buffer);
     }
     if (data instanceof ArrayBuffer) {
         return new Uint8Array(data);
@@ -37,7 +39,7 @@ export class BaseCrypto {
         if (typeof alg !== "object") {
             throw new TypeError("Wrong algorithm data type. Must be Object");
         }
-        if (!("name" in alg)) {
+        if (!alg.name) {
             throw new AlgorithmError(AlgorithmError.PARAM_REQUIRED, "name");
         }
     }
