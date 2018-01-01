@@ -33,7 +33,7 @@ export class WebCryptoError extends Error {
         super();
         this.message = printf(template, ...args as any);
         const error = new Error(this.message);
-        error.name = (this as any)["constructor"].name;
+        error.name = (this as any).constructor.name;
         this.stack = (error as any).stack;
     }
 

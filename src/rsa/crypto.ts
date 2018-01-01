@@ -28,7 +28,7 @@ export class Rsa extends BaseCrypto {
          * It throws error if algorithm doesn't have a `name` paramter
          * But it's not a equal to W3 specification
          * https://www.w3.org/TR/WebCryptoAPI/#dfn-RsaHashedImportParams
-         *   
+         *
          */
         this.checkAlgorithm(alg as any);
         if (!alg.hash) {
