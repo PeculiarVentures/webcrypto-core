@@ -69,6 +69,22 @@ describe("Webcrypto", () => {
                 TestPrepareData(data, 10);
             });
 
+            context("from subarray ArrayBufferView", () => {
+
+                it("Uint8Array", () => {
+                    const data = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
+                    const sub = data.subarray(0, 5);
+                    assert.equal(webcrypto.PrepareData(sub).byteLength, 5);
+                });
+
+                it("Uint16Array", () => {
+                    const data = new Uint16Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]);
+                    const sub = data.subarray(0, 5);
+                    assert.equal(webcrypto.PrepareData(sub).byteLength, 10);
+                });
+
+            });
+
             it("from wrong data", () => {
                 assert.throws(() => webcrypto.PrepareData("12345"), Error);
             });
