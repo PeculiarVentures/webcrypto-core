@@ -29,11 +29,12 @@ export class Ec extends BaseCrypto {
         }
         switch (alg.namedCurve.toUpperCase()) {
             case "P-256":
+            case "K-256":
             case "P-384":
             case "P-521":
                 break;
             default:
-                throw new EcKeyGenParamsError(EcKeyGenParamsError.PARAM_WRONG_VALUE, paramNamedCurve, "P-256, P-384 or P-521");
+                throw new EcKeyGenParamsError(EcKeyGenParamsError.PARAM_WRONG_VALUE, paramNamedCurve, "K-256, P-256, P-384 or P-521");
         }
     }
 
