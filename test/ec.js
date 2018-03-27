@@ -21,7 +21,7 @@ describe("Subtle", function () {
             ["ecdsa", "ecdh"]
                 .forEach(function (alg) {
 
-                    ["P-256", "P-384", "P-521", "Wrong curve", void 0, 123]
+                    ["P-256", "P-384", "P-521", "K-256", "X25519", "Wrong curve", void 0, 123]
                         .forEach(function (namedCurve, index) {
 
                             it(alg + " " + namedCurve, function (done) {
@@ -29,7 +29,7 @@ describe("Subtle", function () {
                                     name: alg,
                                     namedCurve: namedCurve
                                 };
-                                generate(_alg, keyUsages[alg], done, index >= 3)
+                                generate(_alg, keyUsages[alg], done, index >= 5)
                             });
 
                         });
