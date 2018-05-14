@@ -19,6 +19,7 @@
         ],
         "no-console": [
             false
-        ]
+        ],
+        "no-namespace": false
     }
 }
