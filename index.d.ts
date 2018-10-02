@@ -19,9 +19,12 @@ declare namespace WebcryptoCore {
         Sha256: string;
         Sha384: string;
         Sha512: string;
+        ChaCha20: string;
         EcDSA: string;
+        EdDSA: string;
         EcDH: string;
         Hmac: string;
+        Poly1305: string;
         Pbkdf2: string;
     };
 
@@ -153,6 +156,12 @@ declare namespace WebcryptoCore {
 
     class EcAlgorithmError extends AlgorithmError {
         public code: number;
+    }
+
+    class EdDSA extends Ec {
+        public static checkAlgorithmParams(alg: EcdsaParams): void;
+        protected static ALG_NAME: string;
+        protected static KEY_USAGES: string[];
     }
 
     class EcDSA extends Ec {

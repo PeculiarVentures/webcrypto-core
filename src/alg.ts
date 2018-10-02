@@ -12,8 +12,11 @@ export const AlgorithmNames = {
     Sha256: "SHA-256",
     Sha384: "SHA-384",
     Sha512: "SHA-512",
+    ChaCha20: "CHACHA20",
     EcDSA: "ECDSA",
+    EdDSA: "EDDSA",
     EcDH: "ECDH",
     Hmac: "HMAC",
+    Poly1305: "POLY1305",
     Pbkdf2: "PBKDF2",
 };
