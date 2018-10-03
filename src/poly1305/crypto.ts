@@ -12,7 +12,7 @@ export class Poly1305 extends BaseCrypto {
         }
     }
 
-    public static checkKeyGenParams(alg: AesKeyGenParams) {
+    public static checkKeyGenParams(alg: Poly1305KeyGenParams) {
         // length is optional
         if ("length" in alg && !(alg.length > 0 && alg.length <= 512)) {
             throw new AlgorithmError(AlgorithmError.PARAM_WRONG_VALUE, "length", "more 0 and less than 512");
@@ -36,7 +36,7 @@ export class Poly1305 extends BaseCrypto {
 
     }
 
-    public static generateKey(algorithm: AesKeyGenParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey | CryptoKeyPair> {
+    public static generateKey(algorithm: Poly1305KeyGenParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey | CryptoKeyPair> {
         return new Promise((resolve, reject) => {
             this.checkAlgorithm(algorithm);
             this.checkKeyGenParams(algorithm);
@@ -81,4 +81,8 @@ export class Poly1305 extends BaseCrypto {
         });
     }
 
+}
+
+interface Poly1305KeyGenParams extends Algorithm {
+    length: number;
 }

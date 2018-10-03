@@ -26,6 +26,7 @@ declare namespace WebcryptoCore {
         Hmac: string;
         Poly1305: string;
         Pbkdf2: string;
+        X25519: string;
     };
 
     function PrepareAlgorithm(alg: AlgorithmIdentifier | string): Algorithm;
@@ -146,6 +147,13 @@ declare namespace WebcryptoCore {
         public code: number;
     }
 
+    class ChaCha20 extends BaseCrypto {
+        public static encrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer>;
+        public static decrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer>;
+        public static ALG_NAME:  string;
+        public static KEY_USAGES: string[];
+    }
+
     class Ec extends BaseCrypto {
         public static checkAlgorithm(alg: Algorithm): void;
         public static checkKeyGenParams(alg: EcKeyGenParams): void;
@@ -236,6 +244,24 @@ declare namespace WebcryptoCore {
         public static checkDeriveParams(alg: Pbkdf2Params): void;
         protected static ALG_NAME: string;
         protected static KEY_USAGES: string[];
+    }
+
+    interface Poly1305KeyGenParams extends Algorithm {
+        hash: string | Algorithm;
+        length?: number;
+    }
+
+    export class Poly1305 extends BaseCrypto {
+        public static checkAlgorithm(alg: Algorithm): void;
+        public static checkKeyGenParams(alg: Poly1305KeyGenParams): void;
+        public static checkKeyGenUsages(keyUsages: string[]): void;
+        public static generateKey(algorithm: Poly1305KeyGenParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey | CryptoKeyPair>;
+        public static exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer>;
+        public static importKey(format: string, keyData: JsonWebKey | Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer, algorithm: string | RsaHashedImportParams | EcKeyImportParams | HmacImportParams | DhImportKeyParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
+        public static sign(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer>;
+        public static verify(algorithm: Algorithm, key: CryptoKey, signature: Uint8Array, data: Uint8Array): PromiseLike<boolean>;
+        public static ALG_NAME: string;
+        public static KEY_USAGES: string[];
     }
 
 }

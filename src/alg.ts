@@ -19,4 +19,5 @@ export const AlgorithmNames = {
     Hmac: "HMAC",
     Poly1305: "POLY1305",
     Pbkdf2: "PBKDF2",
+    X25519: "X25519",
 };
