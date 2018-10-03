@@ -22,9 +22,13 @@ export class ChaCha20 extends BaseCrypto {
         });
     }
 
-    public static checkKeyGenParams(alg: AesKeyGenParams) {
+    public static checkKeyGenParams(alg: ChaCha20KeyGenParams) {
         if (alg.length !== 256) {
-            throw new AlgorithmError(AlgorithmError.PARAM_WRONG_VALUE, "length", "128, 192 or 256");
+            throw new AlgorithmError(AlgorithmError.PARAM_WRONG_VALUE, "length", "256");
         }
     }
+}
+
+interface ChaCha20KeyGenParams {
+    length: number;
 }

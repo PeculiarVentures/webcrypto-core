@@ -14,8 +14,8 @@ export class Poly1305 extends BaseCrypto {
 
     public static checkKeyGenParams(alg: Poly1305KeyGenParams) {
         // length is optional
-        if ("length" in alg && !(alg.length > 0 && alg.length <= 512)) {
-            throw new AlgorithmError(AlgorithmError.PARAM_WRONG_VALUE, "length", "more 0 and less than 512");
+        if ("length" in alg && alg.length === 256) {
+            throw new AlgorithmError(AlgorithmError.PARAM_WRONG_VALUE, "length", "256");
         }
     }
 
@@ -53,7 +53,7 @@ export class Poly1305 extends BaseCrypto {
         });
     }
 
-    public static importKey(format: string, keyData: JsonWebKey | Uint8Array, algorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
+    public static importKey(format: string, keyData: JsonWebKey | BufferSource, algorithm: Poly1305KeyGenParams, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey> {
         return new Promise((resolve, reject) => {
             this.checkAlgorithm(algorithm);
             this.checkFormat(format);
