@@ -27,6 +27,23 @@ export class ChaCha20 extends BaseCrypto {
             throw new AlgorithmError(AlgorithmError.PARAM_WRONG_VALUE, "length", "256");
         }
     }
+
+    public static checkKey(key: CryptoKey, alg?: string, type: string | null = null, usage: string | null = null) {
+        // check key empty
+        if (!key) {
+            throw new CryptoKeyError(CryptoKeyError.EMPTY_KEY);
+        }
+        // check type
+        if (type && (!key.type || key.type.toUpperCase() !== type.toUpperCase())) {
+            throw new CryptoKeyError(CryptoKeyError.WRONG_KEY_TYPE, key.type, type);
+        }
+        // check usage
+        if (usage) {
+            if (!key.usages.some((keyUsage) => usage.toUpperCase() === keyUsage.toUpperCase())) {
+                throw new CryptoKeyError(CryptoKeyError.WRONG_KEY_USAGE, usage);
+            }
+        }
+    }
 }
 
 interface ChaCha20KeyGenParams {

@@ -33,9 +33,10 @@ export class Ec extends BaseCrypto {
             case "P-384":
             case "P-521":
             case "X25519":
+            case "ED25519":
                 break;
             default:
-                throw new EcKeyGenParamsError(EcKeyGenParamsError.PARAM_WRONG_VALUE, paramNamedCurve, "K-256, P-256, P-384, P-521 or X25519");
+                throw new EcKeyGenParamsError(EcKeyGenParamsError.PARAM_WRONG_VALUE, paramNamedCurve, "K-256, P-256, P-384, P-521, X25519 or ED25519");
         }
     }
 
