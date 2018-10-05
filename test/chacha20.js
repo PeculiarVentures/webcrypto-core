@@ -9,7 +9,7 @@ describe("Subtle", function () {
 
     context("ChaCha20", function () {
 
-        it("ChaCha20 encrypt", function (done) {
+        it("encrypt", function (done) {
             var key = {
                 algorithm: {
                     name: "ECDSA",
@@ -22,6 +22,36 @@ describe("Subtle", function () {
                 label: new Uint8Array([1, 2, 3, 4, 5, 6])
             }
             encrypt("encrypt", alg, key, done, false);
+        });
+
+        it("encrypt fails with bad key type", function (done) {
+            var key = {
+                algorithm: {
+                    name: "ECDSA",
+                },
+                usages: ["encrypt"],
+                type: "public"
+            };
+            var alg = {
+                name: "CHACHA20",
+                label: new Uint8Array([1, 2, 3, 4, 5, 6])
+            }
+            encrypt("encrypt", alg, key, done, true);
+        });
+
+        it("encrypt fails with bad key useage", function (done) {
+            var key = {
+                algorithm: {
+                    name: "ECDSA",
+                },
+                usages: ["sign"],
+                type: "secret"
+            };
+            var alg = {
+                name: "CHACHA20",
+                label: new Uint8Array([1, 2, 3, 4, 5, 6])
+            }
+            encrypt("encrypt", alg, key, done, true);
         });
 
         it("decrypt", (done) => {
@@ -38,5 +68,6 @@ describe("Subtle", function () {
             }
             encrypt("decrypt", alg, key, done, false);
         });
+
     })
 })
