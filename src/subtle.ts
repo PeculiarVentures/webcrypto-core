@@ -4,7 +4,7 @@ import { AlgorithmError, CryptoKeyError, WebCryptoError } from "./error";
 
 import { AesCBC, AesCTR, AesECB, AesGCM, AesKW } from "./aes/crypto";
 import { ChaCha20 } from "./chacha20/crypto";
-import { EcDH, EcDSA } from "./ec/crypto";
+import { EcDH, EcDSA, EdDSA } from "./ec/crypto";
 import { Hmac } from "./hmac/crypto";
 import { Pbkdf2 } from "./pbkdf2/crypto";
 import { Poly1305 } from "./poly1305/crypto";
@@ -48,14 +48,14 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.EcDSA.toUpperCase():
                     Class = EcDSA;
                     break;
+                case AlgorithmNames.EdDSA.toUpperCase():
+                    Class = EdDSA;
+                    break;
                 case AlgorithmNames.EcDH.toUpperCase():
                     Class = EcDH;
                     break;
                 case AlgorithmNames.Hmac.toUpperCase():
                     Class = Hmac;
-                    break;
-                case AlgorithmNames.Poly1305.toUpperCase():
-                    Class = Poly1305;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
@@ -100,6 +100,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.EcDSA.toUpperCase():
                     Class = EcDSA;
                     break;
+                case AlgorithmNames.EdDSA.toUpperCase():
+                    Class = EdDSA;
+                    break;
                 case AlgorithmNames.Hmac.toUpperCase():
                     Class = Hmac;
                     break;
@@ -129,6 +132,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.EcDSA.toUpperCase():
                     Class = EcDSA;
+                    break;
+                case AlgorithmNames.EdDSA.toUpperCase():
+                    Class = EdDSA;
                     break;
                 case AlgorithmNames.Hmac.toUpperCase():
                     Class = Hmac;

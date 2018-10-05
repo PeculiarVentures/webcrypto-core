@@ -22,12 +22,6 @@ export class ChaCha20 extends BaseCrypto {
         });
     }
 
-    public static checkKeyGenParams(alg: ChaCha20KeyGenParams) {
-        if (alg.length !== 256) {
-            throw new AlgorithmError(AlgorithmError.PARAM_WRONG_VALUE, "length", "256");
-        }
-    }
-
     public static checkKey(key: CryptoKey, alg?: string, type: string | null = null, usage: string | null = null) {
         // check key empty
         if (!key) {

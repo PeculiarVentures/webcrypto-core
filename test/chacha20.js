@@ -54,10 +54,40 @@ describe("Subtle", function () {
             encrypt("encrypt", alg, key, done, true);
         });
 
-        it("encrypt fails no key", function (done) {
-            var key = {};
+        it("encrypt fails with missing key useage", function (done) {
+            var key = {
+                algorithm: {
+                    name: "ECDSA",
+                },
+                usages : null,
+                type: "secret"
+            };
             var alg = {
                 name: "CHACHA20",
+                label: new Uint8Array([1, 2, 3, 4, 5, 6])
+            }
+            encrypt("encrypt", alg, key, done, true);
+        });
+
+        it("encrypt fails no key", function (done) {
+            var key = false;
+            var alg = {
+                name: "CHACHA20",
+                label: new Uint8Array([1, 2, 3, 4, 5, 6])
+            }
+            encrypt("encrypt", alg, key, done, true);
+        });
+
+        it("encrypt fails bad length", function (done) {
+            var key = {
+                algorithm: {
+                    name: "ECDSA",
+                },
+                type: "secret"
+            };
+            var alg = {
+                name: "CHACHA20",
+                length: 254,
                 label: new Uint8Array([1, 2, 3, 4, 5, 6])
             }
             encrypt("encrypt", alg, key, done, true);
@@ -79,7 +109,7 @@ describe("Subtle", function () {
         });
 
         it("decrypt fails with no key", (done) => {
-            var key = {};
+            var key = null;
             var alg = {
                 name: "CHACHA20",
                 label: new Uint8Array([1, 2, 3, 4, 5, 6])

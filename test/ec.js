@@ -10,6 +10,7 @@ var importKey = helper.importKey;
 var keyUsages = {
     ecdsa: ["sign", "verify"],
     ecdh: ["deriveKey", "deriveBits"],
+    eddsa: ["sign", "verify"],
 }
 
 describe("Subtle", function () {
@@ -18,7 +19,7 @@ describe("Subtle", function () {
 
         context("generate", function () {
 
-            ["ecdsa", "ecdh"]
+            ["ecdsa", "ecdh", "eddsa"]
                 .forEach(function (alg) {
 
                     ["P-256", "P-384", "P-521", "K-256", "X25519", "Wrong curve", void 0, 123]
@@ -506,7 +507,44 @@ describe("Subtle", function () {
                 exportKey("jwk", key, done, true);
             });
 
-        }); // import/export ECDSA			
+        }); // import/export ECDSA
+
+        context("EdDSA sign/verify", function () {
+            it("sign sha-512", function (done) {
+                var _key = {
+                    type: "private",
+                    algorithm: {
+                        name: "eddsa"
+                    },
+                    usages: ["sign"]
+                };
+                var _alg = {
+                    name: "eddsa",
+                    hash: {
+                        name: "sha-512"
+                    }
+                }
+                sign(_alg, _key, done, false);
+            });
+
+            it("verify sha-512", function (done) {
+                var _key = {
+                    type: "public",
+                    algorithm: {
+                        name: "eddsa"
+                    },
+                    usages: ["verify"]
+                };
+                var _alg = {
+                    name: "eddsa",
+                    hash: {
+                        name: "sha-512"
+                    }
+                }
+                verify(_alg, _key, done, false);
+            });
+
+        })
 
     });
 

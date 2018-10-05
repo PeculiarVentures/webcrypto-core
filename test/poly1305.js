@@ -78,9 +78,38 @@ describe("Subtle", function () {
             });
 
             it("sign fails with no key", function (done) {
-                var _key = {};
+                var _key = null;
                 var _alg = {
                     name: "Poly1305",
+                }
+                sign(_alg, _key, done, true);
+            });
+
+            it("sign fails with bad algo", function (done) {
+                var _key = {
+                    type: "secret",
+                    algorithm: {
+                        name: "EDDSA",
+                    },
+                    usages: ["sign"]
+                };
+                var _alg = {
+                    name: "ChaCha20",
+                }
+                sign(_alg, _key, done, true);
+            });
+
+            it("sign fails with bad algo length", function (done) {
+                var _key = {
+                    type: "secret",
+                    algorithm: {
+                        name: "EDDSA",
+                    },
+                    usages: ["sign"]
+                };
+                var _alg = {
+                    name: "ChaCha20",
+                    length: 254,
                 }
                 sign(_alg, _key, done, true);
             });
