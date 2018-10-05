@@ -54,6 +54,15 @@ describe("Subtle", function () {
             encrypt("encrypt", alg, key, done, true);
         });
 
+        it("encrypt fails no key", function (done) {
+            var key = {};
+            var alg = {
+                name: "CHACHA20",
+                label: new Uint8Array([1, 2, 3, 4, 5, 6])
+            }
+            encrypt("encrypt", alg, key, done, true);
+        });
+
         it("decrypt", (done) => {
             var key = {
                 algorithm: {
@@ -67,6 +76,15 @@ describe("Subtle", function () {
                 label: new Uint8Array([1, 2, 3, 4, 5, 6])
             }
             encrypt("decrypt", alg, key, done, false);
+        });
+
+        it("decrypt fails with no key", (done) => {
+            var key = {};
+            var alg = {
+                name: "CHACHA20",
+                label: new Uint8Array([1, 2, 3, 4, 5, 6])
+            }
+            encrypt("decrypt", alg, key, done, true);
         });
 
     })

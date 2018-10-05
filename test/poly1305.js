@@ -62,6 +62,7 @@ describe("Subtle", function () {
                 }
                 sign(_alg, _key, done, false);
             });
+
             it("sign fails with bad useage", function (done) {
                 var _key = {
                     type: "secret",
@@ -70,6 +71,14 @@ describe("Subtle", function () {
                     },
                     usages: ["encrypt"]
                 };
+                var _alg = {
+                    name: "Poly1305",
+                }
+                sign(_alg, _key, done, true);
+            });
+
+            it("sign fails with no key", function (done) {
+                var _key = {};
                 var _alg = {
                     name: "Poly1305",
                 }
@@ -88,6 +97,14 @@ describe("Subtle", function () {
                     name: "Poly1305"
                 }
                 verify(_alg, _key, done, false);
+            });
+
+            it("verify fails with no key", function (done) {
+                var _key = {};
+                var _alg = {
+                    name: "Poly1305"
+                }
+                verify(_alg, _key, done, true);
             });
         })
     })
