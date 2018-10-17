@@ -33,9 +33,10 @@ export class Ec extends BaseCrypto {
             case "P-384":
             case "P-521":
             case "X25519":
+            case "ED25519":
                 break;
             default:
-                throw new EcKeyGenParamsError(EcKeyGenParamsError.PARAM_WRONG_VALUE, paramNamedCurve, "K-256, P-256, P-384, P-521 or X25519");
+                throw new EcKeyGenParamsError(EcKeyGenParamsError.PARAM_WRONG_VALUE, paramNamedCurve, "K-256, P-256, P-384, P-521, X25519 or ED25519");
         }
     }
 
@@ -87,10 +88,36 @@ export class EcAlgorithmError extends AlgorithmError {
     public code = 10;
 }
 
+export class EdDSA extends Ec {
+    public static ALG_NAME = AlgorithmNames.EdDSA;
+    public static KEY_USAGES: string[] = ["sign", "verify"];
+
+    public static checkAlgorithmParams(alg: EcdsaParams) {
+        this.checkAlgorithm(alg);
+        Sha.checkAlgorithm(alg.hash as Algorithm);
+    }
+
+    public static sign(algorithm: EcdsaParams, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer> {
+        return new Promise((resolve, reject) => {
+            this.checkAlgorithmParams(algorithm);
+            this.checkKey(key, this.ALG_NAME, "private", "sign");
+            resolve(undefined);
+        });
+    }
+
+    public static verify(algorithm: EcdsaParams, key: CryptoKey, signature: Uint8Array, data: Uint8Array): PromiseLike<boolean> {
+        return new Promise((resolve, reject) => {
+            this.checkAlgorithmParams(algorithm);
+            this.checkKey(key, this.ALG_NAME, "public", "verify");
+            resolve(undefined);
+        });
+    }
+}
+
 export class EcDSA extends Ec {
 
     public static ALG_NAME = AlgorithmNames.EcDSA;
-    public static KEY_USAGES: string[] = ["sign", "verify", "deriveKey", "deriveBits"];
+    public static KEY_USAGES: string[] = ["sign", "verify"];
 
     public static checkAlgorithmParams(alg: EcdsaParams) {
         this.checkAlgorithm(alg);

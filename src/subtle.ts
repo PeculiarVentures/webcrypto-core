@@ -3,9 +3,11 @@ import { BaseCrypto, PrepareAlgorithm, PrepareData } from "./base";
 import { AlgorithmError, CryptoKeyError, WebCryptoError } from "./error";
 
 import { AesCBC, AesCTR, AesECB, AesGCM, AesKW } from "./aes/crypto";
-import { EcDH, EcDSA } from "./ec/crypto";
+import { ChaCha20 } from "./chacha20/crypto";
+import { EcDH, EcDSA, EdDSA } from "./ec/crypto";
 import { Hmac } from "./hmac/crypto";
 import { Pbkdf2 } from "./pbkdf2/crypto";
+import { Poly1305 } from "./poly1305/crypto";
 import { RsaOAEP, RsaPSS, RsaSSA } from "./rsa/crypto";
 import { Sha } from "./sha/crypto";
 
@@ -45,6 +47,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.EcDSA.toUpperCase():
                     Class = EcDSA;
+                    break;
+                case AlgorithmNames.EdDSA.toUpperCase():
+                    Class = EdDSA;
                     break;
                 case AlgorithmNames.EcDH.toUpperCase():
                     Class = EcDH;
@@ -95,8 +100,14 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.EcDSA.toUpperCase():
                     Class = EcDSA;
                     break;
+                case AlgorithmNames.EdDSA.toUpperCase():
+                    Class = EdDSA;
+                    break;
                 case AlgorithmNames.Hmac.toUpperCase():
                     Class = Hmac;
+                    break;
+                case AlgorithmNames.Poly1305.toUpperCase():
+                    Class = Poly1305;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
@@ -122,8 +133,14 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.EcDSA.toUpperCase():
                     Class = EcDSA;
                     break;
+                case AlgorithmNames.EdDSA.toUpperCase():
+                    Class = EdDSA;
+                    break;
                 case AlgorithmNames.Hmac.toUpperCase():
                     Class = Hmac;
+                    break;
+                case AlgorithmNames.Poly1305.toUpperCase():
+                    Class = Poly1305;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
@@ -154,6 +171,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.AesGCM.toUpperCase():
                     Class = AesGCM;
                     break;
+                case AlgorithmNames.ChaCha20.toUpperCase():
+                    Class = ChaCha20;
+                    break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
             }
@@ -182,6 +202,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.AesGCM.toUpperCase():
                     Class = AesGCM;
+                    break;
+                case AlgorithmNames.ChaCha20.toUpperCase():
+                    Class = ChaCha20;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
@@ -273,6 +296,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.Hmac.toUpperCase():
                     Class = Hmac;
                     break;
+                case AlgorithmNames.Poly1305.toUpperCase():
+                    Class = Poly1305;
+                    break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, key.algorithm.name);
             }
@@ -324,6 +350,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.Pbkdf2.toUpperCase():
                     Class = Pbkdf2;
+                    break;
+                case AlgorithmNames.Poly1305.toUpperCase():
+                    Class = Poly1305;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
