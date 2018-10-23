@@ -509,6 +509,95 @@ describe("Subtle", function () {
 
         }); // import/export ECDSA
 
+        context("import/export EdDSA", function () {
+
+            it("import raw", function (done) {
+                var alg = {
+                    name: "eddsa",
+                    namedCurve: "p-256"
+                }
+                importKey("raw", {}, alg, ["sign"], done, false);
+            });
+
+            it("import jwk", function (done) {
+                var alg = {
+                    name: "eddsa",
+                    namedCurve: "p-256"
+                }
+                importKey("jwk", {}, alg, ["sign"], done, false);
+            });
+
+            it("import spki", function (done) {
+                var alg = {
+                    name: "eddsa",
+                    namedCurve: "p-256"
+                }
+                importKey("spki", new Uint8Array(5), alg, ["verify"], done, false);
+            });
+
+            it("import wrong alg namedCurver", function (done) {
+                var alg = {
+                    name: "eddsa",
+                    namedCurve: "wrong"
+                }
+                importKey("jwk", {}, alg, ["sign"], done, true);
+            });
+
+            it("import", function (done) {
+                var alg = {
+                    name: "eddsa",
+                    namedCurve: "p-256"
+                }
+                importKey("jwk", {}, alg, ["sign"], done, false);
+            });
+
+            // export
+            context("export", function () {
+
+                // Test export of public keys
+                ["jwk", "spki", "raw", "pkcs8"].forEach(function (format) {
+                    it(format, function (done) {
+                        var key = {
+                            algorithm: {
+                                name: "eddsa"
+                            },
+                            type: "public",
+                            extractable: true
+                        };
+                        exportKey(format, key, done, format === "pkcs8"); // pkcs8 only for private!
+                    });
+                });
+
+                // Test export of private keys
+                ["jwk", "pkcs8", "spki", "raw"].forEach(function (format) {
+                    it(format, function (done) {
+                        var key = {
+                            algorithm: {
+                                name: "eddsa"
+                            },
+                            type: "private",
+                            extractable: true
+                        };
+                        exportKey(format, key, done, format === "spki" || format === "raw"); // spki & raw only for public
+                    });
+                });
+
+                it("not extractable", function (done) {
+                    var key = {
+                        algorithm: {
+                            name: "eddsa"
+                        },
+                        type: "public",
+                        extractable: false
+                    };
+                    exportKey("jwk", key, done, true);
+                });
+
+            });
+
+        }); // import/export EDDSA
+
+
         context("EdDSA sign/verify", function () {
             it("sign sha-512", function (done) {
                 var _key = {
