@@ -290,6 +290,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.EcDSA.toUpperCase():
                     Class = EcDSA;
                     break;
+                case AlgorithmNames.EdDSA.toUpperCase():
+                    Class = EdDSA;
+                    break;
                 case AlgorithmNames.EcDH.toUpperCase():
                     Class = EcDH;
                     break;
@@ -341,6 +344,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.EcDSA.toUpperCase():
                     Class = EcDSA;
+                    break;
+                case AlgorithmNames.EdDSA.toUpperCase():
+                    Class = EdDSA;
                     break;
                 case AlgorithmNames.EcDH.toUpperCase():
                     Class = EcDH;
