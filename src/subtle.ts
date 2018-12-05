@@ -4,6 +4,7 @@ import { AlgorithmError, CryptoKeyError, WebCryptoError } from "./error";
 
 import { AesCBC, AesCTR, AesECB, AesGCM, AesKW } from "./aes/crypto";
 import { ChaCha20 } from "./chacha20/crypto";
+import { Des, DesCBC, DesCbcParams } from "./des/crypto";
 import { EcDH, EcDSA, EdDSA } from "./ec/crypto";
 import { Hmac } from "./hmac/crypto";
 import { Pbkdf2 } from "./pbkdf2/crypto";
@@ -56,6 +57,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.Hmac.toUpperCase():
                     Class = Hmac;
+                    break;
+                case AlgorithmNames.DesCBC.toUpperCase():
+                    Class = DesCBC;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
@@ -149,7 +153,7 @@ export class SubtleCrypto implements NativeSubtleCrypto {
         });
     }
 
-    public encrypt(algorithm: string | RsaOaepParams | AesCtrParams | AesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer>;
+    public encrypt(algorithm: string | RsaOaepParams | AesCtrParams | AesCbcParams | DesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer>;
     public encrypt(algorithm: any, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer> {
         return new Promise((resolve, reject) => {
             const alg = PrepareAlgorithm(algorithm);
@@ -174,6 +178,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.ChaCha20.toUpperCase():
                     Class = ChaCha20;
                     break;
+                case AlgorithmNames.DesCBC.toUpperCase():
+                    Class = DesCBC;
+                    break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
             }
@@ -181,7 +188,7 @@ export class SubtleCrypto implements NativeSubtleCrypto {
         });
     }
 
-    public decrypt(algorithm: string | RsaOaepParams | AesCtrParams | AesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer>;
+    public decrypt(algorithm: string | RsaOaepParams | AesCtrParams | AesCbcParams | DesCbcParams | AesCmacParams | AesGcmParams | AesCfbParams, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer>;
     public decrypt(algorithm: any, key: CryptoKey, data: BufferSource): PromiseLike<ArrayBuffer> {
         return new Promise((resolve, reject) => {
             const alg = PrepareAlgorithm(algorithm);
@@ -205,6 +212,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.ChaCha20.toUpperCase():
                     Class = ChaCha20;
+                    break;
+                case AlgorithmNames.DesCBC.toUpperCase():
+                    Class = DesCBC;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
@@ -302,6 +312,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.Poly1305.toUpperCase():
                     Class = Poly1305;
                     break;
+                case AlgorithmNames.DesCBC.toUpperCase():
+                    Class = DesCBC;
+                    break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, key.algorithm.name);
             }
@@ -360,6 +373,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.Poly1305.toUpperCase():
                     Class = Poly1305;
                     break;
+                case AlgorithmNames.DesCBC.toUpperCase():
+                    Class = DesCBC;
+                    break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
             }
@@ -389,6 +405,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.AesKW.toUpperCase():
                     Class = AesKW;
+                    break;
+                case AlgorithmNames.DesCBC.toUpperCase():
+                    Class = DesCBC;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
@@ -421,6 +440,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.AesKW.toUpperCase():
                     Class = AesKW;
+                    break;
+                case AlgorithmNames.DesCBC.toUpperCase():
+                    Class = DesCBC;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, unwrapAlg.name);
