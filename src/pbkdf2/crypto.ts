@@ -1,6 +1,7 @@
 import * as Aes from "../aes/crypto";
 import { AlgorithmNames } from "../alg";
 import { BaseCrypto, PrepareAlgorithm } from "../base";
+import { DesCBC, DesEdeCBC } from "../des/crypto";
 import { AlgorithmError, CryptoKeyError, WebCryptoError } from "../error";
 import { Hmac } from "../hmac/crypto";
 import { Sha } from "../sha/crypto";
@@ -83,6 +84,14 @@ export class Pbkdf2 extends BaseCrypto {
                     case AlgorithmNames.Hmac:
                         Hmac.checkKeyGenParams(derivedKeyType as any);
                         Hmac.checkKeyUsages(keyUsages);
+                        break;
+                    case AlgorithmNames.DesCBC:
+                        DesCBC.checkKeyGenParams(derivedKeyType as any);
+                        DesCBC.checkKeyUsages(keyUsages);
+                        break;
+                    case AlgorithmNames.DesEdeCBC:
+                        DesEdeCBC.checkKeyGenParams(derivedKeyType as any);
+                        DesEdeCBC.checkKeyUsages(keyUsages);
                         break;
                     default:
                         throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, derivedKeyType);

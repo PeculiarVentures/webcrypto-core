@@ -4,7 +4,7 @@ import { AlgorithmError, CryptoKeyError, WebCryptoError } from "./error";
 
 import { AesCBC, AesCTR, AesECB, AesGCM, AesKW } from "./aes/crypto";
 import { ChaCha20 } from "./chacha20/crypto";
-import { Des, DesCBC, DesCbcParams } from "./des/crypto";
+import { Des, DesCBC, DesCbcParams, DesEdeCBC } from "./des/crypto";
 import { EcDH, EcDSA, EdDSA } from "./ec/crypto";
 import { Hmac } from "./hmac/crypto";
 import { Pbkdf2 } from "./pbkdf2/crypto";
@@ -60,6 +60,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.DesCBC.toUpperCase():
                     Class = DesCBC;
+                    break;
+                case AlgorithmNames.DesEdeCBC.toUpperCase():
+                    Class = DesEdeCBC;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
@@ -181,6 +184,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.DesCBC.toUpperCase():
                     Class = DesCBC;
                     break;
+                case AlgorithmNames.DesEdeCBC.toUpperCase():
+                    Class = DesEdeCBC;
+                    break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
             }
@@ -215,6 +221,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.DesCBC.toUpperCase():
                     Class = DesCBC;
+                case AlgorithmNames.DesEdeCBC.toUpperCase():
+                    Class = DesEdeCBC;
+                    break;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
@@ -315,6 +324,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.DesCBC.toUpperCase():
                     Class = DesCBC;
                     break;
+                case AlgorithmNames.DesEdeCBC.toUpperCase():
+                    Class = DesEdeCBC;
+                    break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, key.algorithm.name);
             }
@@ -376,6 +388,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                 case AlgorithmNames.DesCBC.toUpperCase():
                     Class = DesCBC;
                     break;
+                case AlgorithmNames.DesEdeCBC.toUpperCase():
+                    Class = DesEdeCBC;
+                    break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
             }
@@ -408,6 +423,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.DesCBC.toUpperCase():
                     Class = DesCBC;
+                    break;
+                case AlgorithmNames.DesEdeCBC.toUpperCase():
+                    Class = DesEdeCBC;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);
@@ -443,6 +461,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.DesCBC.toUpperCase():
                     Class = DesCBC;
+                    break;
+                case AlgorithmNames.DesEdeCBC.toUpperCase():
+                    Class = DesEdeCBC;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, unwrapAlg.name);

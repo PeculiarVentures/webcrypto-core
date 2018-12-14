@@ -2,17 +2,26 @@ import { AlgorithmNames } from "../alg";
 import { BaseCrypto } from "../base";
 import { AlgorithmError, CryptoKeyError, WebCryptoError } from "../error";
 
-// tslint:disable-next-line:no-empty-interface
 export interface DesKeyGenParams extends Algorithm {
+    length: number;
 }
 
 export interface DesCbcParams extends Algorithm {
   iv: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer;
 }
 
+export interface DesEdeCbcParams extends Algorithm {
+  iv: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer;
+}
+
+export interface DesKeyDeriveParams extends Algorithm {
+    length: number;
+}
+
 export class Des extends BaseCrypto {
 
     public static ALG_NAME = "";
+    public static KEY_LENGTH = 64;
     public static KEY_USAGES: string[] = ["encrypt", "decrypt", "wrapKey", "unwrapKey"];
 
     public static checkKeyUsages(keyUsages: string[]) {
@@ -30,7 +39,15 @@ export class Des extends BaseCrypto {
     }
 
     public static checkKeyGenParams(alg: DesKeyGenParams) {
-      // nothing
+      if (!("length" in alg)) {
+        throw new AlgorithmError(AlgorithmError.PARAM_REQUIRED, "length");
+      }
+      if (typeof alg.length !== "number") {
+        throw new AlgorithmError(AlgorithmError.PARAM_WRONG_TYPE, "length", "Number");
+      }
+      if (alg.length !== this.KEY_LENGTH) {
+        throw new AlgorithmError(AlgorithmError.PARAM_WRONG_VALUE, "length", `${this.KEY_LENGTH}`);
+      }
     }
 
     public static generateKey(algorithm: DesKeyGenParams, extractable: boolean, keyUsages: string[]): Promise<CryptoKey | CryptoKeyPair> {
@@ -115,5 +132,12 @@ export class DesCBC extends Des {
             throw new AlgorithmError(AlgorithmError.PARAM_WRONG_VALUE, "iv", "ArrayBufferView or ArrayBuffer with size 8");
         }
     }
+
+}
+
+export class DesEdeCBC extends DesCBC {
+
+    public static ALG_NAME = AlgorithmNames.DesEdeCBC;
+    public static KEY_LENGTH = 192;
 
 }
