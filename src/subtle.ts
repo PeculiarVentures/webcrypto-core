@@ -221,9 +221,9 @@ export class SubtleCrypto implements NativeSubtleCrypto {
                     break;
                 case AlgorithmNames.DesCBC.toUpperCase():
                     Class = DesCBC;
+                    break;
                 case AlgorithmNames.DesEdeCBC.toUpperCase():
                     Class = DesEdeCBC;
-                    break;
                     break;
                 default:
                     throw new AlgorithmError(AlgorithmError.UNSUPPORTED_ALGORITHM, alg.name);

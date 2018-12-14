@@ -12,16 +12,16 @@ describe("Subtle", function () {
       algs.forEach(function (alg) {
 
           it(alg + " generate", function (done) {
-              generate({ name: alg }, ["encrypt", "decrypt", "wrapKey", "unwrapKey"], done, false);
+              generate({ name: alg, length: 64 }, ["encrypt", "decrypt", "wrapKey", "unwrapKey"], done, false);
           });
           it(alg + " generate wrong key usage", function (done) {
-              generate({ name: alg }, ["sign", "verify"], done, true);
+              generate({ name: alg, length: 64 }, ["sign", "verify"], done, true);
           });
           it(alg + " generate with key usage = null", function (done) {
-              generate({ name: alg }, null, done, true);
+              generate({ name: alg, length: 64 }, null, done, true);
           });
           it(alg + " generate with empty key usage", function (done) {
-              generate({ name: alg }, [], done, true);
+              generate({ name: alg, length: 64 }, [], done, true);
           });
           it(alg + " export raw", function (done) {
               var key = { algorithm: { name: alg }, type: "secret", extractable: true };
