@@ -27,6 +27,8 @@ declare namespace WebcryptoCore {
         Poly1305: string;
         Pbkdf2: string;
         X25519: string;
+        DesCBC: string;
+        DesEdeCBC: string;
     };
 
     function PrepareAlgorithm(alg: AlgorithmIdentifier | string): Algorithm;
@@ -150,7 +152,7 @@ declare namespace WebcryptoCore {
     class ChaCha20 extends BaseCrypto {
         public static encrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer>;
         public static decrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer>;
-        public static ALG_NAME:  string;
+        public static ALG_NAME: string;
         public static KEY_USAGES: string[];
     }
 
@@ -262,6 +264,50 @@ declare namespace WebcryptoCore {
         public static verify(algorithm: Algorithm, key: CryptoKey, signature: Uint8Array, data: Uint8Array): PromiseLike<boolean>;
         public static ALG_NAME: string;
         public static KEY_USAGES: string[];
+    }
+
+    // DES
+
+    interface DesKeyGenParams extends Algorithm {
+        length: number;
+    }
+
+    interface DesCbcParams extends Algorithm {
+        iv: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer;
+    }
+
+    interface DesEdeCbcParams extends Algorithm {
+        iv: Int8Array | Int16Array | Int32Array | Uint8Array | Uint16Array | Uint32Array | Uint8ClampedArray | Float32Array | Float64Array | DataView | ArrayBuffer;
+    }
+
+    interface DesKeyDeriveParams extends Algorithm {
+        length: number;
+    }
+
+    class Des extends BaseCrypto {
+        public static ALG_NAME: string;
+        public static KEY_LENGTH: number;
+        public static KEY_USAGES: string[];
+        public static checkKeyUsages(keyUsages: string[]): void;
+        public static checkAlgorithm(alg: Algorithm): void;
+        public static checkKeyGenParams(alg: DesKeyGenParams): void;
+        public static generateKey(algorithm: DesKeyGenParams, extractable: boolean, keyUsages: string[]): Promise<CryptoKey | CryptoKeyPair>;
+        public static exportKey(format: string, key: CryptoKey): PromiseLike<JsonWebKey | ArrayBuffer>;
+        public static importKey(format: string, keyData: JsonWebKey | Uint8Array, algorithm: any, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
+        public static wrapKey(format: string, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: Algorithm): PromiseLike<ArrayBuffer>;
+        public static unwrapKey(format: string, wrappedKey: Uint8Array, unwrappingKey: CryptoKey, unwrapAlgorithm: Algorithm, unwrappedKeyAlgorithm: Algorithm, extractable: boolean, keyUsages: string[]): PromiseLike<CryptoKey>;
+        public static encrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer>;
+        public static decrypt(algorithm: Algorithm, key: CryptoKey, data: Uint8Array): PromiseLike<ArrayBuffer>;
+    }
+
+    class DesCBC extends Des {
+        public static ALG_NAME: string;
+        public static checkAlgorithmParams(alg: DesCbcParams): void;
+    }
+
+    class DesEdeCBC extends DesCBC {
+        public static ALG_NAME: string;
+        public static KEY_LENGTH: number;
     }
 
 }
