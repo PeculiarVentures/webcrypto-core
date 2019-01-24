@@ -41,10 +41,11 @@
     "@types/node": "^10.12.12",
     "coveralls": "^3.0.2",
     "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
     "rollup": "^0.67.4",
     "rollup-plugin-typescript": "^1.0.0",
-    "typescript": "^3.2.1",
-    "ts-node": "^7.0.1"
+    "ts-node": "^7.0.1",
+    "typescript": "^3.2.1"
   },
   "author": "PeculiarVentures",
   "license": "MIT",
