@@ -72,4 +72,18 @@ context("HMAC", () => {
 
   });
 
+  context("checkImportParams", () => {
+    it("error if `hash` is missing", () => {
+      assert.throws(() => {
+        provider.checkImportParams({} as any);
+      }, Error);
+    });
+
+    it("error if `hash` is wrong", () => {
+      assert.throws(() => {
+        provider.checkImportParams({ hash: { name: "WRONG" } } as any);
+      }, OperationError);
+    });
+  });
+
 });

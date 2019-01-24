@@ -45,4 +45,10 @@ export class HmacProvider extends ProviderCrypto {
     }
   }
 
+  public checkImportParams(algorithm: HmacImportParams) {
+    // hash
+    this.checkRequiredProperty(algorithm, "hash");
+    this.checkHashAlgorithm(algorithm.hash as Algorithm, this.hashAlgorithms);
+  }
+
 }
