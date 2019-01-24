@@ -7,7 +7,7 @@ context("HMAC", () => {
 
   context("checkAlgorithmParams", () => {
 
-    it("error if `hash` is missed", () => {
+    it("error if `hash` is missing", () => {
       assert.throws(() => {
         provider.checkAlgorithmParams({ salt: new Uint8Array(4), iterations: 1000 } as any);
       }, Error);
@@ -19,7 +19,7 @@ context("HMAC", () => {
       }, OperationError);
     });
 
-    it("error if `salt` is missed", () => {
+    it("error if `salt` is missing", () => {
       assert.throws(() => {
         provider.checkAlgorithmParams({ hash: { name: "SHA-256" }, iterations: 1000 } as any);
       }, Error);
@@ -31,7 +31,7 @@ context("HMAC", () => {
       }, TypeError);
     });
 
-    it("error if `iterations` is missed", () => {
+    it("error if `iterations` is missing", () => {
       assert.throws(() => {
         provider.checkAlgorithmParams({ hash: { name: "SHA-256" }, salt: new Uint8Array(4) } as any);
       }, Error);

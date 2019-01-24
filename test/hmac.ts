@@ -8,7 +8,7 @@ context("HMAC", () => {
 
   context("checkGenerateKeyParams", () => {
 
-    it("error if `hash` is missed", () => {
+    it("error if `hash` is missing", () => {
       assert.throws(() => {
         provider.checkGenerateKeyParams({} as any);
       }, Error);

@@ -8,58 +8,30 @@ context("AES", () => {
 
     const provider = new AesCbcProvider();
 
-    context("checkGenerateKey", () => {
+    context("checkGenerateKeyParams", () => {
 
-      context("algorithm", () => {
-
-        it("error if `name` is wrong", () => {
-          assert.throws(() => {
-            provider.checkGenerateKey({ name: "AES-WRONG", length: 128 }, false, ["encrypt"]);
-          }, AlgorithmError);
-        });
-
-        it("lower case `name`", () => {
-          provider.checkGenerateKey({ name: "aes-cbc", length: 128 }, false, ["encrypt"]);
-        });
-
-        it("error if `length` is not present", () => {
-          assert.throws(() => {
-            provider.checkGenerateKey({ name: "AES-CBC" } as any, false, ["encrypt"]);
-          }, Error);
-        });
-
-        it("error if `length` has wrong type", () => {
-          assert.throws(() => {
-            provider.checkGenerateKey({ name: "AES-CBC", length: "s" } as any, false, ["encrypt"]);
-          }, TypeError);
-        });
-
-        it("error if `length` has wrong value", () => {
-          assert.throws(() => {
-            provider.checkGenerateKey({ name: "AES-CBC", length: 1 } as any, false, ["encrypt"]);
-          }, TypeError);
-        });
-
-        [128, 192, 256].forEach((length) => {
-          it(`correct length:${length}`, () => {
-            provider.checkGenerateKey({ name: "AES-CBC", length } as any, false, ["encrypt"]);
-          });
-        });
-
+      it("error if `length` is not present", () => {
+        assert.throws(() => {
+          provider.checkGenerateKeyParams({ name: "AES-CBC" } as any);
+        }, Error);
       });
 
-      context("key usages", () => {
+      it("error if `length` has wrong type", () => {
+        assert.throws(() => {
+          provider.checkGenerateKeyParams({ name: "AES-CBC", length: "s" } as any);
+        }, TypeError);
+      });
 
-        it("correct usages", () => {
-          provider.checkGenerateKey({ name: "AES-CBC", length: 128 }, false, ["encrypt", "decrypt", "wrapKey", "unwrapKey"]);
+      it("error if `length` has wrong value", () => {
+        assert.throws(() => {
+          provider.checkGenerateKeyParams({ name: "AES-CBC", length: 1 } as any);
+        }, TypeError);
+      });
+
+      [128, 192, 256].forEach((length) => {
+        it(`correct length:${length}`, () => {
+          provider.checkGenerateKeyParams({ name: "AES-CBC", length } as any);
         });
-
-        it("wrong usage", () => {
-          assert.throws(() => {
-            provider.checkGenerateKey({ name: "AES-CBC", length: 128 }, false, ["encrypt", "sign"]);
-          }, TypeError);
-        });
-
       });
 
     });

@@ -21,7 +21,7 @@ context("EC", () => {
 
     context("checkGenerateKeyParams", () => {
 
-      it("error if `namedCurve` is missed", () => {
+      it("error if `namedCurve` is missing", () => {
         assert.throws(() => {
           provider.checkGenerateKeyParams({} as any);
         }, Error);
@@ -55,7 +55,7 @@ context("EC", () => {
 
       context("checkAlgorithmParams", () => {
 
-        it("error if `public` is missed", () => {
+        it("error if `public` is missing", () => {
           assert.throws(() => {
             provider.checkAlgorithmParams({} as any);
           }, Error);
@@ -104,7 +104,7 @@ context("EC", () => {
 
     context("checkAlgorithmParams", () => {
 
-      it("error if `hash` is missed", () => {
+      it("error if `hash` is missing", () => {
         assert.throws(() => {
           provider.checkAlgorithmParams({} as any);
         }, Error);
