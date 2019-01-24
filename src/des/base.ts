@@ -15,6 +15,12 @@ export interface DesKeyGenParams extends Algorithm {
   length: number;
 }
 
+export interface DesDerivedKeyParams extends Algorithm {
+  length: number;
+}
+
+export interface DesImportParams extends Algorithm { }
+
 export abstract class DesProvider extends ProviderCrypto {
 
   public usages: KeyUsages = ["encrypt", "decrypt", "wrapKey", "unwrapKey"];
@@ -34,19 +40,19 @@ export abstract class DesProvider extends ProviderCrypto {
     }
   }
 
-  public checkImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsages) {
-    super.checkImportKey(format, keyData, algorithm, extractable, keyUsages)
-    this.checkKeyUsages(keyUsages, this.usages);
-  }
-
-  public checkGenerateKey(algorithm: DesKeyGenParams, extractable: boolean, keyUsages: KeyUsage[]) {
-    super.checkGenerateKey(algorithm, extractable, keyUsages);
-
+  public checkGenerateKeyParams(algorithm: DesKeyGenParams) {
     // length
     this.checkRequiredProperty(algorithm, "length");
+    if (typeof algorithm.length !== "number") {
+      throw new TypeError("length: Is not of type Number");
+    }
     if (algorithm.length !== this.keySizeBits) {
       throw new OperationError(`algorith.length: Must be ${this.keySizeBits}`);
     }
+  }
+
+  public checkDerivedKeyParams(algorithm: DesDerivedKeyParams) {
+    this.checkGenerateKeyParams(algorithm);
   }
 
 }

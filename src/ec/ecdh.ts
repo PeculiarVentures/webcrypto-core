@@ -15,6 +15,7 @@ export class EcdhProvider extends EllipticProvider {
   public namedCurves = ["P-256", "P-384", "P-521"];
 
   public checkAlgorithmParams(algorithm: EcdhKeyDeriveParams) {
+    // public
     this.checkRequiredProperty(algorithm, "public");
     if (!(algorithm.public instanceof CryptoKey)) {
       throw new TypeError("public: Is not a CryptoKey");
