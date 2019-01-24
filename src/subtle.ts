@@ -1,5 +1,5 @@
 import { Convert } from "pvtsutils";
-import { AlgorithmError, RequiredPropertyError } from "./errors";
+import { AlgorithmError } from "./errors";
 import { CryptoKey } from "./key";
 import { ProviderCrypto } from "./provider";
 import { ProviderStorage } from "./storage";
@@ -105,13 +105,10 @@ export class SubtleCrypto {
 
     public async deriveKey(algorithm: AlgorithmIdentifier, baseKey: CryptoKey, derivedKeyType: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey> {
         this.checkRequiredArguments(arguments, 5, "deriveKey");
+        // check derivedKeyType
         const preparedDerivedKeyType = this.prepareAlgorithm(derivedKeyType);
-        if (!("length" in preparedDerivedKeyType)) {
-            throw new RequiredPropertyError("derivedKeyType.length");
-        }
-        if (typeof (preparedDerivedKeyType as any).length !== "number") {
-            throw new TypeError("derivedKeyType.length: Is not a number");
-        }
+        const importProvider = this.getProvider(preparedDerivedKeyType.name);
+        importProvider.checkDerivedKeyParams(preparedDerivedKeyType);
 
         // derive bits
         const preparedAlgorithm = this.prepareAlgorithm(algorithm);

@@ -1,7 +1,7 @@
 import assert from "assert";
-import { ProviderCrypto } from "../src/provider";
-import { UnsupportedOperationError, AlgorithmError, CryptoError } from "../src/errors";
+import { AlgorithmError, CryptoError, UnsupportedOperationError } from "../src/errors";
 import { CryptoKey } from "../src/key";
+import { ProviderCrypto } from "../src/provider";
 
 class TestProvider extends ProviderCrypto {
   public name = "CUSTOM-ALG";
