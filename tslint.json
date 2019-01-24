@@ -1,25 +1,20 @@
 {
+    "defaultSeverity": "error",
     "extends": [
         "tslint:recommended"
     ],
+    "linterOptions": {
+        "exclude": [
+            "types/**/*.d.ts"
+        ]
+    },
+    "jsRules": {},
     "rules": {
-        "interface-name": [
-            false
-        ],
-        "prefer-const": true,
-        "no-var-requires": false,
+        "interface-name": false,
+        "max-line-length": false,
+        "member-ordering": false,
         "object-literal-sort-keys": false,
-        "no-bitwise": false,
-        "forin": false,
-        "max-line-length": [
-            false
-        ],
-        "max-classes-per-file": [
-            false
-        ],
-        "no-console": [
-            false
-        ],
-        "no-namespace": false
-    }
+        "forin": false
+    },
+    "rulesDirectory": []
 }
