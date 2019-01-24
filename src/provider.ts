@@ -38,6 +38,7 @@ export abstract class ProviderCrypto {
   }
   public checkGenerateKey(algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[]) {
     this.checkAlgorithmName(algorithm);
+    this.checkGenerateKeyParams(algorithm);
     if (!(keyUsages && keyUsages.length)) {
       throw new TypeError(`Usages cannot be empty when creating a key.`);
     }
@@ -48,6 +49,9 @@ export abstract class ProviderCrypto {
       allowedUsages = this.usages.privateKey.concat(this.usages.publicKey);
     }
     this.checkKeyUsages(keyUsages, allowedUsages);
+  }
+  public checkGenerateKeyParams(algorithm: Algorithm) {
+    // nothing
   }
   public async onGenerateKey(algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair | CryptoKey> {
     throw new UnsupportedOperationError("generateKey");
@@ -157,7 +161,8 @@ export abstract class ProviderCrypto {
   }
   public checkImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[]) {
     this.checkKeyFormat(format);
-    this.checkImportAlgorithm(algorithm);
+    this.checkAlgorithmName(algorithm);
+    this.checkImportParams(algorithm);
 
     // check key usages
     if (Array.isArray(this.usages)) {
@@ -165,6 +170,7 @@ export abstract class ProviderCrypto {
       this.checkKeyUsages(keyUsages, this.usages);
     } else {
       // asymmetric provider
+      // TODO: implement
     }
   }
   public async onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey> {
@@ -179,6 +185,10 @@ export abstract class ProviderCrypto {
   }
 
   public checkAlgorithmParams(algorithm: Algorithm) {
+    // nothing
+  }
+
+  public checkDerivedKeyParams(algorithm: Algorithm) {
     // nothing
   }
 
@@ -212,10 +222,8 @@ export abstract class ProviderCrypto {
     throw new OperationError(`hash: Must be one of ${hashAlgorithms.join(", ")}`);
   }
 
-  public checkImportAlgorithm(algorithm: Algorithm) {
-    if (this.name.toUpperCase() !== algorithm.name.toUpperCase()) {
-      throw new OperationError(`Incorrect import algorithm`);
-    }
+  public checkImportParams(algorithm: Algorithm) {
+    // nothing
   }
 
   public checkKeyFormat(format: any) {
