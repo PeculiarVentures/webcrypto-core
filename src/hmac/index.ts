@@ -22,17 +22,16 @@ export class HmacProvider extends ProviderCrypto {
         return 256;
       case "SHA-384":
         return 384;
-      case "SHA-521":
-        return 521;
+      case "SHA-512":
+        return 512;
       default:
         throw new Error(`Unknown algorithm name '${algName}'`);
     }
   }
 
-  public checkGenerateKey(algorithm: HmacKeyGenParams, extractable: boolean, keyUsages: KeyUsage[]) {
-    super.checkGenerateKey.apply(this, arguments);
-
+  public checkGenerateKeyParams(algorithm: HmacKeyGenParams) {
     // hash
+    this.checkRequiredProperty(algorithm, "hash");
     this.checkHashAlgorithm(algorithm.hash as Algorithm, this.hashAlgorithms);
 
     // length
@@ -40,8 +39,8 @@ export class HmacProvider extends ProviderCrypto {
       if (typeof algorithm.length !== "number") {
         throw new TypeError("length: Is not a Number");
       }
-      if (algorithm.length < 8) {
-        throw new OperationError("length: Is less than 8 bits");
+      if (algorithm.length < 1) {
+        throw new RangeError("length: Number is out of range");
       }
     }
   }
