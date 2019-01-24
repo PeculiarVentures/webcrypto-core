@@ -11,6 +11,7 @@ export class RsaOaepProvider extends RsaProvider {
   };
 
   public checkAlgorithmParams(algorithm: RsaOaepParams) {
+    // label
     if (algorithm.label
       && !(algorithm.label instanceof ArrayBuffer || ArrayBuffer.isView(algorithm.label))) {
       throw new TypeError("label: Is not of type '(ArrayBuffer or ArrayBufferView)'");
