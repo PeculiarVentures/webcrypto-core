@@ -50,7 +50,18 @@ context("AES", () => {
 
       context("key usages", () => {
 
+        it("correct usages", () => {
+          provider.checkGenerateKey({ name: "AES-CBC", length: 128 }, false, ["encrypt", "decrypt", "wrapKey", "unwrapKey"]);
+        });
+
+        it("wrong usage", () => {
+          assert.throws(() => {
+            provider.checkGenerateKey({ name: "AES-CBC", length: 128 }, false, ["encrypt", "sign"]);
+          }, TypeError);
+        });
+
       });
+
     });
 
   });
