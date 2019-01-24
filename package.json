@@ -1,6 +1,6 @@
 {
   "name": "webcrypto-core",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Common layer to be used by crypto libraries based on WebCrypto API for input validation.",
   "main": "index.js",
   "module": "dist/webcrypto-core.es.js",
@@ -13,7 +13,6 @@
     "test": "mocha",
     "prepub": "npm run build",
     "pub": "npm version patch && npm publish && git push",
-    "precoverage": "npm run build:map",
     "coverage": "nyc npm test",
     "precoveragehtml": "npm run coverage",
     "coveragehtml": "nyc report -r html",
