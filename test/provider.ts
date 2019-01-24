@@ -1,4 +1,5 @@
 import assert from "assert";
+import { ProviderKeyPairUsage } from "../src";
 import { AlgorithmError, CryptoError, UnsupportedOperationError } from "../src/errors";
 import { CryptoKey } from "../src/key";
 import { ProviderCrypto } from "../src/provider";
@@ -8,9 +9,33 @@ class TestProvider extends ProviderCrypto {
   public usages: KeyUsage[] = ["sign"];
 }
 
+// tslint:disable-next-line:max-classes-per-file
+class TestAsymmetricProvider extends ProviderCrypto {
+  public name = "CUSTOM-ALG";
+  public usages: ProviderKeyPairUsage = {
+    privateKey: ["sign"],
+    publicKey: ["verify"],
+  };
+}
+
 context("ProviderCrypto", () => {
 
   const crypto = new TestProvider();
+
+  context("checkGenerateKey", () => {
+
+    it("error if `keyUsages` argument is empty list", () => {
+      assert.throws(() => {
+        crypto.checkGenerateKey({ name: "CUSTOM-ALG" }, true, []);
+      }, TypeError);
+    });
+
+    it("check usages for symmetric key", () => {
+      const aProv = new TestAsymmetricProvider();
+      aProv.checkGenerateKey({ name: "CUSTOM-ALG" }, true, ["sign", "verify"]);
+    });
+
+  });
 
   context("digest", () => {
 
