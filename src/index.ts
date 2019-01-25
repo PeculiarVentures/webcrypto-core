@@ -7,6 +7,7 @@ export * from "./hmac";
 export * from "./pbkdf";
 export * from "./crypto";
 export * from "./provider";
+export * from "./storage";
 export * from "./subtle";
 export * from "./key";
 export * from "./types";

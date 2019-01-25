@@ -3,7 +3,7 @@ import { ProviderCrypto } from "./provider";
 export class ProviderStorage {
   private items: { [algorithmName: string]: ProviderCrypto } = {};
 
-  public get(algorithmName: string) {
+  public get(algorithmName: string): ProviderCrypto | null {
     return this.items[algorithmName.toLowerCase()] || null;
   }
 
@@ -19,8 +19,8 @@ export class ProviderStorage {
     return provider;
   }
 
-  public has(provider: ProviderCrypto) {
-    return this.get(provider.name) === provider;
+  public has(name: string) {
+    return !!this.get(name);
   }
 
   public get length() {
