@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Common layer to be used by crypto libraries based on WebCrypto API for input validation.",
   "main": "index.js",
-  "module": "dist/webcrypto-core.es.js",
   "types": "types/index.d.ts",
   "scripts": {
     "prepare": "npm run build",
