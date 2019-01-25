@@ -1,7 +1,6 @@
 .DS_Store
 .nyc_output
 .vscode
-build
 src
 node_modules
 coverage

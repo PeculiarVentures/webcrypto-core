@@ -1,25 +1,17 @@
 {
   "name": "webcrypto-core",
-  "version": "0.1.26",
+  "version": "1.0.0",
   "description": "Common layer to be used by crypto libraries based on WebCrypto API for input validation.",
-  "main": "dist/webcrypto-core.js",
-  "module": "dist/webcrypto-core.es.js",
-  "types": "index.d.ts",
-  "directories": {
-    "test": "test"
-  },
+  "main": "index.js",
+  "types": "types/index.d.ts",
   "scripts": {
     "prepare": "npm run build",
-    "build": "npm run build:dist",
-    "build:es5": "rollup -c",
-    "build:map": "rollup -c -m",
-    "build:es2015": "rollup -c rollup.config.es.js",
-    "build:dist": "npm run build:es5 && npm run build:es2015",
-    "build:source": "tsc --declaration --declarationDir types",
-    "test": "mocha test",
+    "build": "npm run build:defs && npm run build:js",
+    "build:defs": "tsc --declaration --outDir types --emitDeclarationOnly",
+    "build:js": "rollup -c",
+    "test": "mocha",
     "prepub": "npm run build",
     "pub": "npm version patch && npm publish && git push",
-    "precoverage": "npm run build:map",
     "coverage": "nyc npm test",
     "precoveragehtml": "npm run coverage",
     "coveragehtml": "nyc report -r html",
@@ -40,16 +32,19 @@
     "ec"
   ],
   "dependencies": {
-    "tslib": "^1.7.1"
+    "pvtsutils": "^1.0.3",
+    "tslib": "^1.9.3"
   },
   "devDependencies": {
-    "@types/node": "^8.10.14",
-    "coveralls": "^3.0.1",
-    "mocha": "^5.1.1",
-    "nyc": "^11.7.3",
-    "rollup": "^0.58.2",
-    "rollup-plugin-typescript": "^0.8.1",
-    "typescript": "^2.8.3"
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.18",
+    "coveralls": "^3.0.2",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "rollup": "^1.1.2",
+    "rollup-plugin-typescript": "^1.0.0",
+    "ts-node": "^8.0.1",
+    "typescript": "^3.2.4"
   },
   "author": "PeculiarVentures",
   "license": "MIT",
@@ -57,5 +52,21 @@
     "url": "https://github.com/PeculiarVentures/webcrypto-core/issues"
   },
   "homepage": "https://github.com/PeculiarVentures/webcrypto-core#readme",
-  "banner": "// Copyright (c) 2017, Peculiar Ventures, All rights reserved."
+  "banner": "// Copyright (c) 2017, Peculiar Ventures, All rights reserved.",
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "**/*.d.ts"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ]
+  }
 }

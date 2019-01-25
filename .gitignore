@@ -7,3 +7,6 @@ build
 dist
 index.js
 .editorconfig
+types
+
+index.js
