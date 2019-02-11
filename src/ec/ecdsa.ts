@@ -12,7 +12,7 @@ export class EcdsaProvider extends EllipticProvider {
     publicKey: ["verify"],
   };
 
-  public namedCurves = ["P-256", "P-384", "P-521"];
+  public namedCurves = ["P-256", "P-384", "P-521", "K-256"];
 
   public checkAlgorithmParams(algorithm: EcdsaParams) {
     this.checkRequiredProperty(algorithm, "hash");
