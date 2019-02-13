@@ -1,6 +1,7 @@
 import { AlgorithmError, CryptoError, OperationError, RequiredPropertyError, UnsupportedOperationError } from "./errors";
 import { CryptoKey } from "./key";
 import { KeyUsages, ProviderKeyUsages } from "./types";
+import { BufferSourceConverter } from "./utils/buffer_converter";
 
 export interface IProviderCheckOptions {
   keyUsage?: boolean;
@@ -239,15 +240,6 @@ export abstract class ProviderCrypto {
   }
 
   protected prepareData(data: any) {
-    if (data instanceof ArrayBuffer) {
-      return data;
-    }
-    if (typeof Buffer !== "undefined" && Buffer.isBuffer(data)) {
-      return new Uint8Array(data);
-    }
-    if (ArrayBuffer.isView(data)) {
-      return data.buffer;
-    }
-    throw new TypeError("The provided value is not of type '(ArrayBuffer or ArrayBufferView)'");
+    return BufferSourceConverter.toArrayBuffer(data);
   }
 }

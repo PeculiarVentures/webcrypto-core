@@ -4,6 +4,7 @@ import { CryptoKey } from "./key";
 import { ProviderCrypto } from "./provider";
 import { ProviderStorage } from "./storage";
 import { HashedAlgorithm } from "./types";
+import { BufferSourceConverter } from "./utils/buffer_converter";
 
 export class SubtleCrypto {
 
@@ -19,7 +20,7 @@ export class SubtleCrypto {
         this.checkRequiredArguments(arguments, 2, "digest");
 
         const preparedAlgorithm = this.prepareAlgorithm(algorithm);
-        const preparedData = this.prepareData(data);
+        const preparedData = BufferSourceConverter.toArrayBuffer(data);
 
         const provider = this.getProvider(preparedAlgorithm.name);
         const result = await provider.digest(preparedAlgorithm, preparedData);
@@ -43,7 +44,7 @@ export class SubtleCrypto {
         this.checkCryptoKey(key);
 
         const preparedAlgorithm = this.prepareAlgorithm(algorithm);
-        const preparedData = this.prepareData(data);
+        const preparedData = BufferSourceConverter.toArrayBuffer(data);
 
         const provider = this.getProvider(preparedAlgorithm.name);
         const result = await provider.sign(preparedAlgorithm, key, preparedData);
@@ -56,8 +57,8 @@ export class SubtleCrypto {
         this.checkCryptoKey(key);
 
         const preparedAlgorithm = this.prepareAlgorithm(algorithm);
-        const preparedData = this.prepareData(data);
-        const preparedSignature = this.prepareData(signature);
+        const preparedData = BufferSourceConverter.toArrayBuffer(data);
+        const preparedSignature = BufferSourceConverter.toArrayBuffer(signature);
 
         const provider = this.getProvider(preparedAlgorithm.name);
         const result = await provider.verify(preparedAlgorithm, key, preparedSignature, preparedData);
@@ -70,7 +71,7 @@ export class SubtleCrypto {
         this.checkCryptoKey(key);
 
         const preparedAlgorithm = this.prepareAlgorithm(algorithm);
-        const preparedData = this.prepareData(data);
+        const preparedData = BufferSourceConverter.toArrayBuffer(data);
 
         const provider = this.getProvider(preparedAlgorithm.name);
         const result = await provider.encrypt(preparedAlgorithm, key, preparedData, { keyUsage: true });
@@ -83,7 +84,7 @@ export class SubtleCrypto {
         this.checkCryptoKey(key);
 
         const preparedAlgorithm = this.prepareAlgorithm(algorithm);
-        const preparedData = this.prepareData(data);
+        const preparedData = BufferSourceConverter.toArrayBuffer(data);
 
         const provider = this.getProvider(preparedAlgorithm.name);
         const result = await provider.decrypt(preparedAlgorithm, key, preparedData, { keyUsage: true });
@@ -139,7 +140,7 @@ export class SubtleCrypto {
         const provider = this.getProvider(preparedAlgorithm.name);
 
         if (["pkcs8", "spki", "raw"].indexOf(format) !== -1) {
-            const preparedData = this.prepareData(keyData as BufferSource);
+            const preparedData = BufferSourceConverter.toArrayBuffer(keyData as BufferSource);
 
             return provider.importKey(format, preparedData, preparedAlgorithm, extractable, keyUsages);
         } else {
@@ -159,7 +160,7 @@ export class SubtleCrypto {
 
         // encrypt key data
         const preparedAlgorithm = this.prepareAlgorithm(wrapAlgorithm);
-        const preparedData = this.prepareData(keyData);
+        const preparedData = BufferSourceConverter.toArrayBuffer(keyData as ArrayBuffer);
         const provider = this.getProvider(preparedAlgorithm.name);
         return provider.encrypt(preparedAlgorithm, wrappingKey, preparedData, { keyUsage: false });
     }
@@ -167,7 +168,7 @@ export class SubtleCrypto {
     public async unwrapKey(format: KeyFormat, wrappedKey: BufferSource, unwrappingKey: CryptoKey, unwrapAlgorithm: AlgorithmIdentifier, unwrappedKeyAlgorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey> {
         // decrypt wrapped key
         const preparedAlgorithm = this.prepareAlgorithm(unwrapAlgorithm);
-        const preparedData = this.prepareData(wrappedKey);
+        const preparedData = BufferSourceConverter.toArrayBuffer(wrappedKey);
         const provider = this.getProvider(preparedAlgorithm.name);
         let keyData = await provider.decrypt(preparedAlgorithm, unwrappingKey, preparedData, { keyUsage: false });
         if (format === "jwk") {
@@ -202,19 +203,6 @@ export class SubtleCrypto {
             return preparedAlgorithm as HashedAlgorithm;
         }
         return { ...algorithm };
-    }
-
-    protected prepareData(data: any) {
-        if (data instanceof ArrayBuffer) {
-            return data;
-        }
-        if (typeof Buffer !== "undefined" && Buffer.isBuffer(data)) {
-            return new Uint8Array(data);
-        }
-        if (ArrayBuffer.isView(data)) {
-            return data.buffer;
-        }
-        throw new TypeError("The provided value is not of type '(ArrayBuffer or ArrayBufferView)'");
     }
 
     protected getProvider(name: string): ProviderCrypto {

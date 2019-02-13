@@ -1,9 +1,4 @@
-import { KeyUsages } from "./types";
-
-export interface CryptoKeyPair {
-  privateKey: CryptoKey;
-  publicKey: CryptoKey;
-}
+import { KeyUsages, NativeCryptoKey } from "./types";
 
 // tslint:disable-next-line:no-empty-interface
 export interface KeyAlgorithm extends Algorithm {
@@ -11,9 +6,9 @@ export interface KeyAlgorithm extends Algorithm {
 
 const KEY_TYPES = ["secret", "private", "public"];
 
-export class CryptoKey {
+export class CryptoKey implements NativeCryptoKey {
 
-  public static create<T extends CryptoKey>(this: { new(): T }, algorithm: KeyAlgorithm, type: KeyType, extractable: boolean, usages: KeyUsages): T {
+  public static create<T extends CryptoKey>(this: new() => T, algorithm: KeyAlgorithm, type: KeyType, extractable: boolean, usages: KeyUsages): T {
     const key = new this();
     key.algorithm = algorithm;
     key.type = type;
