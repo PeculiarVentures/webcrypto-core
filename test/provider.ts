@@ -1,6 +1,6 @@
 import assert from "assert";
 import { ProviderKeyPairUsage } from "../src";
-import { AlgorithmError, CryptoError, UnsupportedOperationError } from "../src/errors";
+import { AlgorithmError, CryptoError, OperationError, UnsupportedOperationError } from "../src/errors";
 import { CryptoKey } from "../src/key";
 import { ProviderCrypto } from "../src/provider";
 
@@ -148,6 +148,28 @@ context("ProviderCrypto", () => {
         ),
         CryptoError,
       );
+    });
+
+  });
+
+  context("checkDeriveBits", () => {
+
+    it("error if length is not multiple 8", () => {
+      const algorithm: Algorithm = { name: "custom-alg" };
+      const key = CryptoKey.create(algorithm, "secret", false, ["deriveBits"]);
+      assert.throws(() => {
+        crypto.checkDeriveBits(algorithm, key, 7);
+      }, OperationError);
+    });
+
+  });
+
+  context("checkKeyFormat", () => {
+
+    it("error if wrong value", () => {
+      assert.throws(() => {
+        crypto.checkKeyFormat("wrong");
+      }, TypeError);
     });
 
   });
