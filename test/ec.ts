@@ -1,5 +1,5 @@
 import assert from "assert";
-import { EcdhProvider, EcdsaProvider, EllipticProvider } from "../src/ec";
+import { EcdhProvider, EcdsaProvider, EddsaProvider, EllipticProvider } from "../src/ec";
 import { OperationError } from "../src/errors";
 import { CryptoKey } from "../src/key";
 import { ProviderKeyUsages } from "../src/types";
@@ -120,6 +120,21 @@ context("EC", () => {
         provider.checkAlgorithmParams({ hash: { name: "SHA-1" } } as any);
       });
 
+    });
+
+  });
+
+  context("EDDSA", () => {
+    const provider = new EddsaProvider();
+
+    it("error if bad namedCurve", () => {
+      assert.throws(() => {
+        provider.checkAlgorithmParams({name: "EDDSA", namedCurve: "P-256"});
+      });
+    });
+
+    it("correct namedCurve", () => {
+      provider.checkAlgorithmParams({name: "EDDSA", namedCurve: "ED25519"});
     });
 
   });
