@@ -1,6 +1,6 @@
 {
   "name": "webcrypto-core",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Common layer to be used by crypto libraries based on WebCrypto API for input validation.",
   "main": "index.js",
   "types": "types/index.d.ts",
