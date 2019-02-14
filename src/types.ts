@@ -1,3 +1,5 @@
+export type NativeCrypto = Crypto;
+export type NativeSubtleCrypto = SubtleCrypto;
 export type NativeCryptoKey = CryptoKey;
 export type HexString = string;
 export type KeyUsages = KeyUsage[];
