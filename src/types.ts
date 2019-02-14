@@ -87,6 +87,7 @@ export interface CryptoCertificate {
 }
 
 export interface CryptoX509Certificate extends CryptoCertificate {
+  type: "x509";
   notBefore: Date;
   notAfter: Date;
   serialNumber: HexString;
@@ -95,6 +96,7 @@ export interface CryptoX509Certificate extends CryptoCertificate {
 }
 
 export interface CryptoX509CertificateRequest extends CryptoCertificate {
+  type: "request";
   subjectName: string;
 }
 
@@ -113,3 +115,8 @@ export interface CryptoCertificateStorage extends CryptoStorage<CryptoCertificat
 }
 
 //#endregion CryptoCertificateStorage
+
+export interface CryptoStorages {
+  keyStorage: CryptoKeyStorage;
+  certStorage: CryptoCertificateStorage;
+}
