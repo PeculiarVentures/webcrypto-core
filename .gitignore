@@ -5,7 +5,6 @@ node_modules
 coverage
 build
 dist
-index.js
 .editorconfig
 types
 

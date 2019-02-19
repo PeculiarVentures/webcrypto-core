@@ -2,7 +2,8 @@
   "name": "webcrypto-core",
   "version": "1.0.4",
   "description": "Common layer to be used by crypto libraries based on WebCrypto API for input validation.",
-  "main": "index.js",
+  "main": "build/webcrypto-core.js",
+  "module": "build/webcrypto-core.es.js",
   "types": "types/index.d.ts",
   "scripts": {
     "prepare": "npm run build",
@@ -52,7 +53,6 @@
     "url": "https://github.com/PeculiarVentures/webcrypto-core/issues"
   },
   "homepage": "https://github.com/PeculiarVentures/webcrypto-core#readme",
-  "banner": "// Copyright (c) 2017, Peculiar Ventures, All rights reserved.",
   "nyc": {
     "extension": [
       ".ts",
