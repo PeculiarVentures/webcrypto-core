@@ -2,7 +2,7 @@ import { OperationError } from "../errors";
 import { KeyUsages } from "../types";
 import { AesProvider } from "./base";
 
-export class AesCmacProvider extends AesProvider {
+export abstract class AesCmacProvider extends AesProvider {
 
   public readonly name = "AES-CMAC";
 
@@ -17,5 +17,8 @@ export class AesCmacProvider extends AesProvider {
       throw new OperationError("length: Must be more than 0");
     }
   }
+
+  public abstract onSign(algorithm: AesCmacParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
+  public abstract onVerify(algorithm: AesCmacParams, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer): Promise<boolean>;
 
 }

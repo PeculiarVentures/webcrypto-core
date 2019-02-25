@@ -1,7 +1,7 @@
 import { KeyUsages } from "../types";
 import { AesProvider } from "./base";
 
-export class AesCbcProvider extends AesProvider {
+export abstract class AesCbcProvider extends AesProvider {
 
   public readonly name = "AES-CBC";
 
@@ -16,5 +16,8 @@ export class AesCbcProvider extends AesProvider {
       throw new TypeError("iv: Must have length 16 bytes");
     }
   }
+
+  public abstract onEncrypt(algorithm: AesCbcParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
+  public abstract onDecrypt(algorithm: AesCbcParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
 
 }

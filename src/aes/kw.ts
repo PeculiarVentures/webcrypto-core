@@ -1,7 +1,7 @@
 import { KeyUsages } from "../types";
 import { AesProvider } from "./base";
 
-export class AesKwProvider extends AesProvider {
+export abstract class AesKwProvider extends AesProvider {
 
   public readonly name = "AES-KW";
 

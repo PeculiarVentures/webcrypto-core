@@ -1,7 +1,7 @@
 import { ProviderKeyUsages } from "../types";
 import { RsaProvider } from "./base";
 
-export class RsaOaepProvider extends RsaProvider {
+export abstract class RsaOaepProvider extends RsaProvider {
 
   public readonly name = "RSA-OAEP";
 
@@ -17,5 +17,8 @@ export class RsaOaepProvider extends RsaProvider {
       throw new TypeError("label: Is not of type '(ArrayBuffer or ArrayBufferView)'");
     }
   }
+
+  public abstract onEncrypt(algorithm: RsaOaepParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
+  public abstract onDecrypt(algorithm: RsaOaepParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
 
 }

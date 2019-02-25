@@ -20,4 +20,8 @@ export abstract class EllipticProvider extends ProviderCrypto {
     throw new OperationError(`namedCurve: Must be one of ${this.namedCurves.join(", ")}`);
   }
 
+  public abstract onGenerateKey(algorithm: EcKeyGenParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair>;
+  public abstract onExportKey(format: KeyFormat, key: CryptoKey): Promise<JsonWebKey | ArrayBuffer>;
+  public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: EcKeyImportParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
+
 }

@@ -3,7 +3,7 @@ import { CryptoKey } from "../key";
 import { ProviderKeyUsages } from "../types";
 import { EllipticProvider } from "./base";
 
-export class EcdhProvider extends EllipticProvider {
+export abstract class EcdhProvider extends EllipticProvider {
 
   public readonly name = "ECDH";
 
@@ -27,5 +27,7 @@ export class EcdhProvider extends EllipticProvider {
       throw new OperationError(`public: Is not ${this.name} key`);
     }
   }
+
+  public abstract onDeriveBits(algorithm: EcdhKeyDeriveParams, baseKey: CryptoKey, length: number): Promise<ArrayBuffer>;
 
 }

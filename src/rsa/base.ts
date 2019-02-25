@@ -1,7 +1,5 @@
 import { Convert } from "pvtsutils";
-import { AlgorithmError } from "../errors";
 import { ProviderCrypto } from "../provider";
-import { HashedAlgorithm } from "../types";
 
 export abstract class RsaProvider extends ProviderCrypto {
 
@@ -38,5 +36,9 @@ export abstract class RsaProvider extends ProviderCrypto {
     this.checkRequiredProperty(algorithm, "hash");
     this.checkHashAlgorithm(algorithm.hash as Algorithm, this.hashAlgorithms);
   }
+
+  public abstract onGenerateKey(algorithm: RsaHashedKeyGenParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair>;
+  public abstract onExportKey(format: KeyFormat, key: CryptoKey): Promise<JsonWebKey | ArrayBuffer>;
+  public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: RsaHashedImportParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
 
 }

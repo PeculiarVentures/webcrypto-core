@@ -2,7 +2,7 @@ import { OperationError } from "../errors";
 import { KeyUsages } from "../types";
 import { AesProvider } from "./base";
 
-export class AesGcmProvider extends AesProvider {
+export abstract class AesGcmProvider extends AesProvider {
 
   public readonly name = "AES-GCM";
 
@@ -34,5 +34,8 @@ export class AesGcmProvider extends AesProvider {
         throw new OperationError("tagLength: Must be one of 32, 64, 96, 104, 112, 120 or 128");
     }
   }
+
+  public abstract onEncrypt(algorithm: AesGcmParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
+  public abstract onDecrypt(algorithm: AesGcmParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
 
 }

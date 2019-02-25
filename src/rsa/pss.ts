@@ -1,7 +1,7 @@
 import { ProviderKeyUsages } from "../types";
 import { RsaProvider } from "./base";
 
-export class RsaPssProvider extends RsaProvider {
+export abstract class RsaPssProvider extends RsaProvider {
 
   public readonly name = "RSA-PSS";
 
@@ -19,5 +19,8 @@ export class RsaPssProvider extends RsaProvider {
       throw new RangeError("saltLength: Must be more than 0");
     }
   }
+
+  public abstract onSign(algorithm: RsaPssParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
+  public abstract onVerify(algorithm: RsaPssParams, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer): Promise<boolean>;
 
 }

@@ -2,7 +2,7 @@ import { OperationError } from "../errors";
 import { ProviderCrypto } from "../provider";
 import { KeyUsages } from "../types";
 
-export class HmacProvider extends ProviderCrypto {
+export abstract class HmacProvider extends ProviderCrypto {
 
   public name = "HMAC";
 
@@ -50,5 +50,9 @@ export class HmacProvider extends ProviderCrypto {
     this.checkRequiredProperty(algorithm, "hash");
     this.checkHashAlgorithm(algorithm.hash as Algorithm, this.hashAlgorithms);
   }
+
+  public abstract onGenerateKey(algorithm: HmacKeyGenParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
+  public abstract onExportKey(format: KeyFormat, key: CryptoKey): Promise<JsonWebKey | ArrayBuffer>;
+  public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: HmacImportParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
 
 }

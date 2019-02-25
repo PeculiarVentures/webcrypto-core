@@ -1,7 +1,7 @@
 import { ProviderKeyUsages } from "../types";
 import { EllipticProvider } from "./base";
 
-export class EcdsaProvider extends EllipticProvider {
+export abstract class EcdsaProvider extends EllipticProvider {
 
   public readonly name = "ECDSA";
 
@@ -18,5 +18,8 @@ export class EcdsaProvider extends EllipticProvider {
     this.checkRequiredProperty(algorithm, "hash");
     this.checkHashAlgorithm(algorithm.hash as Algorithm, this.hashAlgorithms);
   }
+
+  public abstract onSign(algorithm: EcdsaParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
+  public abstract onVerify(algorithm: EcdsaParams, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer): Promise<boolean>;
 
 }

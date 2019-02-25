@@ -2,7 +2,7 @@ import { OperationError } from "../errors";
 import { KeyUsages } from "../types";
 import { AesProvider } from "./base";
 
-export class AesCtrProvider extends AesProvider {
+export abstract class AesCtrProvider extends AesProvider {
 
   public readonly name = "AES-CTR";
 
@@ -26,5 +26,8 @@ export class AesCtrProvider extends AesProvider {
       throw new OperationError("length: Must be more than 0");
     }
   }
+
+  public abstract onEncrypt(algorithm: AesCtrParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
+  public abstract onDecrypt(algorithm: AesCtrParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
 
 }

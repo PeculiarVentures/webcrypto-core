@@ -55,4 +55,10 @@ export abstract class DesProvider extends ProviderCrypto {
     this.checkGenerateKeyParams(algorithm);
   }
 
+  public abstract onGenerateKey(algorithm: DesKeyGenParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
+  public abstract onExportKey(format: KeyFormat, key: CryptoKey): Promise<JsonWebKey | ArrayBuffer>;
+  public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: DesImportParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
+  public abstract onEncrypt(algorithm: DesParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
+  public abstract onDecrypt(algorithm: DesParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
+
 }

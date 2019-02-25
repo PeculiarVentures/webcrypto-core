@@ -2,7 +2,7 @@ import { OperationError } from "../errors";
 import { ProviderCrypto } from "../provider";
 import { KeyUsages } from "../types";
 
-export class Pbkdf2Provider extends ProviderCrypto {
+export abstract class Pbkdf2Provider extends ProviderCrypto {
 
   public name = "PBKDF2";
 
@@ -38,5 +38,8 @@ export class Pbkdf2Provider extends ProviderCrypto {
       throw new SyntaxError("extractable: Must be False");
     }
   }
+
+  public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
+  public abstract onDeriveBits(algorithm: Pbkdf2Params, baseKey: CryptoKey, length: number): Promise<ArrayBuffer>;
 
 }
