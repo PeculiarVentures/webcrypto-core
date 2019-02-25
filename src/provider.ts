@@ -1,6 +1,7 @@
 import { AlgorithmError, CryptoError, OperationError, RequiredPropertyError, UnsupportedOperationError } from "./errors";
 import { CryptoKey } from "./key";
 import { KeyUsages, ProviderKeyUsages } from "./types";
+import { isJWK } from "./utils";
 import { BufferSourceConverter } from "./utils/buffer_converter";
 
 export interface IProviderCheckOptions {
@@ -162,6 +163,7 @@ export abstract class ProviderCrypto {
   }
   public checkImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[]) {
     this.checkKeyFormat(format);
+    this.checkKeyData(format, keyData);
     this.checkAlgorithmName(algorithm);
     this.checkImportParams(algorithm);
 
@@ -236,6 +238,19 @@ export abstract class ProviderCrypto {
         break;
       default:
         throw new TypeError("format: Is invalid value. Must be 'jwk', 'raw', 'spki', or 'pkcs8'");
+    }
+  }
+
+  public checkKeyData(format: KeyFormat, keyData: any) {
+    if (!keyData) {
+      throw new TypeError("keyData: Cannot be empty on empty on key importing");
+    }
+    if (format === "jwk") {
+      if (!isJWK(keyData)) {
+        throw new TypeError("keyData: Is not JsonWebToken");
+      }
+    } else if (!BufferSourceConverter.isBufferSource(keyData)) {
+      throw new TypeError("keyData: Is not ArrayBufferView or ArrrayBuffer");
     }
   }
 
