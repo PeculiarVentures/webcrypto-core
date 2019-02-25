@@ -1,9 +1,10 @@
 import assert from "assert";
+import "reflect-metadata";
 import { OperationError, Pbkdf2Provider } from "../src";
 
 context("HMAC", () => {
 
-  const provider = new Pbkdf2Provider();
+  const provider = Reflect.construct(Pbkdf2Provider, []) as Pbkdf2Provider;
 
   context("checkAlgorithmParams", () => {
 

@@ -1,11 +1,14 @@
 import assert from "assert";
+import "reflect-metadata"
 import { RsaOaepProvider, RsaPssProvider, RsaSsaProvider } from "../src";
+
+// tslint:disable:max-classes-per-file
 
 context("RSA", () => {
 
   context("RSASSA-PKCS1-v1_5", () => {
 
-    const provider = new RsaSsaProvider();
+    const provider = Reflect.construct(RsaSsaProvider, []) as RsaSsaProvider;
 
     context("checkGenerateKeyParams", () => {
 
@@ -113,7 +116,7 @@ context("RSA", () => {
 
   context("RSA-OAEP", () => {
 
-    const provider = new RsaOaepProvider();
+    const provider = Reflect.construct(RsaOaepProvider, []) as RsaOaepProvider;
 
     context("checkAlgorithmParams", () => {
 
@@ -133,7 +136,7 @@ context("RSA", () => {
 
   context("RSA-PSS", () => {
 
-    const provider = new RsaPssProvider();
+    const provider = Reflect.construct(RsaPssProvider, []) as RsaPssProvider;
 
     context("checkAlgorithmParams", () => {
 

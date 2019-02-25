@@ -1,8 +1,11 @@
 import assert from "assert";
+import "reflect-metadata";
 import { EcdhProvider, EcdsaProvider, EllipticProvider } from "../src/ec";
 import { OperationError } from "../src/errors";
 import { CryptoKey } from "../src/key";
 import { ProviderKeyUsages } from "../src/types";
+
+// tslint:disable:max-classes-per-file
 
 context("EC", () => {
 
@@ -15,6 +18,15 @@ context("EC", () => {
         privateKey: ["sign"],
         publicKey: ["verify"],
       };
+      public onGenerateKey(algorithm: EcKeyGenParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair> {
+        throw new Error("Method not implemented.");
+      }
+      public onExportKey(format: KeyFormat, key: CryptoKey): Promise<JsonWebKey | ArrayBuffer> {
+        throw new Error("Method not implemented.");
+      }
+      public onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: EcKeyImportParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey> {
+        throw new Error("Method not implemented.");
+      }
     }
 
     const provider = new EcTestProvider();
@@ -49,7 +61,7 @@ context("EC", () => {
 
   context("ECDH", () => {
 
-    const provider = new EcdhProvider();
+    const provider = Reflect.construct(EcdhProvider, []) as EcdhProvider;
 
     context("", () => {
 
@@ -100,7 +112,7 @@ context("EC", () => {
 
   context("ECDSA", () => {
 
-    const provider = new EcdsaProvider();
+    const provider = Reflect.construct(EcdsaProvider, []) as EcdsaProvider;
 
     context("checkAlgorithmParams", () => {
 

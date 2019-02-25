@@ -1,5 +1,44 @@
 import assert from "assert";
-import { ProviderStorage, RsaOaepProvider, RsaSsaProvider } from "../src";
+import { ProviderStorage } from "../src";
+import * as rsa from "../src/rsa";
+
+// tslint:disable:max-classes-per-file
+
+class RsaSsaProvider extends rsa.RsaSsaProvider {
+  public onSign(algorithm: rsa.RsaSsaParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer> {
+    throw new Error("Method not implemented.");
+  }
+  public onVerify(algorithm: rsa.RsaSsaParams, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer): Promise<boolean> {
+    throw new Error("Method not implemented.");
+  }
+  public onGenerateKey(algorithm: RsaHashedKeyGenParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair> {
+    throw new Error("Method not implemented.");
+  }
+  public onExportKey(format: KeyFormat, key: CryptoKey): Promise<ArrayBuffer | JsonWebKey> {
+    throw new Error("Method not implemented.");
+  }
+  public onImportKey(format: KeyFormat, keyData: ArrayBuffer | JsonWebKey, algorithm: RsaHashedImportParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey> {
+    throw new Error("Method not implemented.");
+  }
+}
+
+class RsaOaepProvider extends rsa.RsaOaepProvider {
+  public onEncrypt(algorithm: RsaOaepParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer> {
+    throw new Error("Method not implemented.");
+  }
+  public onDecrypt(algorithm: RsaOaepParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer> {
+    throw new Error("Method not implemented.");
+  }
+  public onGenerateKey(algorithm: RsaHashedKeyGenParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair> {
+    throw new Error("Method not implemented.");
+  }
+  public onExportKey(format: KeyFormat, key: CryptoKey): Promise<ArrayBuffer | JsonWebKey> {
+    throw new Error("Method not implemented.");
+  }
+  public onImportKey(format: KeyFormat, keyData: ArrayBuffer | JsonWebKey, algorithm: RsaHashedImportParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey> {
+    throw new Error("Method not implemented.");
+  }
+}
 
 context("ProviderStorage", () => {
 

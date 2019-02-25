@@ -1,10 +1,11 @@
 import assert from "assert";
+import "reflect-metadata"
 import { OperationError } from "../src/errors";
 import { HmacProvider } from "../src/hmac";
 
 context("HMAC", () => {
 
-  const provider = new HmacProvider();
+  const provider = Reflect.construct(HmacProvider, []) as HmacProvider;
 
   context("checkGenerateKeyParams", () => {
 

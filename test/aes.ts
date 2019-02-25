@@ -1,12 +1,15 @@
 import assert from "assert";
-import { AesCbcProvider, AesCmacProvider, AesCtrProvider, AesGcmProvider, AesProvider } from "../src/aes";
-import { AlgorithmError, OperationError } from "../src/errors";
+import "reflect-metadata";
+import { AesCbcProvider, AesCmacProvider, AesCtrProvider, AesGcmProvider } from "../src/aes";
+import { OperationError } from "../src/errors";
+
+// tslint:disable:max-classes-per-file
 
 context("AES", () => {
 
   context("AES-CBC", () => {
 
-    const provider = new AesCbcProvider();
+    const provider = Reflect.construct(AesCbcProvider, []) as AesCbcProvider;
 
     context("checkGenerateKeyParams", () => {
 
@@ -40,7 +43,7 @@ context("AES", () => {
 
   context("AES-CBC", () => {
 
-    const provider = new AesCbcProvider();
+    const provider = Reflect.construct(AesCbcProvider, []) as AesCbcProvider;
 
     context("checkAlgorithmParams", () => {
 
@@ -78,7 +81,7 @@ context("AES", () => {
 
   context("AES-CMAC", () => {
 
-    const provider = new AesCmacProvider();
+    const provider = Reflect.construct(AesCmacProvider, []) as AesCmacProvider;
 
     context("checkAlgorithmParams", () => {
 
@@ -116,7 +119,7 @@ context("AES", () => {
 
   context("AES-CTR", () => {
 
-    const provider = new AesCtrProvider();
+    const provider = Reflect.construct(AesCtrProvider, []) as AesCtrProvider;
 
     context("checkAlgorithmParams", () => {
 
@@ -199,7 +202,7 @@ context("AES", () => {
 
   context("AES-GCM", () => {
 
-    const provider = new AesGcmProvider();
+    const provider = Reflect.construct(AesGcmProvider, []) as AesGcmProvider;
 
     context("checkAlgorithmParams", () => {
 

@@ -3,11 +3,25 @@ import { DesProvider } from "../src/des";
 import { OperationError } from "../src/errors";
 
 class DesTestProvider extends DesProvider {
-
   public keySizeBits = 64;
   public ivSize = 8;
   public name = "DES-TEST";
 
+  public onGenerateKey(algorithm: import("../src/des").DesKeyGenParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey> {
+    throw new Error("Method not implemented.");
+  }
+  public onExportKey(format: KeyFormat, key: CryptoKey): Promise<JsonWebKey | ArrayBuffer> {
+    throw new Error("Method not implemented.");
+  }
+  public onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: import("../src/des").DesImportParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey> {
+    throw new Error("Method not implemented.");
+  }
+  public onEncrypt(algorithm: import("../src/des").DesParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer> {
+    throw new Error("Method not implemented.");
+  }
+  public onDecrypt(algorithm: import("../src/des").DesParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer> {
+    throw new Error("Method not implemented.");
+  }
 }
 
 context("DES", () => {
@@ -68,7 +82,7 @@ context("DES", () => {
     });
 
     it("correct value", () => {
-        provider.checkGenerateKeyParams({ length: 64 } as any);
+      provider.checkGenerateKeyParams({ length: 64 } as any);
     });
 
   });
