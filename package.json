@@ -7,9 +7,7 @@
   "types": "build/webcrypto-core.d.ts",
   "scripts": {
     "prepare": "npm run build",
-    "build": "npm run build:defs && npm run build:js",
-    "build:defs": "tsc --declaration --outDir types --emitDeclarationOnly",
-    "build:js": "rollup -c",
+    "build": "rollup -c",
     "test": "mocha",
     "prepub": "npm run build",
     "pub": "npm version patch && npm publish && git push",
