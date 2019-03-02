@@ -1,6 +1,6 @@
 import assert from "assert";
 import "reflect-metadata";
-import { OperationError, HkdfProvider } from "../src";
+import { HkdfProvider, OperationError } from "../src";
 
 context("HKDF", () => {
 
