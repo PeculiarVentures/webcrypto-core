@@ -4,7 +4,7 @@
   "description": "Common layer to be used by crypto libraries based on WebCrypto API for input validation.",
   "main": "build/webcrypto-core.js",
   "module": "build/webcrypto-core.es.js",
-  "types": "types/index.d.ts",
+  "types": "build/webcrypto-core.d.ts",
   "scripts": {
     "prepare": "npm run build",
     "build": "npm run build:defs && npm run build:js",
@@ -44,7 +44,7 @@
     "nyc": "^13.3.0",
     "reflect-metadata": "^0.1.13",
     "rollup": "^1.1.2",
-    "rollup-plugin-typescript": "^1.0.0",
+    "rollup-plugin-dts": "^0.13.0",
     "ts-node": "^8.0.1",
     "typescript": "^3.2.4"
   },

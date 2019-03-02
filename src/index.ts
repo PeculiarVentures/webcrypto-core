@@ -5,6 +5,7 @@ export * from "./rsa";
 export * from "./ec";
 export * from "./hmac";
 export * from "./pbkdf";
+export * from "./hkdf";
 export * from "./crypto";
 export * from "./provider";
 export * from "./storage";

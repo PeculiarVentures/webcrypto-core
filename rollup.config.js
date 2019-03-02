@@ -1,14 +1,14 @@
-import typescript from "rollup-plugin-typescript";
-import ts from "typescript";
-
-const pkg = require("./package.json");
+// @ts-check
+import { ts, dts } from "rollup-plugin-dts";
+// @ts-ignore
+import pkg from "./package.json";
 
 const banner = [
   "/**",
   " * Copyright (c) 2019, Peculiar Ventures, All rights reserved.",
   " */",
   "",
-];
+].join("\n");
 const input = "src/index.ts";
 const external = Object.keys(pkg.dependencies);
 
@@ -17,14 +17,23 @@ export default [
   {
     input,
     plugins: [
-      typescript({ typescript: ts, target: "esnext", removeComments: true }),
+      ts({
+        compilerOptions: {
+          removeComments: true,
+        },
+      }),
     ],
     external,
     output: [
       {
-        banner: banner.join("\n"),
+        banner,
         file: pkg.main,
         format: "cjs",
+      },
+      {
+        banner,
+        file: pkg.module,
+        format: "es",
       }
     ]
   },
@@ -32,13 +41,12 @@ export default [
   {
     input,
     plugins: [
-      typescript({ typescript: ts, target: "esnext", removeComments: true }),
+      dts(),
     ],
     external,
     output: [
       {
-        banner: banner.join("\n"),
-        file: pkg.module,
+        file: pkg.types,
         format: "es",
       }
     ]
