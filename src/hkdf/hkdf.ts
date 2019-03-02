@@ -35,6 +35,6 @@ export abstract class HkdfProvider extends ProviderCrypto {
   }
 
   public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
-  public abstract onDeriveBits(algorithm: Pbkdf2Params, baseKey: CryptoKey, length: number): Promise<ArrayBuffer>;
+  public abstract onDeriveBits(algorithm: HkdfParams, baseKey: CryptoKey, length: number): Promise<ArrayBuffer>;
 
 }
