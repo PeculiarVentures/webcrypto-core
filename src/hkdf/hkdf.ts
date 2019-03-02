@@ -4,7 +4,7 @@ import { BufferSourceConverter } from "../utils";
 
 export abstract class HkdfProvider extends ProviderCrypto {
 
-  public name = "HMAC";
+  public name = "HKDF";
   public hashAlgorithms = ["SHA-1", "SHA-256", "SHA-384", "SHA-512"];
   public usages: KeyUsages = ["deriveKey", "deriveBits"];
 
@@ -15,13 +15,13 @@ export abstract class HkdfProvider extends ProviderCrypto {
 
     // salt
     this.checkRequiredProperty(algorithm, "salt");
-    if (BufferSourceConverter.isBufferSource(algorithm.salt)) {
+    if (!BufferSourceConverter.isBufferSource(algorithm.salt)) {
       throw new TypeError("salt: Is not of type '(ArrayBuffer or ArrayBufferView)'");
     }
 
     // info
     this.checkRequiredProperty(algorithm, "info");
-    if (BufferSourceConverter.isBufferSource(algorithm.info)) {
+    if (!BufferSourceConverter.isBufferSource(algorithm.info)) {
       throw new TypeError("salt: Is not of type '(ArrayBuffer or ArrayBufferView)'");
     }
   }
