@@ -5,7 +5,7 @@ export class BufferSourceConverter {
       return data;
     }
     if (typeof Buffer !== "undefined" && Buffer.isBuffer(data)) {
-      return new Uint8Array(data);
+      return new Uint8Array(data).buffer;
     }
     if (ArrayBuffer.isView(data)) {
       return data.buffer;
