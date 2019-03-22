@@ -250,7 +250,7 @@ export abstract class ProviderCrypto {
         throw new TypeError("keyData: Is not JsonWebToken");
       }
     } else if (!BufferSourceConverter.isBufferSource(keyData)) {
-      throw new TypeError("keyData: Is not ArrayBufferView or ArrrayBuffer");
+      throw new TypeError("keyData: Is not ArrayBufferView or ArrayBuffer");
     }
   }
 
