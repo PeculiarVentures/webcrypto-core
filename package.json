@@ -31,20 +31,20 @@
     "ec"
   ],
   "dependencies": {
-    "pvtsutils": "^1.0.3",
+    "pvtsutils": "^1.0.4",
     "tslib": "^1.9.3"
   },
   "devDependencies": {
-    "@types/mocha": "^5.2.5",
-    "@types/node": "^10.12.18",
-    "coveralls": "^3.0.2",
+    "@types/mocha": "^5.2.6",
+    "@types/node": "^10.14.4",
+    "coveralls": "^3.0.3",
     "mocha": "^5.2.0",
     "nyc": "^13.3.0",
     "reflect-metadata": "^0.1.13",
-    "rollup": "^1.1.2",
-    "rollup-plugin-dts": "^0.13.0",
-    "ts-node": "^8.0.1",
-    "typescript": "^3.2.4"
+    "rollup": "^1.10.0",
+    "rollup-plugin-dts": "^0.14.0",
+    "ts-node": "^8.0.3",
+    "typescript": "^3.4.3"
   },
   "author": "PeculiarVentures",
   "license": "MIT",
