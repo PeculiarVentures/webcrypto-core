@@ -1,20 +1,20 @@
 export class BufferSourceConverter {
 
   public static toArrayBuffer(data: BufferSource) {
-    if (data instanceof ArrayBuffer) {
-      return data;
-    }
-    if (typeof Buffer !== "undefined" && Buffer.isBuffer(data)) {
-      return new Uint8Array(data).buffer;
-    }
-    if (ArrayBuffer.isView(data)) {
-      return data.buffer;
-    }
-    throw new TypeError("The provided value is not of type '(ArrayBuffer or ArrayBufferView)'");
+    return this.toUint8Array(data).buffer;
   }
 
   public static toUint8Array(data: BufferSource) {
-    return new Uint8Array(this.toArrayBuffer(data));
+    if (typeof Buffer !== "undefined" && Buffer.isBuffer(data)) {
+      return new Uint8Array(data);
+    }
+    if (ArrayBuffer.isView(data)) {
+      return Buffer.from(data.buffer, data.byteOffset, data.byteLength);
+    }
+    if (data instanceof ArrayBuffer) {
+      return new Uint8Array(data);
+    }
+    throw new TypeError("The provided value is not of type '(ArrayBuffer or ArrayBufferView)'");
   }
 
   public static isBufferSource(data: any): data is BufferSource {

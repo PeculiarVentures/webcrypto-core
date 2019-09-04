@@ -27,13 +27,20 @@ context("BufferSourceConverter", () => {
     assert.equal(Convert.ToHex(data), vectorHex);
   });
 
+  it("convert from offset Uint8Array", () => {
+    const source = new Uint8Array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    const offset = source.subarray(5, 10);
+    const data = BufferSourceConverter.toUint8Array(offset);
+    assert.equal(Convert.ToHex(data), "0506070809");
+  });
+
   context("isBufferSource", () => {
 
-    it("ArayBufferView", () => {
+    it("ArrayBufferView", () => {
       assert.equal(BufferSourceConverter.isBufferSource(new Uint16Array(0)), true);
     });
 
-    it("ArayBuffer", () => {
+    it("ArrayBuffer", () => {
       assert.equal(BufferSourceConverter.isBufferSource(new ArrayBuffer(0)), true);
     });
 
