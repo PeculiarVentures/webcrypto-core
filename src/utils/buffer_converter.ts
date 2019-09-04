@@ -1,7 +1,11 @@
 export class BufferSourceConverter {
 
   public static toArrayBuffer(data: BufferSource) {
-    return this.toUint8Array(data).buffer;
+    const buf = this.toUint8Array(data);
+    if (buf.byteOffset || buf.length) {
+      return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.length);
+    }
+    return buf.buffer;
   }
 
   public static toUint8Array(data: BufferSource) {
