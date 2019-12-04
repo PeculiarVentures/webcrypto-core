@@ -12,7 +12,7 @@ export abstract class EcdhProvider extends EllipticProvider {
     publicKey: [],
   };
 
-  public namedCurves = ["P-256", "P-384", "P-521"];
+  public namedCurves = ["P-256", "P-384", "P-521", "K-256"];
 
   public checkAlgorithmParams(algorithm: EcdhKeyDeriveParams) {
     // public
