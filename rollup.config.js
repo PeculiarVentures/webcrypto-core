@@ -1,5 +1,4 @@
-// @ts-check
-import { ts, dts } from "rollup-plugin-dts";
+import typescript from "rollup-plugin-typescript2";
 // @ts-ignore
 import pkg from "./package.json";
 
@@ -12,15 +11,15 @@ const banner = [
 const input = "src/index.ts";
 const external = Object.keys(pkg.dependencies);
 
+
 export default [
   // main
   {
     input,
     plugins: [
-      ts({
-        compilerOptions: {
-          removeComments: true,
-        },
+      typescript({
+        check: true,
+        clean: true,
       }),
     ],
     external,
@@ -34,21 +33,7 @@ export default [
         banner,
         file: pkg.module,
         format: "es",
-      }
-    ]
-  },
-  // lib
-  {
-    input,
-    plugins: [
-      dts(),
+      },
     ],
-    external,
-    output: [
-      {
-        file: pkg.types,
-        format: "es",
-      }
-    ]
   },
 ];
