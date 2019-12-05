@@ -13,7 +13,7 @@ export class BufferSourceConverter {
       return new Uint8Array(data);
     }
     if (ArrayBuffer.isView(data)) {
-      return Buffer.from(data.buffer, data.byteOffset, data.byteLength);
+      return new Uint8Array(data.buffer, data.byteOffset, data.byteLength);
     }
     if (data instanceof ArrayBuffer) {
       return new Uint8Array(data);
