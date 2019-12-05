@@ -1,5 +1,5 @@
 import assert from "assert";
-import "reflect-metadata"
+import "reflect-metadata";
 import { RsaOaepProvider, RsaPssProvider, RsaSsaProvider } from "../src";
 
 // tslint:disable:max-classes-per-file
