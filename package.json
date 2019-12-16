@@ -41,7 +41,7 @@
     "ec"
   ],
   "dependencies": {
-    "pvtsutils": "^1.0.8",
+    "pvtsutils": "^1.0.9",
     "tslib": "^1.10.0"
   },
   "devDependencies": {
