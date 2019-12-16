@@ -1,10 +1,9 @@
-import { Convert } from "pvtsutils";
+import { BufferSourceConverter, Convert } from "pvtsutils";
 import { AlgorithmError } from "./errors";
 import { CryptoKey } from "./key";
 import { ProviderCrypto } from "./provider";
 import { ProviderStorage } from "./storage";
 import { HashedAlgorithm } from "./types";
-import { BufferSourceConverter } from "./utils/buffer_converter";
 
 export class SubtleCrypto {
 

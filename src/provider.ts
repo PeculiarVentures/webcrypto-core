@@ -1,8 +1,8 @@
+import { BufferSourceConverter } from "pvtsutils";
 import { AlgorithmError, CryptoError, OperationError, RequiredPropertyError, UnsupportedOperationError } from "./errors";
 import { CryptoKey } from "./key";
 import { KeyUsages, ProviderKeyUsages } from "./types";
 import { isJWK } from "./utils";
-import { BufferSourceConverter } from "./utils/buffer_converter";
 
 export interface IProviderCheckOptions {
   keyUsage?: boolean;
