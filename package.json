@@ -41,22 +41,22 @@
     "ec"
   ],
   "dependencies": {
-    "pvtsutils": "^1.0.9",
-    "tslib": "^1.10.0"
+    "pvtsutils": "^1.0.10",
+    "tslib": "^1.11.1"
   },
   "devDependencies": {
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^10.17.9",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^10.17.17",
     "coveralls": "^3.0.9",
-    "mocha": "^6.2.2",
-    "nyc": "^14.1.1",
+    "mocha": "^7.1.0",
+    "nyc": "^15.0.0",
     "reflect-metadata": "^0.1.13",
-    "rimraf": "^3.0.0",
-    "rollup": "^1.27.13",
-    "rollup-plugin-typescript2": "^0.25.3",
-    "ts-node": "^8.5.4",
-    "tslint": "^5.20.1",
-    "typescript": "^3.7.3"
+    "rimraf": "^3.0.2",
+    "rollup": "^2.0.6",
+    "rollup-plugin-typescript2": "^0.26.0",
+    "ts-node": "^8.6.2",
+    "tslint": "^6.1.0",
+    "typescript": "^3.8.3"
   },
   "author": "PeculiarVentures",
   "license": "MIT",
@@ -78,6 +78,15 @@
     "reporter": [
       "text-summary",
       "html"
+    ]
+  },
+  "mocha": {
+    "require": "ts-node/register",
+    "extension": [
+      "ts"
+    ],
+    "watch-files": [
+      "test/**/*.ts"
     ]
   }
 }
