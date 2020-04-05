@@ -42,16 +42,19 @@ export class EcDsaSignature {
 
   private getPointSize(): number {
     // tslint:disable-next-line: no-bitwise
-    const size = Math.max(this.r.byteLength, this.s.byteLength) << 3;
+    const size = Math.max(this.r.byteLength, this.s.byteLength);
     switch (size) {
+      case 31:
       case 32:
         return 32;
+      case 47:
       case 48:
         return 48;
+      case 65:
       case 66:
         return 66;
     }
-    throw new Error("Method not implemented.");
+    throw new Error("Unsupported EC point size");
   }
 
   private addPadding(pointSize: number, bytes: BufferSource) {

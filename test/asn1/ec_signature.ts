@@ -1,6 +1,6 @@
 import * as assert from "assert";
 import { Convert } from "pvtsutils";
-import { AsnSerializer } from "@peculiar/asn1-schema";
+import { AsnSerializer, AsnParser } from "@peculiar/asn1-schema";
 import { EcDsaSignature } from "../../src/asn1";
 
 interface IEcSignatureTestVector {
@@ -46,12 +46,22 @@ context("ASN1", () => {
       },
     ]
 
-    context("Convert", () => {
+    context("From WebCrypto to DER", () => {
       vectors.forEach((vector) => {
         it(vector.name, () => {
           const value = EcDsaSignature.fromWebCryptoSignature(Convert.FromHex(vector.webCrypto));
           const der = AsnSerializer.serialize(value);
           assert.equal(Convert.ToHex(der), vector.asn1);
+        });
+      });
+    });
+
+    context("From DER to WebCrypto", () => {
+      vectors.forEach((vector) => {
+        it(vector.name, () => {
+          const value = AsnParser.parse(Convert.FromHex(vector.asn1), EcDsaSignature);
+          const signature = value.toWebCryptoSignature();
+          assert.equal(Convert.ToHex(signature), vector.webCrypto);
         });
       });
     });

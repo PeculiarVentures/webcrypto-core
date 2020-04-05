@@ -3,7 +3,7 @@ import { AsnParser, AsnSerializer } from "@peculiar/asn1-schema";
 import { JsonParser, JsonSerializer } from "@peculiar/json-schema";
 import * as asn from "../../src/asn1";
 
-context("ASN", () => {
+context("ASN1", () => {
 
   context("RSA", () => {
 
