@@ -10,8 +10,6 @@ import { AsnIntegerWithoutPaddingConverter } from "./converters";
 //   s  INTEGER
 // }
 
-
-
 export class EcDsaSignature {
 
   public static fromWebCryptoSignature(value: BufferSource): EcDsaSignature {
