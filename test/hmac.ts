@@ -47,17 +47,17 @@ context("HMAC", () => {
 
     it("SHA-1", () => {
       const len = provider.getDefaultLength("SHA-1");
-      assert.equal(len, 160);
+      assert.equal(len, 512);
     });
 
     it("SHA-256", () => {
       const len = provider.getDefaultLength("SHA-256");
-      assert.equal(len, 256);
+      assert.equal(len, 512);
     });
 
     it("SHA-384", () => {
       const len = provider.getDefaultLength("SHA-384");
-      assert.equal(len, 384);
+      assert.equal(len, 512);
     });
 
     it("SHA-512", () => {

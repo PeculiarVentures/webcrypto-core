@@ -16,12 +16,10 @@ export abstract class HmacProvider extends ProviderCrypto {
    */
   public getDefaultLength(algName: string) {
     switch (algName.toUpperCase()) {
+      // Chrome, Safari and Firefox returns 512
       case "SHA-1":
-        return 160;
       case "SHA-256":
-        return 256;
       case "SHA-384":
-        return 384;
       case "SHA-512":
         return 512;
       default:
