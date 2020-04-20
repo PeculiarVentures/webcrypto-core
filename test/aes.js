@@ -224,17 +224,8 @@ describe("Subtle", function () {
                 };
                 encrypt("decrypt", alg, key, done, false);
             });
-            it("wrong alg param, counter size 15", function (done) {
-                var alg = { name: "AES-CTR", counter: new Uint8Array(15), length: 1 };
-                var key = {
-                    algorithm: { name: "AES-CTR" },
-                    type: "secret",
-                    usages: ["decrypt"]
-                };
-                encrypt("decrypt", alg, key, done, true);
-            });
             it("wrong alg param, length", function (done) {
-                var alg = { name: "AES-CTR", counter: new Uint8Array(16), length: 256 };
+                var alg = { name: "AES-CTR", counter: new Uint8Array(16), length: -1 };
                 var key = {
                     algorithm: { name: "AES-CTR" },
                     type: "secret",

@@ -151,8 +151,8 @@ export class AesCTR extends AesEncrypt {
         if (alg.counter.byteLength !== 16) {
             throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_VALUE, "counter", "ArrayBufferView or ArrayBuffer with size 16");
         }
-        if (!(alg.length > 0 && alg.length <= 128)) {
-            throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_VALUE, "length", "number [1-128]");
+        if (alg.length < 1) {
+            throw new AesAlgorithmError(AesAlgorithmError.PARAM_WRONG_VALUE, "length", "number must be more than 0");
         }
     }
 
