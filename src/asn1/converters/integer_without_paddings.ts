@@ -14,8 +14,8 @@ export const AsnIntegerWithoutPaddingConverter: IAsnConverter<ArrayBuffer> = {
     if (bytes[0] > 127) {
       const newValue = new Uint8Array(bytes.length + 1);
       newValue.set(bytes, 1);
-      return new asn1.Integer({ valueHex: newValue });
+      return new asn1.Integer({ valueHex: newValue.buffer } as any);
     }
-    return new asn1.Integer({ valueHex: value });
+    return new asn1.Integer({ valueHex: value } as any);
   },
 };
