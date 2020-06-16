@@ -18,8 +18,10 @@ export class SubtleCrypto {
 
   protected providers = new ProviderStorage();
 
-  public async digest(algorithm: AlgorithmIdentifier, data: BufferSource): Promise<ArrayBuffer> {
-    this.checkRequiredArguments(arguments, 2, "digest");
+  public async digest(algorithm: AlgorithmIdentifier, data: BufferSource): Promise<ArrayBuffer>;
+  public async digest(...args: any[]): Promise<ArrayBuffer> {
+    this.checkRequiredArguments(args, 2, "digest");
+    const [algorithm, data] = args;
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
     const preparedData = BufferSourceConverter.toArrayBuffer(data);
@@ -30,8 +32,10 @@ export class SubtleCrypto {
     return result;
   }
 
-  public async generateKey(algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair | CryptoKey> {
-    this.checkRequiredArguments(arguments, 3, "generateKey");
+  public async generateKey(algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair | CryptoKey>;
+  public async generateKey(...args: any[]): Promise<CryptoKeyPair | CryptoKey> {
+    this.checkRequiredArguments(args, 3, "generateKey");
+    const [algorithm, extractable, keyUsages] = args;
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
 
@@ -41,8 +45,10 @@ export class SubtleCrypto {
     return result;
   }
 
-  public async sign(algorithm: AlgorithmIdentifier, key: CryptoKey, data: BufferSource): Promise<ArrayBuffer> {
-    this.checkRequiredArguments(arguments, 3, "sign");
+  public async sign(algorithm: AlgorithmIdentifier, key: CryptoKey, data: BufferSource): Promise<ArrayBuffer>;
+  public async sign(...args: any[]): Promise<ArrayBuffer> {
+    this.checkRequiredArguments(args, 3, "sign");
+    const [algorithm, key, data] = args;
     this.checkCryptoKey(key);
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
@@ -54,8 +60,10 @@ export class SubtleCrypto {
     return result;
   }
 
-  public async verify(algorithm: AlgorithmIdentifier, key: CryptoKey, signature: BufferSource, data: BufferSource): Promise<boolean> {
-    this.checkRequiredArguments(arguments, 4, "verify");
+  public async verify(algorithm: AlgorithmIdentifier, key: CryptoKey, signature: BufferSource, data: BufferSource): Promise<boolean>;
+  public async verify(...args: any[]): Promise<boolean> {
+    this.checkRequiredArguments(args, 4, "verify");
+    const [algorithm, key, signature, data] = args;
     this.checkCryptoKey(key);
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
@@ -68,8 +76,10 @@ export class SubtleCrypto {
     return result;
   }
 
-  public async encrypt(algorithm: AlgorithmIdentifier, key: CryptoKey, data: BufferSource): Promise<ArrayBuffer> {
-    this.checkRequiredArguments(arguments, 3, "encrypt");
+  public async encrypt(algorithm: AlgorithmIdentifier, key: CryptoKey, data: BufferSource): Promise<ArrayBuffer>;
+  public async encrypt(...args: any[]): Promise<ArrayBuffer> {
+    this.checkRequiredArguments(args, 3, "encrypt");
+    const [algorithm, key, data] = args;
     this.checkCryptoKey(key);
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
@@ -81,8 +91,10 @@ export class SubtleCrypto {
     return result;
   }
 
-  public async decrypt(algorithm: AlgorithmIdentifier, key: CryptoKey, data: BufferSource): Promise<ArrayBuffer> {
-    this.checkRequiredArguments(arguments, 3, "decrypt");
+  public async decrypt(algorithm: AlgorithmIdentifier, key: CryptoKey, data: BufferSource): Promise<ArrayBuffer>;
+  public async decrypt(...args: any[]): Promise<ArrayBuffer> {
+    this.checkRequiredArguments(args, 3, "decrypt");
+    const [algorithm, key, data] = args;
     this.checkCryptoKey(key);
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
@@ -94,8 +106,10 @@ export class SubtleCrypto {
     return result;
   }
 
-  public async deriveBits(algorithm: AlgorithmIdentifier, baseKey: CryptoKey, length: number): Promise<ArrayBuffer> {
-    this.checkRequiredArguments(arguments, 3, "deriveBits");
+  public async deriveBits(algorithm: AlgorithmIdentifier, baseKey: CryptoKey, length: number): Promise<ArrayBuffer>;
+  public async deriveBits(...args: any[]): Promise<ArrayBuffer> {
+    this.checkRequiredArguments(args, 3, "deriveBits");
+    const [algorithm, baseKey, length] = args;
     this.checkCryptoKey(baseKey);
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
@@ -106,8 +120,10 @@ export class SubtleCrypto {
     return result;
   }
 
-  public async deriveKey(algorithm: AlgorithmIdentifier, baseKey: CryptoKey, derivedKeyType: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey> {
-    this.checkRequiredArguments(arguments, 5, "deriveKey");
+  public async deriveKey(algorithm: AlgorithmIdentifier, baseKey: CryptoKey, derivedKeyType: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
+  public async deriveKey(...args: any[]): Promise<CryptoKey> {
+    this.checkRequiredArguments(args, 5, "deriveKey");
+    const [algorithm, baseKey, derivedKeyType, extractable, keyUsages] = args;
     // check derivedKeyType
     const preparedDerivedKeyType = this.prepareAlgorithm(derivedKeyType);
     const importProvider = this.getProvider(preparedDerivedKeyType.name);
@@ -126,8 +142,9 @@ export class SubtleCrypto {
   public async exportKey(format: "raw" | "spki" | "pkcs8", key: CryptoKey): Promise<ArrayBuffer>;
   public async exportKey(format: "jwk", key: CryptoKey): Promise<JsonWebKey>;
   public async exportKey(format: KeyFormat, key: CryptoKey): Promise<JsonWebKey | ArrayBuffer>;
-  public async exportKey(format: KeyFormat, key: CryptoKey): Promise<JsonWebKey | ArrayBuffer> {
-    this.checkRequiredArguments(arguments, 2, "exportKey");
+  public async exportKey(...args: any[]): Promise<JsonWebKey | ArrayBuffer> {
+    this.checkRequiredArguments(args, 2, "exportKey");
+    const [format, key] = args;
     this.checkCryptoKey(key);
 
     const provider = this.getProvider(key.algorithm.name);
@@ -135,8 +152,10 @@ export class SubtleCrypto {
 
     return result;
   }
-  public async importKey(format: KeyFormat, keyData: JsonWebKey | BufferSource, algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey> {
-    this.checkRequiredArguments(arguments, 5, "importKey");
+  public async importKey(format: KeyFormat, keyData: JsonWebKey | BufferSource, algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
+  public async importKey(...args: any[]): Promise<CryptoKey> {
+    this.checkRequiredArguments(args, 5, "importKey");
+    const [format, keyData, algorithm, extractable, keyUsages] = args;
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
     const provider = this.getProvider(preparedAlgorithm.name);
@@ -187,7 +206,7 @@ export class SubtleCrypto {
     return this.importKey(format, keyData, unwrappedKeyAlgorithm, extractable, keyUsages);
   }
 
-  protected checkRequiredArguments(args: IArguments, size: number, methodName: string) {
+  protected checkRequiredArguments(args: any[], size: number, methodName: string) {
     if (args.length !== size) {
       throw new TypeError(`Failed to execute '${methodName}' on 'SubtleCrypto': ${size} arguments required, but only ${args.length} present`);
     }

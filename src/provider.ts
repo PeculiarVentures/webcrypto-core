@@ -21,9 +21,10 @@ export abstract class ProviderCrypto {
   public abstract readonly usages: ProviderKeyUsages;
 
   //#region Digest
-  public async digest(algorithm: Algorithm, data: ArrayBuffer): Promise<ArrayBuffer> {
-    this.checkDigest.apply(this, arguments);
-    return this.onDigest.apply(this, arguments);
+  public async digest(algorithm: Algorithm, data: ArrayBuffer): Promise<ArrayBuffer>;
+  public async digest(...args: any[]): Promise<ArrayBuffer> {
+    this.checkDigest.apply(this, args);
+    return this.onDigest.apply(this, args);
   }
   public checkDigest(algorithm: Algorithm, data: ArrayBuffer) {
     this.checkAlgorithmName(algorithm);
@@ -34,9 +35,10 @@ export abstract class ProviderCrypto {
   //#endregion
 
   //#region Generate key
-  public async generateKey(algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair | CryptoKey> {
-    this.checkGenerateKey.apply(this, arguments);
-    return this.onGenerateKey.apply(this, arguments);
+  public async generateKey(algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair | CryptoKey>;
+  public async generateKey(...args: any[]): Promise<CryptoKeyPair | CryptoKey> {
+    this.checkGenerateKey.apply(this, args);
+    return this.onGenerateKey.apply(this, args);
   }
   public checkGenerateKey(algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[]) {
     this.checkAlgorithmName(algorithm);
@@ -61,9 +63,10 @@ export abstract class ProviderCrypto {
   //#endregion
 
   //#region Sign
-  public async sign(algorithm: Algorithm, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer> {
-    this.checkSign.apply(this, arguments);
-    return this.onSign.apply(this, arguments);
+  public async sign(algorithm: Algorithm, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer> ;
+  public async sign(...args: any[]): Promise<ArrayBuffer> {
+    this.checkSign.apply(this, args);
+    return this.onSign.apply(this, args);
   }
   public checkSign(algorithm: Algorithm, key: CryptoKey, data: ArrayBuffer) {
     this.checkAlgorithmName(algorithm);
@@ -76,9 +79,10 @@ export abstract class ProviderCrypto {
   //#endregion
 
   //#region Verify
-  public async verify(algorithm: Algorithm, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer): Promise<boolean> {
-    this.checkVerify.apply(this, arguments);
-    return this.onVerify.apply(this, arguments);
+  public async verify(algorithm: Algorithm, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer): Promise<boolean>;
+  public async verify(...args: any[]): Promise<boolean> {
+    this.checkVerify.apply(this, args);
+    return this.onVerify.apply(this, args);
   }
   public checkVerify(algorithm: Algorithm, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer) {
     this.checkAlgorithmName(algorithm);
@@ -91,9 +95,10 @@ export abstract class ProviderCrypto {
   //#endregion
 
   //#region Encrypt
-  public async encrypt(algorithm: Algorithm, key: CryptoKey, data: ArrayBuffer, options?: IProviderCheckOptions): Promise<ArrayBuffer> {
-    this.checkEncrypt.apply(this, arguments);
-    return this.onEncrypt.apply(this, arguments);
+  public async encrypt(algorithm: Algorithm, key: CryptoKey, data: ArrayBuffer, options?: IProviderCheckOptions): Promise<ArrayBuffer>;
+  public async encrypt(...args: any[]): Promise<ArrayBuffer> {
+    this.checkEncrypt.apply(this, args);
+    return this.onEncrypt.apply(this, args);
   }
   public checkEncrypt(algorithm: Algorithm, key: CryptoKey, data: ArrayBuffer, options: IProviderCheckOptions = {}) {
     this.checkAlgorithmName(algorithm);
@@ -106,9 +111,10 @@ export abstract class ProviderCrypto {
   //#endregion
 
   //#region
-  public async decrypt(algorithm: Algorithm, key: CryptoKey, data: ArrayBuffer, options?: IProviderCheckOptions): Promise<ArrayBuffer> {
-    this.checkDecrypt.apply(this, arguments);
-    return this.onDecrypt.apply(this, arguments);
+  public async decrypt(algorithm: Algorithm, key: CryptoKey, data: ArrayBuffer, options?: IProviderCheckOptions): Promise<ArrayBuffer>;
+  public async decrypt(...args: any[]): Promise<ArrayBuffer> {
+    this.checkDecrypt.apply(this, args);
+    return this.onDecrypt.apply(this, args);
   }
   public checkDecrypt(algorithm: Algorithm, key: CryptoKey, data: ArrayBuffer, options: IProviderCheckOptions = {}) {
     this.checkAlgorithmName(algorithm);
@@ -121,9 +127,10 @@ export abstract class ProviderCrypto {
   //#endregion
 
   //#region Derive bits
-  public async deriveBits(algorithm: Algorithm, baseKey: CryptoKey, length: number, options?: IProviderCheckOptions): Promise<ArrayBuffer> {
-    this.checkDeriveBits.apply(this, arguments);
-    return this.onDeriveBits.apply(this, arguments);
+  public async deriveBits(algorithm: Algorithm, baseKey: CryptoKey, length: number, options?: IProviderCheckOptions): Promise<ArrayBuffer>;
+  public async deriveBits(...args: any[]): Promise<ArrayBuffer> {
+    this.checkDeriveBits.apply(this, args);
+    return this.onDeriveBits.apply(this, args);
   }
   public checkDeriveBits(algorithm: Algorithm, baseKey: CryptoKey, length: number, options: IProviderCheckOptions = {}) {
     this.checkAlgorithmName(algorithm);
@@ -139,9 +146,10 @@ export abstract class ProviderCrypto {
   //#endregion
 
   //#region Export key
-  public async exportKey(format: KeyFormat, key: CryptoKey): Promise<JsonWebKey | ArrayBuffer> {
-    this.checkExportKey.apply(this, arguments);
-    return this.onExportKey.apply(this, arguments);
+  public async exportKey(format: KeyFormat, key: CryptoKey): Promise<JsonWebKey | ArrayBuffer>;
+  public async exportKey(...args: any[]): Promise<JsonWebKey | ArrayBuffer> {
+    this.checkExportKey.apply(this, args);
+    return this.onExportKey.apply(this, args);
   }
   public checkExportKey(format: KeyFormat, key: CryptoKey) {
     this.checkKeyFormat(format);
@@ -157,9 +165,10 @@ export abstract class ProviderCrypto {
   //#endregion
 
   //#region Import key
-  public async importKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey> {
-    this.checkImportKey.apply(this, arguments);
-    return this.onImportKey.apply(this, arguments);
+  public async importKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
+  public async importKey(...args: any[]): Promise<CryptoKey> {
+    this.checkImportKey.apply(this, args);
+    return this.onImportKey.apply(this, args);
   }
   public checkImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[]) {
     this.checkKeyFormat(format);
