@@ -7,6 +7,7 @@ export abstract class Crypto {
    */
   public abstract readonly subtle: SubtleCrypto;
 
+  // @internal
   public get[Symbol.toStringTag]() {
     return "Crypto";
   }
