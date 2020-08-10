@@ -6,6 +6,11 @@ export abstract class Crypto {
    * like hashing, signing, encryption or decryption
    */
   public abstract readonly subtle: SubtleCrypto;
+
+  public get[Symbol.toStringTag]() {
+    return "Crypto";
+  }
+
   /**
    * Generates cryptographically random values
    * @param array Is an integer-based BufferSource.

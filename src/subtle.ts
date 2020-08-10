@@ -1,6 +1,5 @@
 import { BufferSourceConverter, Convert } from "pvtsutils";
 import { AlgorithmError } from "./errors";
-import { CryptoKey } from "./key";
 import { ProviderCrypto } from "./provider";
 import { ProviderStorage } from "./storage";
 import { HashedAlgorithm } from "./types";
@@ -17,6 +16,10 @@ export class SubtleCrypto {
   }
 
   protected providers = new ProviderStorage();
+
+  public get[Symbol.toStringTag]() {
+    return "SubtleCrypto";
+  }
 
   public async digest(algorithm: AlgorithmIdentifier, data: BufferSource): Promise<ArrayBuffer>;
   public async digest(...args: any[]): Promise<ArrayBuffer> {

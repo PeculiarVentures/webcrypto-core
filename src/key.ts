@@ -26,4 +26,8 @@ export class CryptoKey implements NativeCryptoKey {
   public type!: KeyType;
   public usages!: KeyUsages;
   public extractable!: boolean;
+
+  public get[Symbol.toStringTag]() {
+    return "CryptoKey";
+  }
 }
