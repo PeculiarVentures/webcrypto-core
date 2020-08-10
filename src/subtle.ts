@@ -3,6 +3,7 @@ import { AlgorithmError } from "./errors";
 import { ProviderCrypto } from "./provider";
 import { ProviderStorage } from "./storage";
 import { HashedAlgorithm } from "./types";
+import { CryptoKey } from './key';
 
 export class SubtleCrypto {
 
@@ -36,8 +37,8 @@ export class SubtleCrypto {
     return result;
   }
 
-  public async generateKey(algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair | CryptoKey>;
-  public async generateKey(...args: any[]): Promise<CryptoKeyPair | CryptoKey> {
+  public async generateKey(algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair | globalThis.CryptoKey>;
+  public async generateKey(...args: any[]): Promise<CryptoKeyPair | globalThis.CryptoKey> {
     this.checkRequiredArguments(args, 3, "generateKey");
     const [algorithm, extractable, keyUsages] = args;
 
@@ -124,8 +125,8 @@ export class SubtleCrypto {
     return result;
   }
 
-  public async deriveKey(algorithm: AlgorithmIdentifier, baseKey: CryptoKey, derivedKeyType: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
-  public async deriveKey(...args: any[]): Promise<CryptoKey> {
+  public async deriveKey(algorithm: AlgorithmIdentifier, baseKey: CryptoKey, derivedKeyType: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<globalThis.CryptoKey>;
+  public async deriveKey(...args: any[]): Promise<globalThis.CryptoKey> {
     this.checkRequiredArguments(args, 5, "deriveKey");
     const [algorithm, baseKey, derivedKeyType, extractable, keyUsages] = args;
     // check derivedKeyType
@@ -156,8 +157,8 @@ export class SubtleCrypto {
 
     return result;
   }
-  public async importKey(format: KeyFormat, keyData: JsonWebKey | BufferSource, algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
-  public async importKey(...args: any[]): Promise<CryptoKey> {
+  public async importKey(format: KeyFormat, keyData: JsonWebKey | BufferSource, algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<globalThis.CryptoKey>;
+  public async importKey(...args: any[]): Promise<globalThis.CryptoKey> {
     this.checkRequiredArguments(args, 5, "importKey");
     const [format, keyData, algorithm, extractable, keyUsages] = args;
 
@@ -190,7 +191,7 @@ export class SubtleCrypto {
     return provider.encrypt({ ...preparedAlgorithm, name: provider.name }, wrappingKey, preparedData, { keyUsage: false });
   }
 
-  public async unwrapKey(format: KeyFormat, wrappedKey: BufferSource, unwrappingKey: CryptoKey, unwrapAlgorithm: AlgorithmIdentifier, unwrappedKeyAlgorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey> {
+  public async unwrapKey(format: KeyFormat, wrappedKey: BufferSource, unwrappingKey: CryptoKey, unwrapAlgorithm: AlgorithmIdentifier, unwrappedKeyAlgorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<globalThis.CryptoKey> {
     // decrypt wrapped key
     const preparedAlgorithm = this.prepareAlgorithm(unwrapAlgorithm);
     const preparedData = BufferSourceConverter.toArrayBuffer(wrappedKey);
