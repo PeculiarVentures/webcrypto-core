@@ -5,6 +5,11 @@
   "main": "build/webcrypto-core.js",
   "module": "build/webcrypto-core.es.js",
   "types": "build/types/index.d.ts",
+  "files": [
+    "build",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "prepare": "npm run build",
     "test": "mocha",
