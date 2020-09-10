@@ -18,7 +18,7 @@ export abstract class AesCmacProvider extends AesProvider {
     }
   }
 
-  public abstract onSign(algorithm: AesCmacParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
-  public abstract onVerify(algorithm: AesCmacParams, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer): Promise<boolean>;
+  public abstract onSign(algorithm: AesCmacParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
+  public abstract onVerify(algorithm: AesCmacParams, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer, ...args: any[]): Promise<boolean>;
 
 }

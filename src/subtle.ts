@@ -23,52 +23,52 @@ export class SubtleCrypto {
     return "SubtleCrypto";
   }
 
-  public async digest(algorithm: AlgorithmIdentifier, data: BufferSource): Promise<ArrayBuffer>;
+  public async digest(algorithm: AlgorithmIdentifier, data: BufferSource, ...args: any[]): Promise<ArrayBuffer>;
   public async digest(...args: any[]): Promise<ArrayBuffer> {
     this.checkRequiredArguments(args, 2, "digest");
-    const [algorithm, data] = args;
+    const [algorithm, data, ...params] = args;
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
     const preparedData = BufferSourceConverter.toArrayBuffer(data);
 
     const provider = this.getProvider(preparedAlgorithm.name);
-    const result = await provider.digest(preparedAlgorithm, preparedData);
+    const result = await provider.digest(preparedAlgorithm, preparedData, ...params);
 
     return result;
   }
 
-  public async generateKey(algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair | globalThis.CryptoKey>;
+  public async generateKey(algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKeyPair | globalThis.CryptoKey>;
   public async generateKey(...args: any[]): Promise<CryptoKeyPair | globalThis.CryptoKey> {
     this.checkRequiredArguments(args, 3, "generateKey");
-    const [algorithm, extractable, keyUsages] = args;
+    const [algorithm, extractable, keyUsages, ...params] = args;
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
 
     const provider = this.getProvider(preparedAlgorithm.name);
-    const result = await provider.generateKey({ ...preparedAlgorithm, name: provider.name }, extractable, keyUsages);
+    const result = await provider.generateKey({ ...preparedAlgorithm, name: provider.name }, extractable, keyUsages, ...params);
 
     return result;
   }
 
-  public async sign(algorithm: AlgorithmIdentifier, key: CryptoKey, data: BufferSource): Promise<ArrayBuffer>;
+  public async sign(algorithm: AlgorithmIdentifier, key: CryptoKey, data: BufferSource, ...args: any[]): Promise<ArrayBuffer>;
   public async sign(...args: any[]): Promise<ArrayBuffer> {
     this.checkRequiredArguments(args, 3, "sign");
-    const [algorithm, key, data] = args;
+    const [algorithm, key, data, ...params] = args;
     this.checkCryptoKey(key);
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
     const preparedData = BufferSourceConverter.toArrayBuffer(data);
 
     const provider = this.getProvider(preparedAlgorithm.name);
-    const result = await provider.sign({ ...preparedAlgorithm, name: provider.name }, key, preparedData);
+    const result = await provider.sign({ ...preparedAlgorithm, name: provider.name }, key, preparedData, ...params);
 
     return result;
   }
 
-  public async verify(algorithm: AlgorithmIdentifier, key: CryptoKey, signature: BufferSource, data: BufferSource): Promise<boolean>;
+  public async verify(algorithm: AlgorithmIdentifier, key: CryptoKey, signature: BufferSource, data: BufferSource, ...args: any[]): Promise<boolean>;
   public async verify(...args: any[]): Promise<boolean> {
     this.checkRequiredArguments(args, 4, "verify");
-    const [algorithm, key, signature, data] = args;
+    const [algorithm, key, signature, data, ...params] = args;
     this.checkCryptoKey(key);
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
@@ -76,59 +76,59 @@ export class SubtleCrypto {
     const preparedSignature = BufferSourceConverter.toArrayBuffer(signature);
 
     const provider = this.getProvider(preparedAlgorithm.name);
-    const result = await provider.verify({ ...preparedAlgorithm, name: provider.name }, key, preparedSignature, preparedData);
+    const result = await provider.verify({ ...preparedAlgorithm, name: provider.name }, key, preparedSignature, preparedData, ...params);
 
     return result;
   }
 
-  public async encrypt(algorithm: AlgorithmIdentifier, key: CryptoKey, data: BufferSource): Promise<ArrayBuffer>;
+  public async encrypt(algorithm: AlgorithmIdentifier, key: CryptoKey, data: BufferSource, ...args: any[]): Promise<ArrayBuffer>;
   public async encrypt(...args: any[]): Promise<ArrayBuffer> {
     this.checkRequiredArguments(args, 3, "encrypt");
-    const [algorithm, key, data] = args;
+    const [algorithm, key, data, ...params] = args;
     this.checkCryptoKey(key);
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
     const preparedData = BufferSourceConverter.toArrayBuffer(data);
 
     const provider = this.getProvider(preparedAlgorithm.name);
-    const result = await provider.encrypt({ ...preparedAlgorithm, name: provider.name }, key, preparedData, { keyUsage: true });
+    const result = await provider.encrypt({ ...preparedAlgorithm, name: provider.name }, key, preparedData, { keyUsage: true }, ...params);
 
     return result;
   }
 
-  public async decrypt(algorithm: AlgorithmIdentifier, key: CryptoKey, data: BufferSource): Promise<ArrayBuffer>;
+  public async decrypt(algorithm: AlgorithmIdentifier, key: CryptoKey, data: BufferSource, ...args: any[]): Promise<ArrayBuffer>;
   public async decrypt(...args: any[]): Promise<ArrayBuffer> {
     this.checkRequiredArguments(args, 3, "decrypt");
-    const [algorithm, key, data] = args;
+    const [algorithm, key, data, ...params] = args;
     this.checkCryptoKey(key);
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
     const preparedData = BufferSourceConverter.toArrayBuffer(data);
 
     const provider = this.getProvider(preparedAlgorithm.name);
-    const result = await provider.decrypt({ ...preparedAlgorithm, name: provider.name }, key, preparedData, { keyUsage: true });
+    const result = await provider.decrypt({ ...preparedAlgorithm, name: provider.name }, key, preparedData, { keyUsage: true }, ...params);
 
     return result;
   }
 
-  public async deriveBits(algorithm: AlgorithmIdentifier, baseKey: CryptoKey, length: number): Promise<ArrayBuffer>;
+  public async deriveBits(algorithm: AlgorithmIdentifier, baseKey: CryptoKey, length: number, ...args: any[]): Promise<ArrayBuffer>;
   public async deriveBits(...args: any[]): Promise<ArrayBuffer> {
     this.checkRequiredArguments(args, 3, "deriveBits");
-    const [algorithm, baseKey, length] = args;
+    const [algorithm, baseKey, length, ...params] = args;
     this.checkCryptoKey(baseKey);
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
 
     const provider = this.getProvider(preparedAlgorithm.name);
-    const result = await provider.deriveBits({ ...preparedAlgorithm, name: provider.name }, baseKey, length, { keyUsage: true });
+    const result = await provider.deriveBits({ ...preparedAlgorithm, name: provider.name }, baseKey, length, { keyUsage: true }, ...params);
 
     return result;
   }
 
-  public async deriveKey(algorithm: AlgorithmIdentifier, baseKey: CryptoKey, derivedKeyType: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<globalThis.CryptoKey>;
+  public async deriveKey(algorithm: AlgorithmIdentifier, baseKey: CryptoKey, derivedKeyType: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<globalThis.CryptoKey>;
   public async deriveKey(...args: any[]): Promise<globalThis.CryptoKey> {
     this.checkRequiredArguments(args, 5, "deriveKey");
-    const [algorithm, baseKey, derivedKeyType, extractable, keyUsages] = args;
+    const [algorithm, baseKey, derivedKeyType, extractable, keyUsages, ...params] = args;
     // check derivedKeyType
     const preparedDerivedKeyType = this.prepareAlgorithm(derivedKeyType);
     const importProvider = this.getProvider(preparedDerivedKeyType.name);
@@ -138,29 +138,29 @@ export class SubtleCrypto {
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
     const provider = this.getProvider(preparedAlgorithm.name);
     provider.checkCryptoKey(baseKey, "deriveKey");
-    const derivedBits = await provider.deriveBits({ ...preparedAlgorithm, name: provider.name }, baseKey, (derivedKeyType as any).length, { keyUsage: false });
+    const derivedBits = await provider.deriveBits({ ...preparedAlgorithm, name: provider.name }, baseKey, (derivedKeyType as any).length, { keyUsage: false }, ...params);
 
     // import derived key
-    return this.importKey("raw", derivedBits, derivedKeyType, extractable, keyUsages);
+    return this.importKey("raw", derivedBits, derivedKeyType, extractable, keyUsages, ...params);
   }
 
-  public async exportKey(format: "raw" | "spki" | "pkcs8", key: CryptoKey): Promise<ArrayBuffer>;
-  public async exportKey(format: "jwk", key: CryptoKey): Promise<JsonWebKey>;
-  public async exportKey(format: KeyFormat, key: CryptoKey): Promise<JsonWebKey | ArrayBuffer>;
+  public async exportKey(format: "raw" | "spki" | "pkcs8", key: CryptoKey, ...args: any[]): Promise<ArrayBuffer>;
+  public async exportKey(format: "jwk", key: CryptoKey, ...args: any[]): Promise<JsonWebKey>;
+  public async exportKey(format: KeyFormat, key: CryptoKey, ...args: any[]): Promise<JsonWebKey | ArrayBuffer>;
   public async exportKey(...args: any[]): Promise<JsonWebKey | ArrayBuffer> {
     this.checkRequiredArguments(args, 2, "exportKey");
-    const [format, key] = args;
+    const [format, key, ...params] = args;
     this.checkCryptoKey(key);
 
     const provider = this.getProvider(key.algorithm.name);
-    const result = await provider.exportKey(format, key);
+    const result = await provider.exportKey(format, key, ...params);
 
     return result;
   }
-  public async importKey(format: KeyFormat, keyData: JsonWebKey | BufferSource, algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<globalThis.CryptoKey>;
+  public async importKey(format: KeyFormat, keyData: JsonWebKey | BufferSource, algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<globalThis.CryptoKey>;
   public async importKey(...args: any[]): Promise<globalThis.CryptoKey> {
     this.checkRequiredArguments(args, 5, "importKey");
-    const [format, keyData, algorithm, extractable, keyUsages] = args;
+    const [format, keyData, algorithm, extractable, keyUsages, ...params] = args;
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
     const provider = this.getProvider(preparedAlgorithm.name);
@@ -168,17 +168,17 @@ export class SubtleCrypto {
     if (["pkcs8", "spki", "raw"].indexOf(format) !== -1) {
       const preparedData = BufferSourceConverter.toArrayBuffer(keyData as BufferSource);
 
-      return provider.importKey(format, preparedData, { ...preparedAlgorithm, name: provider.name }, extractable, keyUsages);
+      return provider.importKey(format, preparedData, { ...preparedAlgorithm, name: provider.name }, extractable, keyUsages, ...params);
     } else {
       if (!(keyData as JsonWebKey).kty) {
         throw new TypeError("keyData: Is not JSON");
       }
     }
-    return provider.importKey(format, keyData as JsonWebKey, { ...preparedAlgorithm, name: provider.name }, extractable, keyUsages);
+    return provider.importKey(format, keyData as JsonWebKey, { ...preparedAlgorithm, name: provider.name }, extractable, keyUsages, ...params);
   }
 
-  public async wrapKey(format: KeyFormat, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: AlgorithmIdentifier): Promise<ArrayBuffer> {
-    let keyData = await this.exportKey(format, key);
+  public async wrapKey(format: KeyFormat, key: CryptoKey, wrappingKey: CryptoKey, wrapAlgorithm: AlgorithmIdentifier, ...args: any[]): Promise<ArrayBuffer> {
+    let keyData = await this.exportKey(format, key, ...args);
     if (format === "jwk") {
       const json = JSON.stringify(keyData);
       keyData = Convert.FromUtf8String(json);
@@ -188,15 +188,15 @@ export class SubtleCrypto {
     const preparedAlgorithm = this.prepareAlgorithm(wrapAlgorithm);
     const preparedData = BufferSourceConverter.toArrayBuffer(keyData as ArrayBuffer);
     const provider = this.getProvider(preparedAlgorithm.name);
-    return provider.encrypt({ ...preparedAlgorithm, name: provider.name }, wrappingKey, preparedData, { keyUsage: false });
+    return provider.encrypt({ ...preparedAlgorithm, name: provider.name }, wrappingKey, preparedData, { keyUsage: false }, ...args);
   }
 
-  public async unwrapKey(format: KeyFormat, wrappedKey: BufferSource, unwrappingKey: CryptoKey, unwrapAlgorithm: AlgorithmIdentifier, unwrappedKeyAlgorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[]): Promise<globalThis.CryptoKey> {
+  public async unwrapKey(format: KeyFormat, wrappedKey: BufferSource, unwrappingKey: CryptoKey, unwrapAlgorithm: AlgorithmIdentifier, unwrappedKeyAlgorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<globalThis.CryptoKey> {
     // decrypt wrapped key
     const preparedAlgorithm = this.prepareAlgorithm(unwrapAlgorithm);
     const preparedData = BufferSourceConverter.toArrayBuffer(wrappedKey);
     const provider = this.getProvider(preparedAlgorithm.name);
-    let keyData = await provider.decrypt({ ...preparedAlgorithm, name: provider.name }, unwrappingKey, preparedData, { keyUsage: false });
+    let keyData = await provider.decrypt({ ...preparedAlgorithm, name: provider.name }, unwrappingKey, preparedData, { keyUsage: false }, ...args);
     if (format === "jwk") {
       try {
         keyData = JSON.parse(Convert.ToUtf8String(keyData));
@@ -208,7 +208,7 @@ export class SubtleCrypto {
     }
 
     // import key
-    return this.importKey(format, keyData, unwrappedKeyAlgorithm, extractable, keyUsages);
+    return this.importKey(format, keyData, unwrappedKeyAlgorithm, extractable, keyUsages, ...args);
   }
 
   protected checkRequiredArguments(args: any[], size: number, methodName: string) {

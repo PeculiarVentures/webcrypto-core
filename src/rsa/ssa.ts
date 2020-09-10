@@ -12,7 +12,7 @@ export abstract class RsaSsaProvider extends RsaProvider {
     publicKey: ["verify"],
   };
 
-  public abstract onSign(algorithm: RsaSsaParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
-  public abstract onVerify(algorithm: RsaSsaParams, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer): Promise<boolean>;
+  public abstract onSign(algorithm: RsaSsaParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
+  public abstract onVerify(algorithm: RsaSsaParams, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer, ...args: any[]): Promise<boolean>;
 
 }

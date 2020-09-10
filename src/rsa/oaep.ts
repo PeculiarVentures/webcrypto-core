@@ -18,7 +18,7 @@ export abstract class RsaOaepProvider extends RsaProvider {
     }
   }
 
-  public abstract onEncrypt(algorithm: RsaOaepParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
-  public abstract onDecrypt(algorithm: RsaOaepParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
+  public abstract onEncrypt(algorithm: RsaOaepParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
+  public abstract onDecrypt(algorithm: RsaOaepParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
 
 }

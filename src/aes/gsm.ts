@@ -35,7 +35,7 @@ export abstract class AesGcmProvider extends AesProvider {
     }
   }
 
-  public abstract onEncrypt(algorithm: AesGcmParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
-  public abstract onDecrypt(algorithm: AesGcmParams, key: CryptoKey, data: ArrayBuffer): Promise<ArrayBuffer>;
+  public abstract onEncrypt(algorithm: AesGcmParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
+  public abstract onDecrypt(algorithm: AesGcmParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
 
 }

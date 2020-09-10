@@ -31,15 +31,15 @@ export abstract class Pbkdf2Provider extends ProviderCrypto {
     }
   }
 
-  public checkImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[]) {
+  public checkImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]) {
     super.checkImportKey(format, keyData, algorithm, extractable, keyUsages);
     if (extractable) {
       // If extractable is not false, then throw a SyntaxError
-      throw new SyntaxError("extractable: Must be False");
+      throw new SyntaxError("extractable: Must be 'false'");
     }
   }
 
-  public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
-  public abstract onDeriveBits(algorithm: Pbkdf2Params, baseKey: CryptoKey, length: number): Promise<ArrayBuffer>;
+  public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
+  public abstract onDeriveBits(algorithm: Pbkdf2Params, baseKey: CryptoKey, length: number, ...args: any[]): Promise<ArrayBuffer>;
 
 }
