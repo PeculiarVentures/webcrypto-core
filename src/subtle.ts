@@ -212,7 +212,7 @@ export class SubtleCrypto {
   }
 
   protected checkRequiredArguments(args: any[], size: number, methodName: string) {
-    if (args.length !== size) {
+    if (args.length < size) {
       throw new TypeError(`Failed to execute '${methodName}' on 'SubtleCrypto': ${size} arguments required, but only ${args.length} present`);
     }
   }

@@ -171,8 +171,12 @@ context("SubtleCrypto", () => {
 
   context("checkRequiredArguments", () => {
 
-    it("error if wrong arguments amount", async () => {
-      await assert.rejects(subtle.digest.apply(subtle, ["test", new Uint8Array(0), 1, 2, 3]));
+    it("error if less than required", async () => {
+      await assert.rejects(subtle.digest.apply(subtle, ["test"]));
+    });
+
+    it("no error if greater than required", async () => {
+      await assert.doesNotReject(subtle.digest.apply(subtle, ["test", new Uint8Array(0), 1, 2, 3]));
     });
 
   });
