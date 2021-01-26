@@ -152,9 +152,9 @@ context("RSA", () => {
         }, TypeError);
       });
 
-      it("error if `saltLength` is less than 1", () => {
+      it("error if `saltLength` is less than 0", () => {
         assert.throws(() => {
-          provider.checkAlgorithmParams({ saltLength: 0 } as any);
+          provider.checkAlgorithmParams({ saltLength: -1 } as any);
         }, RangeError);
       });
 

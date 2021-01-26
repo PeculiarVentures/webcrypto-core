@@ -15,8 +15,8 @@ export abstract class RsaPssProvider extends RsaProvider {
     if (typeof algorithm.saltLength !== "number") {
       throw new TypeError("saltLength: Is not a Number");
     }
-    if (algorithm.saltLength < 1) {
-      throw new RangeError("saltLength: Must be more than 0");
+    if (algorithm.saltLength < 0) {
+      throw new RangeError("saltLength: Must be positive number");
     }
   }
 
