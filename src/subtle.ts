@@ -138,7 +138,7 @@ export class SubtleCrypto {
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
     const provider = this.getProvider(preparedAlgorithm.name);
     provider.checkCryptoKey(baseKey, "deriveKey");
-    const derivedBits = await provider.deriveBits({ ...preparedAlgorithm, name: provider.name }, baseKey, (derivedKeyType as any).length, { keyUsage: false }, ...params);
+    const derivedBits = await provider.deriveBits({ ...preparedAlgorithm, name: provider.name }, baseKey, (derivedKeyType as any).length || 512, { keyUsage: false }, ...params);
 
     // import derived key
     return this.importKey("raw", derivedBits, derivedKeyType, extractable, keyUsages, ...params);
