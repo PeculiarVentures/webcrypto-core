@@ -5,7 +5,7 @@ import { EllipticProvider } from "./base";
 
 export abstract class EcdhProvider extends EllipticProvider {
 
-  public readonly name = "ECDH";
+  public readonly name: string = "ECDH";
 
   public usages: ProviderKeyUsages = {
     privateKey: ["deriveBits", "deriveKey"],
