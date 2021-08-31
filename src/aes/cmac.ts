@@ -2,6 +2,10 @@ import { OperationError } from "../errors";
 import { KeyUsages } from "../types";
 import { AesProvider } from "./base";
 
+export interface AesCmacParams extends Algorithm {
+  length: number;
+}
+
 export abstract class AesCmacProvider extends AesProvider {
 
   public readonly name = "AES-CMAC";
