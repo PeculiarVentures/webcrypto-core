@@ -1,5 +1,4 @@
 import assert from "assert";
-import "reflect-metadata";
 import { AesCbcProvider, AesCmacProvider, AesCtrProvider, AesGcmProvider } from "../src/aes";
 import { OperationError } from "../src/errors";
 

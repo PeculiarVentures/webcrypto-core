@@ -1,5 +1,5 @@
 import assert from "assert";
-import { CryptoKey } from "../src/key";
+import { CryptoKey } from "../src/crypto_key";
 
 context("CryptoKey", () => {
 

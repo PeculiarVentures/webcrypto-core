@@ -1,13 +1,49 @@
 import assert from "assert";
-import "reflect-metadata";
-import { EcdhEsProvider, EcdhProvider, EcdsaProvider, EdDsaProvider, EllipticProvider } from "../src/ec";
+import { Convert } from "pvtsutils";
+import { EcdhEsProvider, EcdhProvider, EcdsaProvider, EcUtils, EdDsaProvider, EllipticProvider } from "../src/ec";
 import { OperationError } from "../src/errors";
-import { CryptoKey } from "../src/key";
+import { CryptoKey } from "../src/crypto_key";
+import { CryptoKeyPair } from "../src/crypto_key_pair";
 import { ProviderKeyUsages } from "../src/types";
 
 // tslint:disable:max-classes-per-file
 
 context("EC", () => {
+
+  context("EcUtils", () => {
+    context("public point", () => {
+      it("encode/decode point without padding", () => {
+        const point = {
+          x: new Uint8Array([1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4]),
+          y: new Uint8Array([5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8]),
+        }
+        const encoded = EcUtils.encodePoint(point, 160);
+
+        assert.strictEqual(Convert.ToHex(encoded), "0401010101010202020202030303030304040404040505050505060606060607070707070808080808");
+
+        const decoded = EcUtils.decodePoint(encoded, 160);
+        assert.strictEqual(Convert.ToHex(decoded.x), Convert.ToHex(point.x));
+        assert.strictEqual(Convert.ToHex(decoded.y), Convert.ToHex(point.y));
+      });
+      it("decode uncompressed point ", () => {
+        const uncompressedPoint = new Uint8Array(Convert.FromHex("0400010101010202020202030303030304040404040005050505060606060607070707070808080808"));
+        const decoded = EcUtils.decodePoint(uncompressedPoint, 160);
+        assert.strictEqual(Convert.ToHex(decoded.x), "0001010101020202020203030303030404040404");
+        assert.strictEqual(Convert.ToHex(decoded.y), "0005050505060606060607070707070808080808");
+      });
+    });
+    context("signature point", () => {
+      it("encode/decode", () => {
+        const encodedHex = "00f3e308185c2d6cb59ec216ba8ce31e0a27db431be250807e604cd858494eb9d1de066b0dc7964f64b31e2f8da7f00741b5ba7e3972fe476099d53f5c5a39905a1f009fc215304c42100a0eec7b9d0bbc5f59c838b604bcceb6ebffd4870c83e76d8eca92e689032caddc69aa87a833216163589f97ce6cb4d10c84b7d6a949e73ca1c5";
+        const decoded = EcUtils.decodeSignature(Convert.FromHex(encodedHex), 521);
+        assert.strictEqual(Convert.ToHex(decoded.r), "f3e308185c2d6cb59ec216ba8ce31e0a27db431be250807e604cd858494eb9d1de066b0dc7964f64b31e2f8da7f00741b5ba7e3972fe476099d53f5c5a39905a1f");
+        assert.strictEqual(Convert.ToHex(decoded.s), "9fc215304c42100a0eec7b9d0bbc5f59c838b604bcceb6ebffd4870c83e76d8eca92e689032caddc69aa87a833216163589f97ce6cb4d10c84b7d6a949e73ca1c5");
+
+        const encoded = EcUtils.encodeSignature(decoded, 521);
+        assert.strictEqual(Convert.ToHex(encoded), encodedHex);
+      });
+    });
+  });
 
   context("Base", () => {
 
@@ -144,10 +180,10 @@ context("EC", () => {
       public async onGenerateKey(algorithm: EcKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKeyPair> {
         return null as any;
       }
-      public async onExportKey(format: KeyFormat, key: globalThis.CryptoKey, ...args: any[]): Promise<ArrayBuffer | JsonWebKey> {
+      public async onExportKey(format: KeyFormat, key: CryptoKey, ...args: any[]): Promise<ArrayBuffer | JsonWebKey> {
         return null as any;
       }
-      public async onImportKey(format: KeyFormat, keyData: ArrayBuffer | JsonWebKey, algorithm: EcKeyImportParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<globalThis.CryptoKey> {
+      public async onImportKey(format: KeyFormat, keyData: ArrayBuffer | JsonWebKey, algorithm: EcKeyImportParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey> {
         return null as any;
       }
     }
@@ -166,19 +202,19 @@ context("EC", () => {
 
   context("EdDSA", () => {
     class TestEdDsaProvider extends EdDsaProvider {
-      public async onSign(algorithm: EcdsaParams, key: globalThis.CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer> {
+      public async onSign(algorithm: EcdsaParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer> {
         return null as any;
       }
-      public async onVerify(algorithm: EcdsaParams, key: globalThis.CryptoKey, signature: ArrayBuffer, data: ArrayBuffer, ...args: any[]): Promise<boolean> {
+      public async onVerify(algorithm: EcdsaParams, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer, ...args: any[]): Promise<boolean> {
         return true;
       }
       public async onGenerateKey(algorithm: EcKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKeyPair> {
         return null as any;
       }
-      public onExportKey(format: KeyFormat, key: globalThis.CryptoKey, ...args: any[]): Promise<ArrayBuffer | JsonWebKey> {
+      public onExportKey(format: KeyFormat, key: CryptoKey, ...args: any[]): Promise<ArrayBuffer | JsonWebKey> {
         return null as any;
       }
-      public onImportKey(format: KeyFormat, keyData: ArrayBuffer | JsonWebKey, algorithm: EcKeyImportParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<globalThis.CryptoKey> {
+      public onImportKey(format: KeyFormat, keyData: ArrayBuffer | JsonWebKey, algorithm: EcKeyImportParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey> {
         return null as any;
       }
     }

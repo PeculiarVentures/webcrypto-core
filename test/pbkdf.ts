@@ -1,5 +1,4 @@
 import assert from "assert";
-import "reflect-metadata";
 import { OperationError, Pbkdf2Provider } from "../src";
 
 context("HMAC", () => {

@@ -1,7 +1,7 @@
 import assert from "assert";
 import { ProviderKeyPairUsage } from "../src";
 import { AlgorithmError, CryptoError, OperationError, UnsupportedOperationError } from "../src/errors";
-import { CryptoKey } from "../src/key";
+import { CryptoKey } from "../src/crypto_key";
 import { ProviderCrypto } from "../src/provider";
 
 class TestProvider extends ProviderCrypto {
