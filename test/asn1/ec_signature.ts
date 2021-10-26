@@ -51,7 +51,7 @@ context("ASN1", () => {
         it(vector.name, () => {
           const value = EcDsaSignature.fromWebCryptoSignature(Convert.FromHex(vector.webCrypto));
           const der = AsnSerializer.serialize(value);
-          assert.equal(Convert.ToHex(der), vector.asn1);
+          assert.strictEqual(Convert.ToHex(der), vector.asn1);
         });
       });
     });
@@ -61,7 +61,7 @@ context("ASN1", () => {
         it(vector.name, () => {
           const value = AsnParser.parse(Convert.FromHex(vector.asn1), EcDsaSignature);
           const signature = value.toWebCryptoSignature();
-          assert.equal(Convert.ToHex(signature), vector.webCrypto);
+          assert.strictEqual(Convert.ToHex(signature), vector.webCrypto);
         });
       });
     });

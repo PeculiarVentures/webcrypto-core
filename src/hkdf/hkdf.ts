@@ -1,4 +1,5 @@
 import { BufferSourceConverter } from "pvtsutils";
+import { CryptoKey } from "../crypto_key";
 import { ProviderCrypto } from "../provider";
 import { KeyUsages } from "../types";
 

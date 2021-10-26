@@ -1,4 +1,5 @@
 import { ProviderCrypto } from "../provider";
+import { CryptoKey } from "../crypto_key";
 
 export abstract class AesProvider extends ProviderCrypto {
 

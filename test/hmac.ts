@@ -1,5 +1,4 @@
 import assert from "assert";
-import "reflect-metadata";
 import { OperationError } from "../src/errors";
 import { HmacProvider } from "../src/hmac";
 

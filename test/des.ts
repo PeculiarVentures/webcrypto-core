@@ -1,6 +1,5 @@
 import assert from "assert";
-import { DesProvider } from "../src/des";
-import { OperationError } from "../src/errors";
+import { CryptoKey, DesProvider, OperationError } from "../src";
 
 class DesTestProvider extends DesProvider {
   public keySizeBits = 64;
