@@ -1,4 +1,4 @@
-import { OperationError } from "../errors";
+import { CryptoKey } from "../crypto_key";
 import { ProviderCrypto } from "../provider";
 import { KeyUsages } from "../types";
 

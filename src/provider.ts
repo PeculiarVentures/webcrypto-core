@@ -1,4 +1,6 @@
 import { BufferSourceConverter } from "pvtsutils";
+import { CryptoKey } from "./crypto_key";
+import { CryptoKeyPair } from "./crypto_key_pair";
 import { AlgorithmError, CryptoError, OperationError, RequiredPropertyError, UnsupportedOperationError } from "./errors";
 import { KeyUsages, ProviderKeyUsages } from "./types";
 import { isJWK } from "./utils";
@@ -34,6 +36,8 @@ export abstract class ProviderCrypto {
   //#endregion
 
   //#region Generate key
+  public async generateKey(algorithm: RsaHashedKeyGenParams | EcKeyGenParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair>;
+  public async generateKey(algorithm: AesKeyGenParams | HmacKeyGenParams | Pbkdf2Params, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
   public async generateKey(algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKeyPair | CryptoKey>;
   public async generateKey(...args: any[]): Promise<CryptoKeyPair | CryptoKey> {
     this.checkGenerateKey.apply(this, args);

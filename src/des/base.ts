@@ -1,5 +1,5 @@
 import { OperationError } from "../errors";
-import { KeyAlgorithm } from "../key";
+import { KeyAlgorithm, CryptoKey } from "../crypto_key";
 import { ProviderCrypto } from "../provider";
 import { KeyUsages } from "../types";
 
@@ -47,7 +47,7 @@ export abstract class DesProvider extends ProviderCrypto {
       throw new TypeError("length: Is not of type Number");
     }
     if (algorithm.length !== this.keySizeBits) {
-      throw new OperationError(`algorith.length: Must be ${this.keySizeBits}`);
+      throw new OperationError(`algorithm.length: Must be ${this.keySizeBits}`);
     }
   }
 

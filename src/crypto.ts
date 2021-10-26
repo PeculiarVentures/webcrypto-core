@@ -17,5 +17,5 @@ export abstract class Crypto {
    * @param array Is an integer-based BufferSource.
    * All elements in the array are going to be overridden with random numbers.
    */
-  public abstract getRandomValues<T extends ArrayBufferView>(array: T): T;
+  public abstract getRandomValues<T extends ArrayBufferView | null>(array: T): T;
 }
