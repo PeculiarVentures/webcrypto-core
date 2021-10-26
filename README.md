@@ -50,7 +50,7 @@ class SubtleCrypto extends core.SubtleCrypto {
   }
 }
 
-class Crypto {
+class Crypto extends core.Crypto {
 
   constructor() {
     this.subtle = new SubtleCrypto();
