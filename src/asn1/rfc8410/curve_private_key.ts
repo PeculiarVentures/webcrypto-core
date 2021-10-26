@@ -1,4 +1,4 @@
-import { AsnProp, AsnPropTypes, AsnType, AsnTypeTypes, OctetString } from "@peculiar/asn1-schema";
+import { AsnProp, AsnPropTypes, AsnType, AsnTypeTypes } from "@peculiar/asn1-schema";
 import { JsonProp, JsonPropTypes } from "@peculiar/json-schema";
 import { JsonBase64UrlArrayBufferConverter } from "../../json/converters";
 

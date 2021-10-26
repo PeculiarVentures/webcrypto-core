@@ -1,5 +1,5 @@
 import { OperationError } from "../errors";
-import { CryptoKey } from "../key";
+import { CryptoKey } from "../crypto_key";
 import { ProviderKeyUsages } from "../types";
 import { EllipticProvider } from "./base";
 
