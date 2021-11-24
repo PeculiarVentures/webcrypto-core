@@ -69,13 +69,33 @@ context("RSA", () => {
       });
 
       it("error if `modulusLength` is wrong value", () => {
-        assert.throws(() => {
-          provider.checkGenerateKeyParams({
-            hash: { name: "SHA-256" },
-            publicExponent: new Uint8Array([1, 0, 1]),
-            modulusLength: 12345,
-          } as any);
-        }, TypeError);
+        it("not multiple of 8 bits", () => {
+          assert.throws(() => {
+            provider.checkGenerateKeyParams({
+              hash: { name: "SHA-256" },
+              publicExponent: new Uint8Array([1, 0, 1]),
+              modulusLength: 12345,
+            } as any);
+          }, TypeError);
+        });
+        it("less than 256", () => {
+          assert.throws(() => {
+            provider.checkGenerateKeyParams({
+              hash: { name: "SHA-256" },
+              publicExponent: new Uint8Array([1, 0, 1]),
+              modulusLength: 256 - 8,
+            } as any);
+          }, TypeError);
+        });
+        it("more than 16384", () => {
+          assert.throws(() => {
+            provider.checkGenerateKeyParams({
+              hash: { name: "SHA-256" },
+              publicExponent: new Uint8Array([1, 0, 1]),
+              modulusLength: 16384 + 8,
+            } as any);
+          }, TypeError);
+        });
       });
 
       it("correct value", () => {

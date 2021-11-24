@@ -24,13 +24,10 @@ export abstract class RsaProvider extends ProviderCrypto {
 
     // modulus length
     this.checkRequiredProperty(algorithm, "modulusLength");
-    switch (algorithm.modulusLength) {
-      case 1024:
-      case 2048:
-      case 4096:
-        break;
-      default:
-        throw new TypeError("modulusLength: Must be 1024, 2048, or 4096");
+    if (algorithm.modulusLength % 8
+      || algorithm.modulusLength < 256
+      || algorithm.modulusLength > 16384) {
+      throw new TypeError("The modulus length must be a multiple of 8 bits and >= 256 and <= 16384");
     }
   }
 
