@@ -46,7 +46,7 @@
     "ec"
   ],
   "dependencies": {
-    "@peculiar/asn1-schema": "^2.0.38",
+    "@peculiar/asn1-schema": "^2.0.44",
     "@peculiar/json-schema": "^1.1.12",
     "asn1js": "^2.1.1",
     "pvtsutils": "^1.2.0",
@@ -55,16 +55,16 @@
   "devDependencies": {
     "@types/asn1js": "^2.0.2",
     "@types/mocha": "^9.0.0",
-    "@types/node": "^16.11.4",
+    "@types/node": "^16.11.10",
     "coveralls": "^3.1.1",
     "mocha": "^9.1.3",
     "nyc": "^15.1.0",
     "rimraf": "^3.0.2",
-    "rollup": "^2.58.1",
-    "rollup-plugin-typescript2": "^0.30.0",
+    "rollup": "^2.60.1",
+    "rollup-plugin-typescript2": "^0.31.1",
     "ts-node": "^10.4.0",
     "tslint": "^6.1.3",
-    "typescript": "^4.4.4"
+    "typescript": "^4.5.2"
   },
   "author": "PeculiarVentures",
   "license": "MIT",
