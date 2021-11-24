@@ -17,7 +17,7 @@ export class SubtleCrypto {
       : false;
   }
 
-  protected providers = new ProviderStorage();
+  public providers = new ProviderStorage();
 
   // @internal
   public get[Symbol.toStringTag]() {
