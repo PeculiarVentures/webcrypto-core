@@ -149,6 +149,26 @@ context("SubtleCrypto", () => {
       assert.equal(!!res, true);
     });
 
+    it("json", async () => {
+      const res = await subtle.importKey("jwk", { kty: "RSA" }, "test", false, ["sign"]);
+      assert.equal(!!res, true);
+    });
+
+    it("Uint8Array", async () => {
+      const res = await subtle.importKey("raw", new Uint8Array(10), "test", false, ["sign"]);
+      assert.equal(!!res, true);
+    });
+
+    it("Buffer", async () => {
+      const res = await subtle.importKey("raw", Buffer.alloc(10), "test", false, ["sign"]);
+      assert.equal(!!res, true);
+    });
+
+    it("ArrayBuffer", async () => {
+      const res = await subtle.importKey("raw", new ArrayBuffer(10), "test", false, ["sign"]);
+      assert.equal(!!res, true);
+    });
+
   });
 
   context("wrapKey", () => {
