@@ -1,19 +1,18 @@
+import path from "path";
 import typescript from "rollup-plugin-typescript2";
-// @ts-ignore
+import dts from "rollup-plugin-dts";
 import pkg from "./package.json";
 
 const banner = [
-  "/**",
-  " * Copyright (c) 2019, Peculiar Ventures, All rights reserved.",
-  " */",
+  "/*!",
+  " Copyright (c) Peculiar Ventures, LLC",
+  "*/",
   "",
 ].join("\n");
 const input = "src/index.ts";
-const external = Object.keys(pkg.dependencies);
-
+const external = Object.keys(pkg.dependencies || {});
 
 export default [
-  // main
   {
     input,
     plugins: [
@@ -23,11 +22,12 @@ export default [
         tsconfigOverride: {
           compilerOptions: {
             module: "ES2015",
+            removeComments: true,
           }
         }
       }),
     ],
-    external,
+    external: [...external],
     output: [
       {
         banner,
@@ -40,5 +40,20 @@ export default [
         format: "es",
       },
     ],
+  },
+  {
+    input,
+    external: [...external],
+    plugins: [
+      dts({
+        tsconfig: path.resolve(__dirname, "./tsconfig.json")
+      })
+    ],
+    output: [
+      {
+        banner,
+        file: pkg.types,
+      }
+    ]
   },
 ];

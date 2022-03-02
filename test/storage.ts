@@ -1,5 +1,5 @@
 import assert from "assert";
-import { ProviderStorage, CryptoKeyPair, CryptoKey } from "../src";
+import { ProviderStorage, CryptoKey } from "../src";
 import * as rsa from "../src/rsa";
 
 // tslint:disable:max-classes-per-file

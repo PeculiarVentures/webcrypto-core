@@ -1,6 +1,4 @@
 import { BufferSourceConverter } from "pvtsutils";
-import { CryptoKey } from "./crypto_key";
-import { CryptoKeyPair } from "./crypto_key_pair";
 import { AlgorithmError, CryptoError, OperationError, RequiredPropertyError, UnsupportedOperationError } from "./errors";
 import { KeyUsages, ProviderKeyUsages } from "./types";
 import { isJWK } from "./utils";

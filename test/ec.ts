@@ -1,10 +1,10 @@
 import assert from "assert";
 import { Convert } from "pvtsutils";
-import { EcdhEsProvider, EcdhProvider, EcdsaProvider, EcUtils, EdDsaProvider, EllipticProvider } from "../src/ec";
-import { OperationError } from "../src/errors";
-import { CryptoKey } from "../src/crypto_key";
-import { CryptoKeyPair } from "../src/crypto_key_pair";
-import { ProviderKeyUsages } from "../src/types";
+import {
+  EcdhEsProvider, EcdhProvider, EcdsaProvider, EcUtils,
+  EdDsaProvider, EllipticProvider, OperationError,
+  CryptoKey, ProviderKeyUsages,
+} from "../src";
 
 // tslint:disable:max-classes-per-file
 
