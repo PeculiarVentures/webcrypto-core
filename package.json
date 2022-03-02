@@ -34,7 +34,8 @@
     "aes",
     "rsa",
     "sha",
-    "ec"
+    "ec",
+    "shake"
   ],
   "dependencies": {
     "@peculiar/asn1-schema": "^2.0.44",
