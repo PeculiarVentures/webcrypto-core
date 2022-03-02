@@ -38,8 +38,11 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
 
+      - name: Install global dependencies
+        run: npm i yarn -g
+
       - name: Install dependencies
-        run: npm install
+        run: yarn
 
       - name: Run linter
         run: npm run lint
