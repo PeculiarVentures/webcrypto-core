@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.1](https://github.com/PeculiarVentures/webcrypto-core/compare/v1.5.0...v1.5.1) (2022-03-02)
+
+
+### Bug Fixes
+
+* publishing problem ([38d4a31](https://github.com/PeculiarVentures/webcrypto-core/commit/38d4a31e0245a313225f94ff835a9d0d27382341))
+
 ## [1.5.0](https://github.com/PeculiarVentures/webcrypto-core/compare/v1.4.0...v1.5.0) (2022-03-02)
 
 
