@@ -76,6 +76,7 @@ jobs:
       - name: Publish
         if: env.PREV_VERSION != env.CURRENT_VERSION
         run: |
+          npm run build
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
