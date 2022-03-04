@@ -17,3 +17,4 @@ export { BufferSourceConverter } from "pvtsutils";
 export * from "./types";
 export * as asn1 from "./asn1";
 export * as json from "./json";
+export * from "./jwk_utils";
