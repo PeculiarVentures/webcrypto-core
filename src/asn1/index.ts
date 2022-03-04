@@ -7,5 +7,8 @@ export * from "./rsa_public_key";
 export * from "./ec_private_key";
 export * from "./ec_public_key";
 export * from "./ec_signature";
+export * from "./one_asymmetric_key";
+export * from "./ed_private_key";
+export * from "./ed_public_key";
 export * from "./rfc8410";
 export * as converters from "./converters";
