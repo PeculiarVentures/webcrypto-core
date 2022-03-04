@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/PeculiarVentures/webcrypto-core/compare/v1.6.0...v1.7.0) (2022-03-04)
+
+
+### Features
+
+* add asn schemas for ED ([45a9045](https://github.com/PeculiarVentures/webcrypto-core/commit/45a90455da038168eea32cc031bf70a3a01316ef))
+* add jwk utils ([3cc7e61](https://github.com/PeculiarVentures/webcrypto-core/commit/3cc7e618f306c431718aefc3133d746b7c0c719b))
+
 ## [1.6.0](https://github.com/PeculiarVentures/webcrypto-core/compare/v1.5.1...v1.6.0) (2022-03-02)
 
 
