@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.2](https://github.com/PeculiarVentures/webcrypto-core/compare/v1.7.0...v1.7.2) (2022-03-25)
+
+
+### Bug Fixes
+
+* @typescript/lib-dom dependency ([47e57b0](https://github.com/PeculiarVentures/webcrypto-core/commit/47e57b0c87c55e051102593c0975370520ce6883))
+* remove @types/web ([e43fae2](https://github.com/PeculiarVentures/webcrypto-core/commit/e43fae239ad6022d774ad81d9889f1a9cc46b9b1))
+
 ## [1.7.0](https://github.com/PeculiarVentures/webcrypto-core/compare/v1.6.0...v1.7.0) (2022-03-04)
 
 
