@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.3](https://github.com/PeculiarVentures/webcrypto-core/compare/v1.7.2...v1.7.3) (2022-03-31)
+
+
+### Bug Fixes
+
+* Buffer is undefined for browsers ([2068c27](https://github.com/PeculiarVentures/webcrypto-core/commit/2068c27c2bff42303c66acecdf1c2dc819e27889))
+
 ### [1.7.2](https://github.com/PeculiarVentures/webcrypto-core/compare/v1.7.0...v1.7.2) (2022-03-25)
 
 
