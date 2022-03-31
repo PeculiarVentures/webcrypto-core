@@ -15,7 +15,8 @@
         "member-ordering": false,
         "object-literal-sort-keys": false,
         "forin": false,
-        "no-empty-interface": false
+        "no-empty-interface": false,
+        "no-bitwise": false
     },
     "rulesDirectory": []
 }

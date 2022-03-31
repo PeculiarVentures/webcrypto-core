@@ -1,6 +1,6 @@
 import { AsnProp, AsnPropTypes, AsnType, AsnTypeTypes } from "@peculiar/asn1-schema";
 import { IJsonConvertible } from "@peculiar/json-schema";
-import { Convert } from "pvtsutils";
+import { combine, Convert } from "pvtsutils";
 import { CryptoError } from "../errors";
 
 // RFC 5480
@@ -50,11 +50,11 @@ export class EcPublicKey implements IJsonConvertible {
     const x = Convert.FromBase64Url(json.x);
     const y = Convert.FromBase64Url(json.y);
 
-    const value = Buffer.concat([
-      new Uint8Array([0x04]), // uncompressed bit
-      new Uint8Array(x),
-      new Uint8Array(y),
-    ]);
+    const value = combine(
+      new Uint8Array([0x04]).buffer, // uncompressed bit
+      x,
+      y,
+    );
 
     this.value = new Uint8Array(value).buffer;
 

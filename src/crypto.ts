@@ -25,7 +25,10 @@ export abstract class Crypto implements globalThis.Crypto {
    * @returns UUID v4 string
    */
   public randomUUID(): string {
-    const uuid = Convert.ToHex(this.getRandomValues(new Uint8Array(16))).toLowerCase();
+    const b = this.getRandomValues(new Uint8Array(16));
+    b[6] = (b[6] & 0x0f) | 0x40;
+    b[8] = (b[8] & 0x3f) | 0x80;
+    const uuid = Convert.ToHex(b).toLowerCase();
 
     return `${uuid.substring(0, 8)}-${uuid.substring(8, 12)}-${uuid.substring(12, 16)}-${uuid.substring(16)}`;
   }
