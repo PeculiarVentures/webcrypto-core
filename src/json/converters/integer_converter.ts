@@ -14,6 +14,6 @@ export const AsnIntegerArrayBufferConverter: IAsnConverter<ArrayBuffer> = {
     const valueHex = new Uint8Array(value)[0] > 127
       ? combine(new Uint8Array([0]).buffer, value)
       : value;
-    return new asn1.Integer({ valueHex: valueHex } as any);
+    return new asn1.Integer({ valueHex } as any);
   },
 };
