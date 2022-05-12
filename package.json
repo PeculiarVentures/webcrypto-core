@@ -40,7 +40,7 @@
   "dependencies": {
     "@peculiar/asn1-schema": "^2.1.6",
     "@peculiar/json-schema": "^1.1.12",
-    "asn1js": "^3.0.0",
+    "asn1js": "^3.0.1",
     "pvtsutils": "^1.3.2",
     "tslib": "^2.4.0"
   },
