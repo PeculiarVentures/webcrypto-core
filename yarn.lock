@@ -411,6 +411,15 @@ asn1js@^3.0.0:
     pvutils "^1.1.3"
     tslib "^2.4.0"
 
+asn1js@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/asn1js/-/asn1js-3.0.1.tgz#b9657f6377eaf1fa3c4f9a52f49c12ae9322b1b1"
+  integrity sha512-7RX/y1foVCz6QXITV3IycqP7FMAC/gbd680gHpO5xGWn8vri1mCJxRJuMFmmkXDQt2/ToeYAcf8VrkNu2cLW+A==
+  dependencies:
+    pvtsutils "^1.3.2"
+    pvutils "^1.1.3"
+    tslib "^2.4.0"
+
 assert-plus@1.0.0, assert-plus@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/assert-plus/-/assert-plus-1.0.0.tgz#f12e0f3c5d77b0b1cdd9146942e4e96c1e4dd525"
