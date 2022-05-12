@@ -1,6 +1,5 @@
 import { IAsnConverter } from "@peculiar/asn1-schema";
 import { combine } from "pvtsutils";
-// @ts-ignore
 import * as asn1 from "asn1js";
 
 export const AsnIntegerArrayBufferConverter: IAsnConverter<ArrayBuffer> = {
