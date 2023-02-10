@@ -1,3 +1,4 @@
+import * as asn1js from "asn1js";
 import { AsnIntegerConverter, AsnProp, AsnPropTypes, AsnSerializer } from "@peculiar/asn1-schema";
 import { IJsonConvertible } from "@peculiar/json-schema";
 import { Convert } from "pvtsutils";
@@ -37,7 +38,10 @@ export class EcPrivateKey implements IJsonConvertible {
       const publicKey = new EcPublicKey();
       publicKey.fromJSON(json);
 
-      this.publicKey = AsnSerializer.toASN(publicKey).valueBlock.valueHex;
+      const asn = AsnSerializer.toASN(publicKey);
+      if ("valueHex" in asn.valueBlock) {
+        this.publicKey = asn.valueBlock.valueHex;
+      }
     }
 
     return this;
