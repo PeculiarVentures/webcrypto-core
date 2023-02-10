@@ -1,7 +1,11 @@
 import path from "path";
+import url from "url";
 import typescript from "rollup-plugin-typescript2";
 import dts from "rollup-plugin-dts";
-import pkg from "./package.json";
+import pkg from "./package.json" assert { type: "json" };
+
+const __filename = url.fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const banner = [
   "/*!",
