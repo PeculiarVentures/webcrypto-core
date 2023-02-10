@@ -25,11 +25,18 @@ export abstract class Crypto implements globalThis.Crypto {
    * @returns UUID v4 string
    */
   public randomUUID(): string {
+    // Generate a random Uint8Array with 16 elements
     const b = this.getRandomValues(new Uint8Array(16));
+
+    // Bitwise AND operation followed by OR operator to modify 6th and 8th elements of the array
     b[6] = (b[6] & 0x0f) | 0x40;
     b[8] = (b[8] & 0x3f) | 0x80;
+
+    // Lowercasing the result after converting each element in hexadecimal format
     const uuid = Convert.ToHex(b).toLowerCase();
 
-    return `${uuid.substring(0, 8)}-${uuid.substring(8, 12)}-${uuid.substring(12, 16)}-${uuid.substring(16)}`;
+    // Return the string created by extracting substrings from the given result
+    return `${uuid.substring(0, 8)}-${uuid.substring(8, 12)}-${uuid.substring(12, 16)}-${uuid.substring(16, 20)}-${uuid.substring(20)}`;
+
   }
 }
