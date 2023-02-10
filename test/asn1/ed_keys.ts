@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import { AsnConvert } from "@peculiar/asn1-schema";
 import { JsonSerializer } from "@peculiar/json-schema";
-import { CurvePrivateKey, idX25519, idX448, PrivateKeyInfo, PublicKeyInfo } from "../../src/asn1";
+import { CurvePrivateKey, EcPrivateKey, idX25519, idX448, PrivateKeyInfo, PublicKeyInfo } from "../../src/asn1";
 import { Convert } from "pvtsutils";
 
 context("EdDSA and ECDH-ES keys", () => {
@@ -14,7 +14,8 @@ context("EdDSA and ECDH-ES keys", () => {
     assert.strictEqual(pki.privateKeyAlgorithm.algorithm, idX448);
     const privateKey = AsnConvert.parse(pki.privateKey, CurvePrivateKey);
 
-    assert.deepStrictEqual(JsonSerializer.toJSON(privateKey), { d: "-GbbS5kL_9zTCTUQRqk0NwgiWBIZXGdaHBEm9Pkrf6LCO1zJXaKe4SKEDlKhrkE7Y4eHmV7Odb4" });
+    const json = JsonSerializer.toJSON(privateKey);
+    assert.deepStrictEqual(json, { d: "-GbbS5kL_9zTCTUQRqk0NwgiWBIZXGdaHBEm9Pkrf6LCO1zJXaKe4SKEDlKhrkE7Y4eHmV7Odb4" });
   });
 
   it("Public key", () => {
