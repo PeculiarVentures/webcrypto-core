@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.6](https://github.com/PeculiarVentures/webcrypto-core/compare/v1.7.5...v1.7.6) (2023-02-10)
+
+
+### Bug Fixes
+
+* Generates invalid UUIDs ([049cd7c](https://github.com/PeculiarVentures/webcrypto-core/commit/049cd7c9434c6171d8d8f4c83c9aa912fd510d3f)), closes [#56](https://github.com/PeculiarVentures/webcrypto-core/issues/56)
+* TS type error ([45feab0](https://github.com/PeculiarVentures/webcrypto-core/commit/45feab0a0a78dcf9ecbd252d105b5cfa128c5085))
+
 ### [1.7.5](https://github.com/PeculiarVentures/webcrypto-core/compare/v1.7.4...v1.7.5) (2022-05-12)
 
 ### [1.7.4](https://github.com/PeculiarVentures/webcrypto-core/compare/v1.7.3...v1.7.4) (2022-05-12)
