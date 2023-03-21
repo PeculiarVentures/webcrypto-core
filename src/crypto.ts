@@ -24,7 +24,7 @@ export abstract class Crypto implements globalThis.Crypto {
    * Generates a v4 UUID using a cryptographically secure random number generator
    * @returns UUID v4 string
    */
-  public randomUUID(): string {
+  public randomUUID(): `${string}-${string}-${string}-${string}-${string}` {
     // Generate a random Uint8Array with 16 elements
     const b = this.getRandomValues(new Uint8Array(16));
 
