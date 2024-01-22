@@ -27,7 +27,7 @@ export class EcCurves {
 
   private constructor() { }
 
-  public static register(item: EcCurveParams) {
+  public static register(item: EcCurveParams): void {
     const oid = new asn1.ObjectIdentifier();
     oid.value = item.id;
     const raw = AsnConvert.serialize(oid);

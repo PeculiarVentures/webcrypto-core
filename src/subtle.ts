@@ -19,7 +19,7 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
   public providers = new ProviderStorage();
 
   // @internal
-  public get [Symbol.toStringTag]() {
+  public get [Symbol.toStringTag](): string {
     return "SubtleCrypto";
   }
 
@@ -214,7 +214,7 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     return this.importKey(format, keyData, unwrappedKeyAlgorithm, extractable, keyUsages, ...args);
   }
 
-  protected checkRequiredArguments(args: any[], size: number, methodName: string) {
+  protected checkRequiredArguments(args: any[], size: number, methodName: string): void {
     if (args.length < size) {
       throw new TypeError(`Failed to execute '${methodName}' on 'SubtleCrypto': ${size} arguments required, but only ${args.length} present`);
     }

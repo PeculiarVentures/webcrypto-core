@@ -8,7 +8,7 @@ export abstract class AesGcmProvider extends AesProvider {
 
   public usages: KeyUsages = ["encrypt", "decrypt", "wrapKey", "unwrapKey"];
 
-  public checkAlgorithmParams(algorithm: AesGcmParams) {
+  public checkAlgorithmParams(algorithm: AesGcmParams): void {
     // iv
     this.checkRequiredProperty(algorithm, "iv");
     if (!(algorithm.iv instanceof ArrayBuffer || ArrayBuffer.isView(algorithm.iv))) {
@@ -29,7 +29,7 @@ export abstract class AesGcmProvider extends AesProvider {
       case 112:
       case 120:
       case 128:
-      break;
+        break;
       default:
         throw new OperationError("tagLength: Must be one of 32, 64, 96, 104, 112, 120 or 128");
     }

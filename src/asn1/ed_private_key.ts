@@ -1,4 +1,4 @@
-import { AsnIntegerConverter, AsnProp, AsnPropTypes, AsnSerializer, AsnType, AsnTypeTypes } from "@peculiar/asn1-schema";
+import { AsnProp, AsnPropTypes, AsnType, AsnTypeTypes } from "@peculiar/asn1-schema";
 import { IJsonConvertible } from "@peculiar/json-schema";
 import { Convert } from "pvtsutils";
 
@@ -16,7 +16,7 @@ export class EdPrivateKey implements IJsonConvertible {
 
     return this;
   }
-  public toJSON() {
+  public toJSON(): JsonWebKey {
     const jwk: JsonWebKey = {
       d: Convert.ToBase64Url(this.value),
     };

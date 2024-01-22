@@ -10,7 +10,7 @@ export abstract class RsaPssProvider extends RsaProvider {
     publicKey: ["verify"],
   };
 
-  public checkAlgorithmParams(algorithm: RsaPssParams) {
+  public checkAlgorithmParams(algorithm: RsaPssParams): void {
     this.checkRequiredProperty(algorithm, "saltLength");
     if (typeof algorithm.saltLength !== "number") {
       throw new TypeError("saltLength: Is not a Number");

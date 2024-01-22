@@ -3,7 +3,7 @@ import { CryptoKey } from "../crypto_key";
 
 export abstract class AesProvider extends ProviderCrypto {
 
-  public checkGenerateKeyParams(algorithm: AesKeyGenParams) {
+  public checkGenerateKeyParams(algorithm: AesKeyGenParams): void {
     // length
     this.checkRequiredProperty(algorithm, "length");
     if (typeof algorithm.length !== "number") {
@@ -19,7 +19,7 @@ export abstract class AesProvider extends ProviderCrypto {
     }
   }
 
-  public checkDerivedKeyParams(algorithm: AesKeyGenParams) {
+  public checkDerivedKeyParams(algorithm: AesKeyGenParams): void {
     this.checkGenerateKeyParams(algorithm);
   }
 

@@ -9,7 +9,7 @@ export abstract class Crypto implements globalThis.Crypto {
   public abstract readonly subtle: SubtleCrypto;
 
   // @internal
-  public get [Symbol.toStringTag]() {
+  public get [Symbol.toStringTag](): string {
     return "Crypto";
   }
 

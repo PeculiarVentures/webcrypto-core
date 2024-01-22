@@ -10,7 +10,7 @@ export abstract class RsaOaepProvider extends RsaProvider {
     publicKey: ["encrypt", "wrapKey"],
   };
 
-  public checkAlgorithmParams(algorithm: RsaOaepParams) {
+  public checkAlgorithmParams(algorithm: RsaOaepParams): void {
     // label
     if (algorithm.label
       && !(algorithm.label instanceof ArrayBuffer || ArrayBuffer.isView(algorithm.label))) {

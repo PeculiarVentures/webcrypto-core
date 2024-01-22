@@ -1,5 +1,5 @@
 import { IJsonConverter } from "@peculiar/json-schema";
-import { Convert, BufferSourceConverter } from "pvtsutils";
+import { Convert } from "pvtsutils";
 
 export const JsonBase64UrlArrayBufferConverter: IJsonConverter<ArrayBuffer, string> = {
   fromJSON: (value: string) => Convert.FromBase64Url(value),

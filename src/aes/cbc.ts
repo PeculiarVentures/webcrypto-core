@@ -7,7 +7,7 @@ export abstract class AesCbcProvider extends AesProvider {
 
   public usages: KeyUsages = ["encrypt", "decrypt", "wrapKey", "unwrapKey"];
 
-  public checkAlgorithmParams(algorithm: AesCbcParams) {
+  public checkAlgorithmParams(algorithm: AesCbcParams): void {
     this.checkRequiredProperty(algorithm, "iv");
     if (!(algorithm.iv instanceof ArrayBuffer || ArrayBuffer.isView(algorithm.iv))) {
       throw new TypeError("iv: Is not of type '(ArrayBuffer or ArrayBufferView)'");
