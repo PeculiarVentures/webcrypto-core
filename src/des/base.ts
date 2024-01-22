@@ -28,7 +28,7 @@ export abstract class DesProvider extends ProviderCrypto {
   public abstract keySizeBits: number;
   public abstract ivSize: number;
 
-  public checkAlgorithmParams(algorithm: AesCbcParams) {
+  public checkAlgorithmParams(algorithm: AesCbcParams): void {
     if (this.ivSize) {
       this.checkRequiredProperty(algorithm, "iv");
       if (!(algorithm.iv instanceof ArrayBuffer || ArrayBuffer.isView(algorithm.iv))) {
@@ -40,7 +40,7 @@ export abstract class DesProvider extends ProviderCrypto {
     }
   }
 
-  public checkGenerateKeyParams(algorithm: DesKeyGenParams) {
+  public checkGenerateKeyParams(algorithm: DesKeyGenParams): void {
     // length
     this.checkRequiredProperty(algorithm, "length");
     if (typeof algorithm.length !== "number") {
@@ -51,7 +51,7 @@ export abstract class DesProvider extends ProviderCrypto {
     }
   }
 
-  public checkDerivedKeyParams(algorithm: DesDerivedKeyParams) {
+  public checkDerivedKeyParams(algorithm: DesDerivedKeyParams): void {
     this.checkGenerateKeyParams(algorithm);
   }
 

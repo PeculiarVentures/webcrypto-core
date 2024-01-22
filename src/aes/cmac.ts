@@ -12,7 +12,7 @@ export abstract class AesCmacProvider extends AesProvider {
 
   public usages: KeyUsages = ["sign", "verify"];
 
-  public checkAlgorithmParams(algorithm: AesCmacParams) {
+  public checkAlgorithmParams(algorithm: AesCmacParams): void {
     this.checkRequiredProperty(algorithm, "length");
     if (typeof algorithm.length !== "number") {
       throw new TypeError("length: Is not a Number");

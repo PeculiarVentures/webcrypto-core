@@ -8,7 +8,7 @@ export abstract class AesCtrProvider extends AesProvider {
 
   public usages: KeyUsages = ["encrypt", "decrypt", "wrapKey", "unwrapKey"];
 
-  public checkAlgorithmParams(algorithm: AesCtrParams) {
+  public checkAlgorithmParams(algorithm: AesCtrParams): void {
     // counter
     this.checkRequiredProperty(algorithm, "counter");
     if (!(algorithm.counter instanceof ArrayBuffer || ArrayBuffer.isView(algorithm.counter))) {

@@ -6,13 +6,13 @@ export abstract class EllipticProvider extends ProviderCrypto {
 
   public abstract namedCurves: string[];
 
-  public checkGenerateKeyParams(algorithm: EcKeyGenParams) {
+  public checkGenerateKeyParams(algorithm: EcKeyGenParams): void {
     // named curve
     this.checkRequiredProperty(algorithm, "namedCurve");
     this.checkNamedCurve(algorithm.namedCurve);
   }
 
-  public checkNamedCurve(namedCurve: string) {
+  public checkNamedCurve(namedCurve: string): void {
     for (const item of this.namedCurves) {
       if (item.toLowerCase() === namedCurve.toLowerCase()) {
         return;

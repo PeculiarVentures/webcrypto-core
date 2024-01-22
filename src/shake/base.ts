@@ -1,6 +1,4 @@
-import { Convert } from "pvtsutils";
 import { ProviderCrypto } from "../provider";
-import { ProviderKeyUsages } from "../types";
 
 export interface ShakeParams extends Algorithm {
   /**

@@ -1,7 +1,6 @@
 import { AsnProp, AsnPropTypes, AsnType, AsnTypeTypes } from "@peculiar/asn1-schema";
 import { IJsonConvertible } from "@peculiar/json-schema";
 import { Convert } from "pvtsutils";
-import { CryptoError } from "../errors";
 
 // RFC 8410
 // https://datatracker.ietf.org/doc/html/rfc8410
@@ -20,8 +19,8 @@ export class EdPublicKey implements IJsonConvertible {
     }
   }
 
-  public toJSON() {
-    const json = {
+  public toJSON(): JsonWebKey {
+    const json: JsonWebKey = {
       x: Convert.ToBase64Url(this.value),
     };
 

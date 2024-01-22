@@ -14,7 +14,7 @@ export abstract class EcdsaProvider extends EllipticProvider {
 
   public namedCurves = ["P-256", "P-384", "P-521", "K-256"];
 
-  public checkAlgorithmParams(algorithm: EcdsaParams) {
+  public checkAlgorithmParams(algorithm: EcdsaParams): void {
     this.checkRequiredProperty(algorithm, "hash");
     this.checkHashAlgorithm(algorithm.hash as Algorithm, this.hashAlgorithms);
   }

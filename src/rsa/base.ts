@@ -6,7 +6,7 @@ export abstract class RsaProvider extends ProviderCrypto {
 
   public hashAlgorithms = ["SHA-1", "SHA-256", "SHA-384", "SHA-512"];
 
-  public checkGenerateKeyParams(algorithm: RsaHashedKeyGenParams) {
+  public checkGenerateKeyParams(algorithm: RsaHashedKeyGenParams): void {
     // hash
     this.checkRequiredProperty(algorithm, "hash");
     this.checkHashAlgorithm(algorithm.hash as Algorithm, this.hashAlgorithms);
@@ -30,7 +30,7 @@ export abstract class RsaProvider extends ProviderCrypto {
     }
   }
 
-  public checkImportParams(algorithm: RsaHashedImportParams) {
+  public checkImportParams(algorithm: RsaHashedImportParams): void {
     this.checkRequiredProperty(algorithm, "hash");
     this.checkHashAlgorithm(algorithm.hash as Algorithm, this.hashAlgorithms);
   }

@@ -19,7 +19,7 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
   public providers = new ProviderStorage();
 
   // @internal
-  public get[Symbol.toStringTag]() {
+  public get [Symbol.toStringTag](): string {
     return "SubtleCrypto";
   }
 
@@ -37,6 +37,7 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     return result;
   }
 
+  public async generateKey(algorithm: "Ed25519", extractable: boolean, keyUsages: ReadonlyArray<"sign" | "verify">, ...args: any[]): Promise<CryptoKeyPair>;
   public async generateKey(algorithm: RsaHashedKeyGenParams | EcKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<globalThis.CryptoKeyPair>;
   public async generateKey(algorithm: AesKeyGenParams | HmacKeyGenParams | Pbkdf2Params, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<globalThis.CryptoKey>;
   public async generateKey(algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: Iterable<KeyUsage>, ...args: any[]): Promise<globalThis.CryptoKeyPair | globalThis.CryptoKey>;
@@ -213,7 +214,7 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     return this.importKey(format, keyData, unwrappedKeyAlgorithm, extractable, keyUsages, ...args);
   }
 
-  protected checkRequiredArguments(args: any[], size: number, methodName: string) {
+  protected checkRequiredArguments(args: any[], size: number, methodName: string): void {
     if (args.length < size) {
       throw new TypeError(`Failed to execute '${methodName}' on 'SubtleCrypto': ${size} arguments required, but only ${args.length} present`);
     }

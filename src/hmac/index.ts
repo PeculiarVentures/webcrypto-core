@@ -14,7 +14,7 @@ export abstract class HmacProvider extends ProviderCrypto {
    * Returns default size in bits by hash algorithm name
    * @param algName Name of the hash algorithm
    */
-  public getDefaultLength(algName: string) {
+  public getDefaultLength(algName: string): number {
     switch (algName.toUpperCase()) {
       // Chrome, Safari and Firefox returns 512
       case "SHA-1":
@@ -27,7 +27,7 @@ export abstract class HmacProvider extends ProviderCrypto {
     }
   }
 
-  public checkGenerateKeyParams(algorithm: HmacKeyGenParams) {
+  public checkGenerateKeyParams(algorithm: HmacKeyGenParams): void {
     // hash
     this.checkRequiredProperty(algorithm, "hash");
     this.checkHashAlgorithm(algorithm.hash as Algorithm, this.hashAlgorithms);
@@ -43,7 +43,7 @@ export abstract class HmacProvider extends ProviderCrypto {
     }
   }
 
-  public checkImportParams(algorithm: HmacImportParams) {
+  public checkImportParams(algorithm: HmacImportParams): void {
     // hash
     this.checkRequiredProperty(algorithm, "hash");
     this.checkHashAlgorithm(algorithm.hash as Algorithm, this.hashAlgorithms);

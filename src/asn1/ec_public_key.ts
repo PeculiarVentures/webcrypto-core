@@ -20,7 +20,7 @@ export class EcPublicKey implements IJsonConvertible {
     }
   }
 
-  public toJSON() {
+  public toJSON(): JsonWebKey {
     let bytes = new Uint8Array(this.value);
 
     if (bytes[0] !== 0x04) {

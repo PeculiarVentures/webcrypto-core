@@ -10,7 +10,7 @@ export abstract class Pbkdf2Provider extends ProviderCrypto {
 
   public usages: KeyUsages = ["deriveBits", "deriveKey"];
 
-  public checkAlgorithmParams(algorithm: Pbkdf2Params) {
+  public checkAlgorithmParams(algorithm: Pbkdf2Params): void {
     // hash
     this.checkRequiredProperty(algorithm, "hash");
     this.checkHashAlgorithm(algorithm.hash as Algorithm, this.hashAlgorithms);
@@ -31,8 +31,8 @@ export abstract class Pbkdf2Provider extends ProviderCrypto {
     }
   }
 
-  public checkImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]) {
-    super.checkImportKey(format, keyData, algorithm, extractable, keyUsages);
+  public checkImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): void {
+    super.checkImportKey(format, keyData, algorithm, extractable, keyUsages, ...args);
     if (extractable) {
       // If extractable is not false, then throw a SyntaxError
       throw new SyntaxError("extractable: Must be 'false'");

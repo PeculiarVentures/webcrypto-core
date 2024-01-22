@@ -23,7 +23,7 @@ jobs:
           echo 'The pull request has not been merged'
           exit 1
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -33,9 +33,9 @@ jobs:
           git config user.email github-actions@github.com
 
       - name: Use Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: 20.x
           registry-url: "https://registry.npmjs.org"
 
       - name: Setup .npmrc
@@ -82,7 +82,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
 
       - name: Push changes
-        uses: ad-m/github-push-action@v0.6.0
+        uses: ad-m/github-push-action@v0.8.0
         if: env.PREV_VERSION != env.CURRENT_VERSION
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -90,7 +90,7 @@ jobs:
           tags: true
 
       - name: Create comment
-        uses: actions/github-script@0.8.0
+        uses: actions/github-script@v7
         if: env.PREV_VERSION != env.CURRENT_VERSION
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
