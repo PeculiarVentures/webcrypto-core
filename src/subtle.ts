@@ -19,7 +19,7 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
   public providers = new ProviderStorage();
 
   // @internal
-  public get[Symbol.toStringTag]() {
+  public get [Symbol.toStringTag]() {
     return "SubtleCrypto";
   }
 
@@ -37,7 +37,7 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     return result;
   }
 
-  public async generateKey(algorithm: "Ed25519", extractable: boolean, keyUsages: ReadonlyArray<"sign" | "verify">): Promise<CryptoKeyPair>;    
+  public async generateKey(algorithm: "Ed25519", extractable: boolean, keyUsages: ReadonlyArray<"sign" | "verify">, ...args: any[]): Promise<CryptoKeyPair>;
   public async generateKey(algorithm: RsaHashedKeyGenParams | EcKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<globalThis.CryptoKeyPair>;
   public async generateKey(algorithm: AesKeyGenParams | HmacKeyGenParams | Pbkdf2Params, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<globalThis.CryptoKey>;
   public async generateKey(algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: Iterable<KeyUsage>, ...args: any[]): Promise<globalThis.CryptoKeyPair | globalThis.CryptoKey>;
