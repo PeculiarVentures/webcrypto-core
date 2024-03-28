@@ -18,9 +18,8 @@ export abstract class AesGcmProvider extends AesProvider {
       throw new OperationError("iv: Must have length more than 0 and less than 2^64 - 1");
     }
     // tagLength
-    if (!("tagLength" in algorithm)) {
-      algorithm.tagLength = 128;
-    }
+    algorithm.tagLength ??= 128;    
+
     switch (algorithm.tagLength) {
       case 32:
       case 64:
