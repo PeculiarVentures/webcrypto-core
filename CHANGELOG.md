@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.9](https://github.com/PeculiarVentures/webcrypto-core/compare/v1.7.8...v1.7.9) (2024-03-28)
+
+
+### Bug Fixes
+
+* nullability checks in AesGcmProvider ([7b57920](https://github.com/PeculiarVentures/webcrypto-core/commit/7b57920303561ab212221379250029153d8fd2d4))
+
 ### [1.7.8](https://github.com/PeculiarVentures/webcrypto-core/compare/v1.7.7...v1.7.8) (2024-01-22)
 
 
