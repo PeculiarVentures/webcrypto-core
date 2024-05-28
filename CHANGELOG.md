@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/PeculiarVentures/webcrypto-core/compare/v1.7.9...v1.8.0) (2024-05-28)
+
+
+### Features
+
+* Add x25519 and ed25519 to ec module ([b65b6af](https://github.com/PeculiarVentures/webcrypto-core/commit/b65b6afe20dcdbef9ec09d871004941ef0d7ee3f))
+
+
+### Bug Fixes
+
+* Improve data validation for importKey and exportKey methods ([4ef9eaa](https://github.com/PeculiarVentures/webcrypto-core/commit/4ef9eaab136fdee833884762f865f4b6dce28465))
+
 ### [1.7.9](https://github.com/PeculiarVentures/webcrypto-core/compare/v1.7.8...v1.7.9) (2024-03-28)
 
 
