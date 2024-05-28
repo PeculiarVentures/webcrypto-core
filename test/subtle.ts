@@ -140,6 +140,27 @@ context("SubtleCrypto", () => {
       assert.equal(!!res, true);
     });
 
+    it("throws for invalid key format", async () => {
+      await assert.rejects(
+        subtle.exportKey("invalid_format" as any, key),
+        TypeError,
+        "Invalid keyFormat argument"
+      );
+    });
+
+    it("throws for key not of expected type", async () => {
+      const key = new CryptoKey();
+      key.type = "wrong_type" as any;
+      await assert.rejects(
+        subtle.exportKey("raw", key),
+        (e: Error) => {
+          assert.ok(e instanceof DOMException, "Error is not an instance of DOMException");
+          assert.strictEqual(e.message, "The key is not of the expected type", "Error message is not as expected");
+          return true;
+        },
+      );
+    });
+
   });
 
   context("importKey", () => {
@@ -169,6 +190,29 @@ context("SubtleCrypto", () => {
       assert.equal(!!res, true);
     });
 
+    it("throws for non-object JWK", async () => {
+      await assert.rejects(
+        subtle.importKey("jwk", new ArrayBuffer(0), "test", false, ["sign"]),
+        TypeError,
+        "Key data must be an object for JWK import"
+      );
+    });
+
+    it("throws for non-BufferSource for non-JWK formats", async () => {
+      await assert.rejects(
+        subtle.importKey("spki", {}, "test", false, ["sign"]),
+        TypeError,
+        "Key data must be a BufferSource for non-JWK formats"
+      );
+    });
+
+    it("throws for invalid format", async () => {
+      await assert.rejects(
+        subtle.importKey("invalid_format", {}, "test", false, ["sign"]),
+        TypeError,
+        "The provided value is not of type '(ArrayBuffer or ArrayBufferView or JsonWebKey)'"
+      );
+    });
   });
 
   context("wrapKey", () => {

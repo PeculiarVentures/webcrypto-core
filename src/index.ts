@@ -3,6 +3,7 @@ export * from "./aes";
 export * from "./des";
 export * from "./rsa";
 export * from "./ec";
+export * from "./ed";
 export * from "./hmac";
 export * from "./pbkdf";
 export * from "./hkdf";
