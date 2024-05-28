@@ -5,6 +5,14 @@ import { ProviderStorage } from "./storage";
 import { HashedAlgorithm } from "./types";
 import { CryptoKey } from './crypto_key';
 
+const keyFormatMap: Record<KeyFormat, KeyType[]> = {
+  "jwk": ["private", "public", "secret"],
+  "pkcs8": ["private"],
+  "spki": ["public"],
+  "raw": ["secret", "public"]
+};
+
+const sourceBufferKeyFormats = ["pkcs8", "spki", "raw"];
 export class SubtleCrypto implements globalThis.SubtleCrypto {
 
   public static isHashedAlgorithm(data: any): data is HashedAlgorithm {
@@ -155,12 +163,20 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     const [format, key, ...params] = args;
     this.checkCryptoKey(key);
 
+    if (!keyFormatMap[format as KeyFormat]) {
+      throw new TypeError("Invalid keyFormat argument");
+    }
+
+    if (!keyFormatMap[format as KeyFormat].includes(key.type)) {
+      throw new DOMException("The key is not of the expected type");
+    }
+
     const provider = this.getProvider(key.algorithm.name);
     const result = await provider.exportKey(format, key, ...params);
 
     return result;
   }
-  public async importKey(format: KeyFormat, keyData: JsonWebKey | BufferSource, algorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<globalThis.CryptoKey>;
+
   public async importKey(...args: any[]): Promise<globalThis.CryptoKey> {
     this.checkRequiredArguments(args, 5, "importKey");
     const [format, keyData, algorithm, extractable, keyUsages, ...params] = args;
@@ -168,16 +184,19 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
     const provider = this.getProvider(preparedAlgorithm.name);
 
-    if (["pkcs8", "spki", "raw"].indexOf(format) !== -1) {
-      const preparedData = BufferSourceConverter.toArrayBuffer(keyData as BufferSource);
-
-      return provider.importKey(format, preparedData, { ...preparedAlgorithm, name: provider.name }, extractable, keyUsages, ...params);
-    } else {
-      if (!(keyData as JsonWebKey).kty) {
-        throw new TypeError("keyData: Is not JSON");
+    if (format === "jwk") {
+      if (typeof keyData !== "object" || !(keyData as JsonWebKey).kty) {
+        throw new TypeError("Key data must be an object for JWK import");
       }
+    } else if (sourceBufferKeyFormats.includes(format)) {
+      if (!BufferSourceConverter.isBufferSource(keyData)) {
+        throw new TypeError("Key data must be a BufferSource for non-JWK formats");
+      }
+    } else {
+      throw new TypeError("The provided value is not of type '(ArrayBuffer or ArrayBufferView or JsonWebKey)'");
     }
-    return provider.importKey(format, keyData as JsonWebKey, { ...preparedAlgorithm, name: provider.name }, extractable, keyUsages, ...params);
+
+    return provider.importKey(format, keyData, { ...preparedAlgorithm, name: provider.name }, extractable, keyUsages, ...params);
   }
 
   public async wrapKey(format: KeyFormat, key: globalThis.CryptoKey, wrappingKey: globalThis.CryptoKey, wrapAlgorithm: AlgorithmIdentifier, ...args: any[]): Promise<ArrayBuffer> {
