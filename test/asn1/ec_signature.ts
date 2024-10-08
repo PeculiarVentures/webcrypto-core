@@ -44,7 +44,7 @@ context("ASN1", () => {
         asn1: "3081880242011e0ff3c825b1133ef2779bbffd05374b17eeeff37444108a4c480b881ba3f3f426c3344fb1173dcec305f3e49408965092f946e609dfb845efaaaa25a43c679b0c024201a1366cd7b11efe7a41418cf83156bfdac56bb6253fd018a23974fc182948f3a84d5241922f09b8a60c4366f58b2b86461886515bd79872bb55e9840c412db766da",
         webCrypto: "011e0ff3c825b1133ef2779bbffd05374b17eeeff37444108a4c480b881ba3f3f426c3344fb1173dcec305f3e49408965092f946e609dfb845efaaaa25a43c679b0c01a1366cd7b11efe7a41418cf83156bfdac56bb6253fd018a23974fc182948f3a84d5241922f09b8a60c4366f58b2b86461886515bd79872bb55e9840c412db766da",
       },
-    ]
+    ];
 
     context("From WebCrypto to DER", () => {
       vectors.forEach((vector) => {
@@ -66,6 +66,38 @@ context("ASN1", () => {
       });
     });
 
-  });
+    describe("toWebCryptoSignature", () => {
+      it("default point size should be 256", () => {
+        const signature = new EcDsaSignature();
+        signature.r = new ArrayBuffer(32);
+        signature.s = new ArrayBuffer(32);
+        const result = signature.toWebCryptoSignature();
+        assert.strictEqual(result.byteLength, 64);
+      });
 
+      it("default point size should be 384", () => {
+        const signature = new EcDsaSignature();
+        signature.r = new ArrayBuffer(48);
+        signature.s = new ArrayBuffer(48);
+        const result = signature.toWebCryptoSignature();
+        assert.strictEqual(result.byteLength, 96);
+      });
+
+      it("default point size should be 521", () => {
+        const signature = new EcDsaSignature();
+        signature.r = new ArrayBuffer(65);
+        signature.s = new ArrayBuffer(65);
+        const result = signature.toWebCryptoSignature();
+        assert.strictEqual(result.byteLength, 132);
+      });
+
+      it("should be given point size", () => {
+        const signature = new EcDsaSignature();
+        signature.r = new ArrayBuffer(32);
+        signature.s = new ArrayBuffer(32);
+        const result = signature.toWebCryptoSignature(384);
+        assert.strictEqual(result.byteLength, 96);
+      });
+    });
+  });
 });

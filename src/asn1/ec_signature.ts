@@ -40,7 +40,16 @@ export class EcDsaSignature {
    * @returns ECDSA signature in X9.62 signature format
    */
   public toWebCryptoSignature(pointSize?: number): ArrayBuffer {
-    pointSize ??= Math.max(this.r.byteLength, this.s.byteLength) * 8;
+    if (!pointSize) {
+      const maxPointLength = Math.max(this.r.byteLength, this.s.byteLength);
+      if (maxPointLength <= 32) {
+        pointSize = 256;
+      } else if (maxPointLength <= 48) {
+        pointSize = 384;
+      } else {
+        pointSize = 521;
+      }
+    }
 
     const signature = EcUtils.encodeSignature(this, pointSize);
 
