@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.8.1](https://github.com/PeculiarVentures/webcrypto-core/compare/v1.8.0...v1.8.1) (2024-10-08)
+
+
+### Bug Fixes
+
+* Improve point size calculation in toWebCryptoSignature method ([5fe372e](https://github.com/PeculiarVentures/webcrypto-core/commit/5fe372e924b91612dabcf9735c119f2c15011dec))
+
 ## [1.8.0](https://github.com/PeculiarVentures/webcrypto-core/compare/v1.7.9...v1.8.0) (2024-05-28)
 
 
