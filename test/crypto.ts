@@ -16,8 +16,7 @@ describe("Crypto", () => {
   }
 
   it("Crypto matches to globalThis.Crypto", () => {
-    let crypto: globalThis.Crypto;
-    crypto = new MyCrypto();
+    const crypto = new MyCrypto();
     assert.ok(crypto);
   });
 

@@ -24,8 +24,6 @@ export class EcCurves {
   protected static items: EcCurve[] = [];
   public static readonly names: string[] = [];
 
-  private constructor() { }
-
   public static register(item: EcCurveParams): void {
     const oid = new asn1.ObjectIdentifier();
     oid.value = item.id;

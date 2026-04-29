@@ -147,7 +147,13 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     return result;
   }
 
-  public async deriveKey(algorithm: AlgorithmIdentifier, baseKey: globalThis.CryptoKey, derivedKeyType: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<globalThis.CryptoKey>;
+  public async deriveKey(
+    algorithm: AlgorithmIdentifier,
+    baseKey: globalThis.CryptoKey,
+    derivedKeyType: AlgorithmIdentifier,
+    extractable: boolean,
+    keyUsages: KeyUsage[],
+    ...args: any[]): Promise<globalThis.CryptoKey>;
   public async deriveKey(...args: any[]): Promise<globalThis.CryptoKey> {
     this.checkRequiredArguments(args, 5, "deriveKey");
     const [algorithm, baseKey, derivedKeyType, extractable, keyUsages, ...params] = args;
@@ -230,7 +236,15 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     }, wrappingKey, preparedData, { keyUsage: false }, ...args);
   }
 
-  public async unwrapKey(format: KeyFormat, wrappedKey: BufferSource, unwrappingKey: globalThis.CryptoKey, unwrapAlgorithm: AlgorithmIdentifier, unwrappedKeyAlgorithm: AlgorithmIdentifier, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<globalThis.CryptoKey> {
+  public async unwrapKey(
+    format: KeyFormat,
+    wrappedKey: BufferSource,
+    unwrappingKey: globalThis.CryptoKey,
+    unwrapAlgorithm: AlgorithmIdentifier,
+    unwrappedKeyAlgorithm: AlgorithmIdentifier,
+    extractable: boolean,
+    keyUsages: KeyUsage[],
+    ...args: any[]): Promise<globalThis.CryptoKey> {
     // decrypt wrapped key
     const preparedAlgorithm = this.prepareAlgorithm(unwrapAlgorithm);
     const preparedData = BufferSourceConverter.toArrayBuffer(wrappedKey);

@@ -117,7 +117,7 @@ describe("ED", () => {
       it("should sign data", async () => {
         const keys = await provider.generateKey({ name: "Ed25519" }, true, ["sign", "verify"]);
         assert.ok("privateKey" in keys);
-        const signature = await provider.sign({ name: "Ed25519" }, keys.privateKey, new ArrayBuffer(32));
+        await provider.sign({ name: "Ed25519" }, keys.privateKey, new ArrayBuffer(32));
       });
       it("should throw error when algorithm is not correct", async () => {
         const keys = await provider.generateKey({ name: "Ed25519" }, true, ["sign", "verify"]);
@@ -198,7 +198,7 @@ describe("ED", () => {
       it("should derive bits", async () => {
         const keys = await provider.generateKey({ name: "X25519" }, true, ["deriveKey", "deriveBits"]);
         assert.ok("privateKey" in keys);
-        const bits = await provider.deriveBits({
+        await provider.deriveBits({
           name: "X25519",
           public: keys.publicKey,
         } as EcdhKeyDeriveParams, keys.privateKey, 32);

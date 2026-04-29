@@ -1,5 +1,6 @@
 import { AsnProp, AsnPropTypes } from "@peculiar/asn1-schema";
 import { BufferSourceConverter, BufferSource } from "pvtsutils";
+import { EcUtils } from "../ec/utils";
 import { AsnIntegerWithoutPaddingConverter } from "./converters";
 
 // RFC 3279
@@ -59,5 +60,3 @@ export class EcDsaSignature {
     return signature.buffer;
   }
 }
-
-import { EcUtils } from "../ec/utils";

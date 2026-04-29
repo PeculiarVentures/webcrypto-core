@@ -14,6 +14,7 @@ export class ProviderStorage {
   public removeAt(algorithmName: string): ProviderCrypto | null {
     const provider = this.get(algorithmName.toLowerCase());
     if (provider) {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete this.items[algorithmName];
     }
     return provider;

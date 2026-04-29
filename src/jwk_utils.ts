@@ -16,6 +16,7 @@ export class JwkUtils {
     }
 
     res = res.sort(([keyA], [keyB]) =>
+      // eslint-disable-next-line no-nested-ternary
       keyA > keyB ? 1 : keyA < keyB ? -1 : 0);
 
     return Object.fromEntries(res) as JsonWebKey;
