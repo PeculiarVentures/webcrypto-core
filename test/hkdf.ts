@@ -1,56 +1,66 @@
 import assert from "assert";
 import { HkdfProvider, OperationError } from "../src";
 
-context("HKDF", () => {
-
+describe("HKDF", () => {
   const provider = Reflect.construct(HkdfProvider, []) as HkdfProvider;
 
-  context("checkAlgorithmParams", () => {
-
+  describe("checkAlgorithmParams", () => {
     it("error if `hash` is missing", () => {
       assert.throws(() => {
-        provider.checkAlgorithmParams({ salt: new Uint8Array(4), info: new Uint8Array(4) } as any);
+        provider.checkAlgorithmParams({
+          salt: new Uint8Array(4), info: new Uint8Array(4),
+        } as any);
       }, Error);
     });
 
     it("error if `hash` is wrong", () => {
       assert.throws(() => {
-        provider.checkAlgorithmParams({ hash: { name: "WRONG" }, salt: new Uint8Array(4), info: new Uint8Array(4) } as any);
+        provider.checkAlgorithmParams({
+          hash: { name: "WRONG" }, salt: new Uint8Array(4), info: new Uint8Array(4),
+        } as any);
       }, OperationError);
     });
 
     it("error if `salt` is missing", () => {
       assert.throws(() => {
-        provider.checkAlgorithmParams({ hash: { name: "SHA-256" }, info: new Uint8Array(4) } as any);
+        provider.checkAlgorithmParams({
+          hash: { name: "SHA-256" }, info: new Uint8Array(4),
+        } as any);
       }, Error);
     });
 
     it("error if `salt` wrong type", () => {
       assert.throws(() => {
-        provider.checkAlgorithmParams({ hash: { name: "SHA-256" }, salt: "wrong", info: new Uint8Array(4) } as any);
+        provider.checkAlgorithmParams({
+          hash: { name: "SHA-256" }, salt: "wrong", info: new Uint8Array(4),
+        } as any);
       }, TypeError);
     });
 
     it("error if `info` is missing", () => {
       assert.throws(() => {
-        provider.checkAlgorithmParams({ hash: { name: "SHA-256" }, salt: new Uint8Array(4) } as any);
+        provider.checkAlgorithmParams({
+          hash: { name: "SHA-256" }, salt: new Uint8Array(4),
+        } as any);
       }, Error);
     });
 
     it("error if `info` wrong type", () => {
       assert.throws(() => {
-        provider.checkAlgorithmParams({ hash: { name: "SHA-256" }, info: "wrong", salt: new Uint8Array(4) } as any);
+        provider.checkAlgorithmParams({
+          hash: { name: "SHA-256" }, info: "wrong", salt: new Uint8Array(4),
+        } as any);
       }, TypeError);
     });
 
     it("correct value", () => {
-      provider.checkAlgorithmParams({ hash: { name: "SHA-256" }, salt: new Uint8Array(4), info: new Uint8Array(4) } as any);
+      provider.checkAlgorithmParams({
+        hash: { name: "SHA-256" }, salt: new Uint8Array(4), info: new Uint8Array(4),
+      } as any);
     });
-
   });
 
-  context("checkImportKey", () => {
-
+  describe("checkImportKey", () => {
     it("throw error if extractable is true", () => {
       assert.throws(() => {
         provider.checkImportKey("raw", new ArrayBuffer(0), { name: "HKDF" }, true, ["deriveBits"]);
@@ -60,7 +70,5 @@ context("HKDF", () => {
     it("correct extractable value", () => {
       provider.checkImportKey("raw", new ArrayBuffer(0), { name: "HKDF" }, false, ["deriveBits"]);
     });
-
   });
-
 });

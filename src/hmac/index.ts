@@ -3,7 +3,6 @@ import { ProviderCrypto } from "../provider";
 import { KeyUsages } from "../types";
 
 export abstract class HmacProvider extends ProviderCrypto {
-
   public name = "HMAC";
 
   public hashAlgorithms = ["SHA-1", "SHA-256", "SHA-384", "SHA-512"];
@@ -52,5 +51,4 @@ export abstract class HmacProvider extends ProviderCrypto {
   public abstract onGenerateKey(algorithm: HmacKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
   public abstract onExportKey(format: KeyFormat, key: CryptoKey, ...args: any[]): Promise<JsonWebKey | ArrayBuffer>;
   public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: HmacImportParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
-
 }

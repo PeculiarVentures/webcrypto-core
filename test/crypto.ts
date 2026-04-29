@@ -2,8 +2,7 @@ import * as assert from "node:assert";
 import * as nodeCrypto from "node:crypto";
 import { Crypto, SubtleCrypto } from "../src";
 
-context("Crypto", () => {
-
+describe("Crypto", () => {
   class MyCrypto extends Crypto {
     public subtle = new SubtleCrypto();
     public getRandomValues<T extends ArrayBufferView | null>(array: T): T {
@@ -17,7 +16,6 @@ context("Crypto", () => {
   }
 
   it("Crypto matches to globalThis.Crypto", () => {
-    // tslint:disable-next-line: no-shadowed-variable
     let crypto: globalThis.Crypto;
     crypto = new MyCrypto();
     assert.ok(crypto);
@@ -33,5 +31,4 @@ context("Crypto", () => {
       assert.ok(new RegExp(regex).test(uuid), `UUID ${uuid} is incorrect`);
     }
   });
-
 });

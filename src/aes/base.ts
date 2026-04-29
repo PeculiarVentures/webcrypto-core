@@ -2,7 +2,6 @@ import { ProviderCrypto } from "../provider";
 import { CryptoKey } from "../crypto_key";
 
 export abstract class AesProvider extends ProviderCrypto {
-
   public checkGenerateKeyParams(algorithm: AesKeyGenParams): void {
     // length
     this.checkRequiredProperty(algorithm, "length");
@@ -26,5 +25,4 @@ export abstract class AesProvider extends ProviderCrypto {
   public abstract onGenerateKey(algorithm: AesKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
   public abstract onExportKey(format: KeyFormat, key: CryptoKey, ...args: any[]): Promise<JsonWebKey | ArrayBuffer>;
   public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
-
 }

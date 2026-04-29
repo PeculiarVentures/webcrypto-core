@@ -3,7 +3,6 @@ import { KeyUsages } from "../types";
 import { AesProvider } from "./base";
 
 export abstract class AesCtrProvider extends AesProvider {
-
   public readonly name = "AES-CTR";
 
   public usages: KeyUsages = ["encrypt", "decrypt", "wrapKey", "unwrapKey"];
@@ -29,5 +28,4 @@ export abstract class AesCtrProvider extends AesProvider {
 
   public abstract onEncrypt(algorithm: AesCtrParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
   public abstract onDecrypt(algorithm: AesCtrParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
-
 }

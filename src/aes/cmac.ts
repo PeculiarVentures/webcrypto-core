@@ -7,7 +7,6 @@ export interface AesCmacParams extends Algorithm {
 }
 
 export abstract class AesCmacProvider extends AesProvider {
-
   public readonly name = "AES-CMAC";
 
   public usages: KeyUsages = ["sign", "verify"];
@@ -24,5 +23,4 @@ export abstract class AesCmacProvider extends AesProvider {
 
   public abstract onSign(algorithm: AesCmacParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
   public abstract onVerify(algorithm: AesCmacParams, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer, ...args: any[]): Promise<boolean>;
-
 }

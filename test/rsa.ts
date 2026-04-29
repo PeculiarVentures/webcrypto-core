@@ -1,16 +1,13 @@
 import assert from "assert";
-import { RsaOaepProvider, RsaPssProvider, RsaSsaProvider } from "../src";
+import {
+  RsaOaepProvider, RsaPssProvider, RsaSsaProvider,
+} from "../src";
 
-// tslint:disable:max-classes-per-file
-
-context("RSA", () => {
-
-  context("RSASSA-PKCS1-v1_5", () => {
-
+describe("RSA", () => {
+  describe("RSASSA-PKCS1-v1_5", () => {
     const provider = Reflect.construct(RsaSsaProvider, []) as RsaSsaProvider;
 
-    context("checkGenerateKeyParams", () => {
-
+    describe("checkGenerateKeyParams", () => {
       it("error if `hash` is missing", () => {
         assert.throws(() => {
           provider.checkGenerateKeyParams({
@@ -68,7 +65,7 @@ context("RSA", () => {
         }, Error);
       });
 
-      it("error if `modulusLength` is wrong value", () => {
+      describe("error if `modulusLength` is wrong value", () => {
         it("not multiple of 8 bits", () => {
           assert.throws(() => {
             provider.checkGenerateKeyParams({
@@ -105,11 +102,9 @@ context("RSA", () => {
           modulusLength: 4096,
         } as any);
       });
-
     });
 
-    context("checkImportParams", () => {
-
+    describe("checkImportParams", () => {
       it("error if `hash` is missing", () => {
         assert.throws(() => {
           provider.checkImportParams({
@@ -128,17 +123,13 @@ context("RSA", () => {
           } as any);
         }, Error);
       });
-
     });
-
   });
 
-  context("RSA-OAEP", () => {
-
+  describe("RSA-OAEP", () => {
     const provider = Reflect.construct(RsaOaepProvider, []) as RsaOaepProvider;
 
-    context("checkAlgorithmParams", () => {
-
+    describe("checkAlgorithmParams", () => {
       it("error if `label` is wrong type", () => {
         assert.throws(() => {
           provider.checkAlgorithmParams({ label: "WRONG" } as any);
@@ -148,17 +139,13 @@ context("RSA", () => {
       it("correct `label`", () => {
         provider.checkAlgorithmParams({ label: new Uint8Array(4) } as any);
       });
-
     });
-
   });
 
-  context("RSA-PSS", () => {
-
+  describe("RSA-PSS", () => {
     const provider = Reflect.construct(RsaPssProvider, []) as RsaPssProvider;
 
-    context("checkAlgorithmParams", () => {
-
+    describe("checkAlgorithmParams", () => {
       it("error if `saltLength` is missing", () => {
         assert.throws(() => {
           provider.checkAlgorithmParams({} as any);
@@ -180,9 +167,6 @@ context("RSA", () => {
       it("correct `saltLength`", () => {
         provider.checkAlgorithmParams({ saltLength: 8 } as any);
       });
-
     });
-
   });
-
 });

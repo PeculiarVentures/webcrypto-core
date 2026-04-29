@@ -6,17 +6,14 @@ import {
   CryptoKey, ProviderKeyUsages,
 } from "../src";
 
-// tslint:disable:max-classes-per-file
-
-context("EC", () => {
-
-  context("EcUtils", () => {
-    context("public point", () => {
+describe("EC", () => {
+  describe("EcUtils", () => {
+    describe("public point", () => {
       it("encode/decode point without padding", () => {
         const point = {
           x: new Uint8Array([1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4]),
           y: new Uint8Array([5, 5, 5, 5, 5, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 8, 8, 8, 8, 8]),
-        }
+        };
         const encoded = EcUtils.encodePoint(point, 160);
 
         assert.strictEqual(Convert.ToHex(encoded), "0401010101010202020202030303030304040404040505050505060606060607070707070808080808");
@@ -32,7 +29,7 @@ context("EC", () => {
         assert.strictEqual(Convert.ToHex(decoded.y), "0005050505060606060607070707070808080808");
       });
     });
-    context("signature point", () => {
+    describe("signature point", () => {
       it("encode/decode", () => {
         const encodedHex = "00f3e308185c2d6cb59ec216ba8ce31e0a27db431be250807e604cd858494eb9d1de066b0dc7964f64b31e2f8da7f00741b5ba7e3972fe476099d53f5c5a39905a1f009fc215304c42100a0eec7b9d0bbc5f59c838b604bcceb6ebffd4870c83e76d8eca92e689032caddc69aa87a833216163589f97ce6cb4d10c84b7d6a949e73ca1c5";
         const decoded = EcUtils.decodeSignature(Convert.FromHex(encodedHex), 521);
@@ -45,8 +42,7 @@ context("EC", () => {
     });
   });
 
-  context("Base", () => {
-
+  describe("Base", () => {
     class EcTestProvider extends EllipticProvider {
       public namedCurves = ["P-1", "P-2"];
       public name = "ECC";
@@ -54,21 +50,23 @@ context("EC", () => {
         privateKey: ["sign"],
         publicKey: ["verify"],
       };
-      public onGenerateKey(algorithm: EcKeyGenParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair> {
+
+      public onGenerateKey(_algorithm: EcKeyGenParams, _extractable: boolean, _keyUsages: KeyUsage[]): Promise<CryptoKeyPair> {
         throw new Error("Method not implemented.");
       }
-      public onExportKey(format: KeyFormat, key: CryptoKey): Promise<JsonWebKey | ArrayBuffer> {
+
+      public onExportKey(_format: KeyFormat, _key: CryptoKey): Promise<JsonWebKey | ArrayBuffer> {
         throw new Error("Method not implemented.");
       }
-      public onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: EcKeyImportParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey> {
+
+      public onImportKey(_format: KeyFormat, _keyData: JsonWebKey | ArrayBuffer, _algorithm: EcKeyImportParams, _extractable: boolean, _keyUsages: KeyUsage[]): Promise<CryptoKey> {
         throw new Error("Method not implemented.");
       }
     }
 
     const provider = new EcTestProvider();
 
-    context("checkGenerateKeyParams", () => {
-
+    describe("checkGenerateKeyParams", () => {
       it("error if `namedCurve` is missing", () => {
         assert.throws(() => {
           provider.checkGenerateKeyParams({} as any);
@@ -90,19 +88,14 @@ context("EC", () => {
       it("correct `namedCurve`", () => {
         provider.checkGenerateKeyParams({ namedCurve: "P-2" } as any);
       });
-
     });
-
   });
 
-  context("ECDH", () => {
-
+  describe("ECDH", () => {
     const provider = Reflect.construct(EcdhProvider, []) as EcdhProvider;
 
-    context("", () => {
-
-      context("checkAlgorithmParams", () => {
-
+    describe("", () => {
+      describe("checkAlgorithmParams", () => {
         it("error if `public` is missing", () => {
           assert.throws(() => {
             provider.checkAlgorithmParams({} as any);
@@ -139,19 +132,14 @@ context("EC", () => {
           key.algorithm = { name: "ECDH" };
           provider.checkAlgorithmParams({ public: key } as any);
         });
-
       });
-
     });
-
   });
 
-  context("ECDSA", () => {
-
+  describe("ECDSA", () => {
     const provider = Reflect.construct(EcdsaProvider, []) as EcdsaProvider;
 
-    context("checkAlgorithmParams", () => {
-
+    describe("checkAlgorithmParams", () => {
       it("error if `hash` is missing", () => {
         assert.throws(() => {
           provider.checkAlgorithmParams({} as any);
@@ -167,68 +155,74 @@ context("EC", () => {
       it("correct `hash`", () => {
         provider.checkAlgorithmParams({ hash: { name: "SHA-1" } } as any);
       });
-
     });
-
   });
 
-  context("ECDH-ES", () => {
+  describe("ECDH-ES", () => {
     class TestEcdhEsProvider extends EcdhEsProvider {
-      public async onDeriveBits(algorithm: EcdhKeyDeriveParams, baseKey: CryptoKey, length: number, ...args: any[]): Promise<ArrayBuffer> {
+      public async onDeriveBits(_algorithm: EcdhKeyDeriveParams, _baseKey: CryptoKey, _length: number, ..._args: any[]): Promise<ArrayBuffer> {
         return null as any;
       }
-      public async onGenerateKey(algorithm: EcKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKeyPair> {
+
+      public async onGenerateKey(_algorithm: EcKeyGenParams, _extractable: boolean, _keyUsages: KeyUsage[], ..._args: any[]): Promise<CryptoKeyPair> {
         return null as any;
       }
-      public async onExportKey(format: KeyFormat, key: CryptoKey, ...args: any[]): Promise<ArrayBuffer | JsonWebKey> {
+
+      public async onExportKey(_format: KeyFormat, _key: CryptoKey, ..._args: any[]): Promise<ArrayBuffer | JsonWebKey> {
         return null as any;
       }
-      public async onImportKey(format: KeyFormat, keyData: ArrayBuffer | JsonWebKey, algorithm: EcKeyImportParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey> {
+
+      public async onImportKey(_format: KeyFormat, _keyData: ArrayBuffer | JsonWebKey, _algorithm: EcKeyImportParams, _extractable: boolean, _keyUsages: KeyUsage[], ..._args: any[]): Promise<CryptoKey> {
         return null as any;
       }
     }
     const provider = new TestEcdhEsProvider();
 
-    context("generateKey", () => {
+    describe("generateKey", () => {
       ["X25519", "x448"].forEach((namedCurve) => {
         it(namedCurve, async () => {
-          const keys = await provider.generateKey({ name: "ECDH-ES", namedCurve } as globalThis.EcKeyGenParams, false, ["deriveBits", "deriveKey"]);
+          const keys = await provider.generateKey({
+            name: "ECDH-ES", namedCurve,
+          } as globalThis.EcKeyGenParams, false, ["deriveBits", "deriveKey"]);
           assert.strictEqual(keys, null);
         });
-      })
+      });
     });
-
   });
 
-  context("EdDSA", () => {
+  describe("EdDSA", () => {
     class TestEdDsaProvider extends EdDsaProvider {
-      public async onSign(algorithm: EcdsaParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer> {
+      public async onSign(_algorithm: EcdsaParams, _key: CryptoKey, _data: ArrayBuffer, ..._args: any[]): Promise<ArrayBuffer> {
         return null as any;
       }
-      public async onVerify(algorithm: EcdsaParams, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer, ...args: any[]): Promise<boolean> {
+
+      public async onVerify(_algorithm: EcdsaParams, _key: CryptoKey, _signature: ArrayBuffer, _data: ArrayBuffer, ..._args: any[]): Promise<boolean> {
         return true;
       }
-      public async onGenerateKey(algorithm: EcKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKeyPair> {
+
+      public async onGenerateKey(_algorithm: EcKeyGenParams, _extractable: boolean, _keyUsages: KeyUsage[], ..._args: any[]): Promise<CryptoKeyPair> {
         return null as any;
       }
-      public onExportKey(format: KeyFormat, key: CryptoKey, ...args: any[]): Promise<ArrayBuffer | JsonWebKey> {
+
+      public onExportKey(_format: KeyFormat, _key: CryptoKey, ..._args: any[]): Promise<ArrayBuffer | JsonWebKey> {
         return null as any;
       }
-      public onImportKey(format: KeyFormat, keyData: ArrayBuffer | JsonWebKey, algorithm: EcKeyImportParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey> {
+
+      public onImportKey(_format: KeyFormat, _keyData: ArrayBuffer | JsonWebKey, _algorithm: EcKeyImportParams, _extractable: boolean, _keyUsages: KeyUsage[], ..._args: any[]): Promise<CryptoKey> {
         return null as any;
       }
     }
     const provider = new TestEdDsaProvider();
 
-    context("generateKey", () => {
+    describe("generateKey", () => {
       ["Ed25519", "ed448"].forEach((namedCurve) => {
         it(namedCurve, async () => {
-          const keys = await provider.generateKey({ name: "EdDSA", namedCurve } as globalThis.EcKeyGenParams, false, ["sign", "verify"]);
+          const keys = await provider.generateKey({
+            name: "EdDSA", namedCurve,
+          } as globalThis.EcKeyGenParams, false, ["sign", "verify"]);
           assert.strictEqual(keys, null);
         });
-      })
+      });
     });
-
   });
-
 });

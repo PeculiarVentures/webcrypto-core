@@ -1,4 +1,6 @@
-import { AsnProp, AsnPropTypes, AsnType, AsnTypeTypes } from "@peculiar/asn1-schema";
+import {
+  AsnProp, AsnPropTypes, AsnType, AsnTypeTypes,
+} from "@peculiar/asn1-schema";
 import { JsonProp, JsonPropTypes } from "@peculiar/json-schema";
 import { JsonBase64UrlArrayBufferConverter } from "../../json/converters";
 
@@ -17,8 +19,9 @@ import { JsonBase64UrlArrayBufferConverter } from "../../json/converters";
  */
 @AsnType({ type: AsnTypeTypes.Choice })
 export class CurvePrivateKey {
-
   @AsnProp({ type: AsnPropTypes.OctetString })
-  @JsonProp({ type: JsonPropTypes.String, converter: JsonBase64UrlArrayBufferConverter })
+  @JsonProp({
+    type: JsonPropTypes.String, converter: JsonBase64UrlArrayBufferConverter,
+  })
   public d!: ArrayBuffer;
 }

@@ -9,10 +9,8 @@ interface IEcSignatureTestVector {
   webCrypto: string;
 }
 
-context("ASN1", () => {
-
-  context("ECDSA Signature Value", () => {
-
+describe("ASN1", () => {
+  describe("ECDSA Signature Value", () => {
     const vectors: IEcSignatureTestVector[] = [
       {
         name: "P-256 #1",
@@ -46,7 +44,7 @@ context("ASN1", () => {
       },
     ];
 
-    context("From WebCrypto to DER", () => {
+    describe("From WebCrypto to DER", () => {
       vectors.forEach((vector) => {
         it(vector.name, () => {
           const value = EcDsaSignature.fromWebCryptoSignature(Convert.FromHex(vector.webCrypto));
@@ -56,7 +54,7 @@ context("ASN1", () => {
       });
     });
 
-    context("From DER to WebCrypto", () => {
+    describe("From DER to WebCrypto", () => {
       vectors.forEach((vector) => {
         it(vector.name, () => {
           const value = AsnParser.parse(Convert.FromHex(vector.asn1), EcDsaSignature);

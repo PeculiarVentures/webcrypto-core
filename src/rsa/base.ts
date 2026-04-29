@@ -3,7 +3,6 @@ import { CryptoKey } from "../crypto_key";
 import { ProviderCrypto } from "../provider";
 
 export abstract class RsaProvider extends ProviderCrypto {
-
   public hashAlgorithms = ["SHA-1", "SHA-256", "SHA-384", "SHA-512"];
 
   public checkGenerateKeyParams(algorithm: RsaHashedKeyGenParams): void {
@@ -38,5 +37,4 @@ export abstract class RsaProvider extends ProviderCrypto {
   public abstract onGenerateKey(algorithm: RsaHashedKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKeyPair>;
   public abstract onExportKey(format: KeyFormat, key: CryptoKey, ...args: any[]): Promise<JsonWebKey | ArrayBuffer>;
   public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: RsaHashedImportParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
-
 }

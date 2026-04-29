@@ -4,7 +4,6 @@ import { ProviderCrypto } from "../provider";
 import { KeyUsages } from "../types";
 
 export abstract class HkdfProvider extends ProviderCrypto {
-
   public name = "HKDF";
   public hashAlgorithms = ["SHA-1", "SHA-256", "SHA-384", "SHA-512"];
   public usages: KeyUsages = ["deriveKey", "deriveBits"];
@@ -37,5 +36,4 @@ export abstract class HkdfProvider extends ProviderCrypto {
 
   public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
   public abstract onDeriveBits(algorithm: HkdfParams, baseKey: CryptoKey, length: number, ...args: any[]): Promise<ArrayBuffer>;
-
 }

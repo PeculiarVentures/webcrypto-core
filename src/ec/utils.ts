@@ -11,7 +11,6 @@ interface EcSignaturePoint {
 }
 
 export class EcUtils {
-
   /**
    * Decodes ANSI X9.62 encoded point
    * @note Used by SunPKCS11 and SunJSSE
@@ -34,7 +33,9 @@ export class EcUtils {
     const xb = view.slice(1, n + 1);
     const yb = view.slice(n + 1, n + 1 + n);
 
-    return { x: xb, y: yb };
+    return {
+      x: xb, y: yb,
+    };
   }
 
   /**
@@ -92,7 +93,7 @@ export class EcUtils {
     return {
       r: this.trimStart(r),
       s: this.trimStart(s),
-    }
+    };
   }
 
   public static trimStart(data: Uint8Array): Uint8Array {
@@ -113,9 +114,8 @@ export class EcUtils {
     }
 
     const res = new Uint8Array(size);
-    res.set(data, size - data.length)
+    res.set(data, size - data.length);
 
     return res;
   }
-
 }

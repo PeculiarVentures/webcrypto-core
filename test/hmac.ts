@@ -2,12 +2,10 @@ import assert from "assert";
 import { OperationError } from "../src/errors";
 import { HmacProvider } from "../src/hmac";
 
-context("HMAC", () => {
-
+describe("HMAC", () => {
   const provider = Reflect.construct(HmacProvider, []) as HmacProvider;
 
-  context("checkGenerateKeyParams", () => {
-
+  describe("checkGenerateKeyParams", () => {
     it("error if `hash` is missing", () => {
       assert.throws(() => {
         provider.checkGenerateKeyParams({} as any);
@@ -22,13 +20,17 @@ context("HMAC", () => {
 
     it("error if `length` is not of type Number", () => {
       assert.throws(() => {
-        provider.checkGenerateKeyParams({ hash: { name: "SHA-256" }, length: "128" } as any);
+        provider.checkGenerateKeyParams({
+          hash: { name: "SHA-256" }, length: "128",
+        } as any);
       }, TypeError);
     });
 
     it("error if `length` is less than 1", () => {
       assert.throws(() => {
-        provider.checkGenerateKeyParams({ hash: { name: "SHA-256" }, length: 0 } as any);
+        provider.checkGenerateKeyParams({
+          hash: { name: "SHA-256" }, length: 0,
+        } as any);
       }, RangeError);
     });
 
@@ -37,13 +39,15 @@ context("HMAC", () => {
     });
 
     it("custom length", () => {
-      provider.checkGenerateKeyParams({ hash: { name: "SHA-256", length: 128 } } as any);
+      provider.checkGenerateKeyParams({
+        hash: {
+          name: "SHA-256", length: 128,
+        },
+      } as any);
     });
-
   });
 
-  context("getDefaultLength", () => {
-
+  describe("getDefaultLength", () => {
     it("SHA-1", () => {
       const len = provider.getDefaultLength("SHA-1");
       assert.equal(len, 512);
@@ -69,10 +73,9 @@ context("HMAC", () => {
         provider.getDefaultLength("SHA-521");
       }, Error);
     });
-
   });
 
-  context("checkImportParams", () => {
+  describe("checkImportParams", () => {
     it("error if `hash` is missing", () => {
       assert.throws(() => {
         provider.checkImportParams({} as any);
@@ -85,5 +88,4 @@ context("HMAC", () => {
       }, OperationError);
     });
   });
-
 });

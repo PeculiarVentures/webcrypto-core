@@ -4,7 +4,6 @@ import { ProviderKeyUsages } from "../types";
 import { EllipticProvider } from "./base";
 
 export abstract class EcdhProvider extends EllipticProvider {
-
   public readonly name: string = "ECDH";
 
   public usages: ProviderKeyUsages = {
@@ -29,5 +28,4 @@ export abstract class EcdhProvider extends EllipticProvider {
   }
 
   public abstract onDeriveBits(algorithm: EcdhKeyDeriveParams, baseKey: CryptoKey, length: number, ...args: any[]): Promise<ArrayBuffer>;
-
 }

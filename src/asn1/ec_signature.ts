@@ -11,7 +11,6 @@ import { AsnIntegerWithoutPaddingConverter } from "./converters";
 // }
 
 export class EcDsaSignature {
-
   /**
    * Create EcDsaSignature from X9.62 signature
    * @param value X9.62 signature
@@ -28,10 +27,14 @@ export class EcDsaSignature {
     return ecSignature;
   }
 
-  @AsnProp({ type: AsnPropTypes.Integer, converter: AsnIntegerWithoutPaddingConverter })
+  @AsnProp({
+    type: AsnPropTypes.Integer, converter: AsnIntegerWithoutPaddingConverter,
+  })
   public r = new ArrayBuffer(0);
 
-  @AsnProp({ type: AsnPropTypes.Integer, converter: AsnIntegerWithoutPaddingConverter })
+  @AsnProp({
+    type: AsnPropTypes.Integer, converter: AsnIntegerWithoutPaddingConverter,
+  })
   public s = new ArrayBuffer(0);
 
   /**
@@ -55,7 +58,6 @@ export class EcDsaSignature {
 
     return signature.buffer;
   }
-
 }
 
 import { EcUtils } from "../ec/utils";

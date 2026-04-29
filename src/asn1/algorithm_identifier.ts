@@ -13,10 +13,7 @@ import { AsnProp, AsnPropTypes } from "@peculiar/asn1-schema";
 export type ParametersType = ArrayBuffer | null;
 
 export class AlgorithmIdentifier {
-
-  @AsnProp({
-    type: AsnPropTypes.ObjectIdentifier,
-  })
+  @AsnProp({ type: AsnPropTypes.ObjectIdentifier })
   public algorithm!: string;
 
   @AsnProp({

@@ -1,6 +1,8 @@
 import assert from "assert";
 import { ProviderKeyPairUsage } from "../src";
-import { AlgorithmError, CryptoError, OperationError, UnsupportedOperationError } from "../src/errors";
+import {
+  AlgorithmError, CryptoError, OperationError, UnsupportedOperationError,
+} from "../src/errors";
 import { CryptoKey } from "../src/crypto_key";
 import { ProviderCrypto } from "../src/provider";
 
@@ -9,7 +11,6 @@ class TestProvider extends ProviderCrypto {
   public usages: KeyUsage[] = ["sign"];
 }
 
-// tslint:disable-next-line:max-classes-per-file
 class TestAsymmetricProvider extends ProviderCrypto {
   public name = "CUSTOM-ALG";
   public usages: ProviderKeyPairUsage = {
@@ -18,12 +19,10 @@ class TestAsymmetricProvider extends ProviderCrypto {
   };
 }
 
-context("ProviderCrypto", () => {
-
+describe("ProviderCrypto", () => {
   const crypto = new TestProvider();
 
-  context("checkGenerateKey", () => {
-
+  describe("checkGenerateKey", () => {
     it("error if `keyUsages` argument is empty list", () => {
       assert.throws(() => {
         crypto.checkGenerateKey({ name: "CUSTOM-ALG" }, true, []);
@@ -34,11 +33,9 @@ context("ProviderCrypto", () => {
       const aProv = new TestAsymmetricProvider();
       aProv.checkGenerateKey({ name: "CUSTOM-ALG" }, true, ["sign", "verify"]);
     });
-
   });
 
-  context("digest", () => {
-
+  describe("digest", () => {
     it("correct data", async () => {
       await assert.rejects(
         crypto.digest({ name: "custom-alg" }, new ArrayBuffer(0)),
@@ -51,11 +48,9 @@ context("ProviderCrypto", () => {
         crypto.digest({ name: "wrong" }, new ArrayBuffer(0)),
       );
     });
-
   });
 
-  context("generateKey", () => {
-
+  describe("generateKey", () => {
     it("correct data", async () => {
       await assert.rejects(
         crypto.generateKey({ name: "custom-alg" }, true, ["sign"]),
@@ -74,11 +69,9 @@ context("ProviderCrypto", () => {
         crypto.generateKey({ name: "custom-alg" }, false, ["verify"]),
       );
     });
-
   });
 
-  context("sign", () => {
-
+  describe("sign", () => {
     const correctKey = CryptoKey.create(
       { name: "custom-alg" },
       "secret",
@@ -149,11 +142,9 @@ context("ProviderCrypto", () => {
         CryptoError,
       );
     });
-
   });
 
-  context("checkDeriveBits", () => {
-
+  describe("checkDeriveBits", () => {
     it("error if length is not multiple 8", () => {
       const algorithm: Algorithm = { name: "custom-alg" };
       const key = CryptoKey.create(algorithm, "secret", false, ["deriveBits"]);
@@ -161,17 +152,13 @@ context("ProviderCrypto", () => {
         crypto.checkDeriveBits(algorithm, key, 7);
       }, OperationError);
     });
-
   });
 
-  context("checkKeyFormat", () => {
-
+  describe("checkKeyFormat", () => {
     it("error if wrong value", () => {
       assert.throws(() => {
         crypto.checkKeyFormat("wrong");
       }, TypeError);
     });
-
   });
-
 });

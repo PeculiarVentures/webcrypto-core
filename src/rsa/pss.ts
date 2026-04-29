@@ -2,7 +2,6 @@ import { ProviderKeyUsages } from "../types";
 import { RsaProvider } from "./base";
 
 export abstract class RsaPssProvider extends RsaProvider {
-
   public readonly name = "RSA-PSS";
 
   public usages: ProviderKeyUsages = {
@@ -22,5 +21,4 @@ export abstract class RsaPssProvider extends RsaProvider {
 
   public abstract onSign(algorithm: RsaPssParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
   public abstract onVerify(algorithm: RsaPssParams, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer, ...args: any[]): Promise<boolean>;
-
 }

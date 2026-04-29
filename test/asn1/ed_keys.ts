@@ -1,11 +1,12 @@
 import * as assert from "assert";
 import { AsnConvert } from "@peculiar/asn1-schema";
 import { JsonSerializer } from "@peculiar/json-schema";
-import { CurvePrivateKey, EcPrivateKey, idX25519, idX448, PrivateKeyInfo, PublicKeyInfo } from "../../src/asn1";
 import { Convert } from "pvtsutils";
+import {
+  CurvePrivateKey, EcPrivateKey, idX25519, idX448, PrivateKeyInfo, PublicKeyInfo,
+} from "../../src/asn1";
 
-context("EdDSA and ECDH-ES keys", () => {
-
+describe("EdDSA and ECDH-ES keys", () => {
   it("Private key", () => {
     const b64 = "MEYCAQAwBQYDK2VvBDoEOPhm20uZC//c0wk1EEapNDcIIlgSGVxnWhwRJvT5K3+iwjtcyV2inuEihA5Soa5BO2OHh5leznW+";
     const raw = Buffer.from(b64, "base64");
@@ -27,5 +28,4 @@ context("EdDSA and ECDH-ES keys", () => {
 
     assert.strictEqual(Convert.ToBase64Url(spki.publicKey), "R-a_Z6rz2HuBXn7m7v_pjef6nHfCWSIObVWCTr5nxjg");
   });
-
 });

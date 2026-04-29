@@ -2,7 +2,6 @@ import { KeyUsages } from "../types";
 import { AesProvider } from "./base";
 
 export abstract class AesCbcProvider extends AesProvider {
-
   public readonly name = "AES-CBC";
 
   public usages: KeyUsages = ["encrypt", "decrypt", "wrapKey", "unwrapKey"];
@@ -19,5 +18,4 @@ export abstract class AesCbcProvider extends AesProvider {
 
   public abstract onEncrypt(algorithm: AesCbcParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
   public abstract onDecrypt(algorithm: AesCbcParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
-
 }

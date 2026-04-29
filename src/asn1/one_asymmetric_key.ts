@@ -19,8 +19,8 @@ import { PrivateKeyInfo } from "./private_key_info";
  * ```
  */
 export class OneAsymmetricKey extends PrivateKeyInfo {
-
-  @AsnProp({ context: 1, implicit: true, type: AsnPropTypes.BitString, optional: true })
+  @AsnProp({
+    context: 1, implicit: true, type: AsnPropTypes.BitString, optional: true,
+  })
   public publicKey?: ArrayBuffer;
-
 }

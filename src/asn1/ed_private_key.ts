@@ -1,10 +1,11 @@
-import { AsnProp, AsnPropTypes, AsnType, AsnTypeTypes } from "@peculiar/asn1-schema";
+import {
+  AsnProp, AsnPropTypes, AsnType, AsnTypeTypes,
+} from "@peculiar/asn1-schema";
 import { IJsonConvertible } from "@peculiar/json-schema";
 import { Convert } from "pvtsutils";
 
 @AsnType({ type: AsnTypeTypes.Choice })
 export class EdPrivateKey implements IJsonConvertible {
-
   @AsnProp({ type: AsnPropTypes.OctetString })
   public value = new ArrayBuffer(0);
 
@@ -16,10 +17,9 @@ export class EdPrivateKey implements IJsonConvertible {
 
     return this;
   }
+
   public toJSON(): JsonWebKey {
-    const jwk: JsonWebKey = {
-      d: Convert.ToBase64Url(this.value),
-    };
+    const jwk: JsonWebKey = { d: Convert.ToBase64Url(this.value) };
 
     return jwk;
   }

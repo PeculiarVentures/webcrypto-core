@@ -67,7 +67,7 @@ export interface CryptoStorage<T> {
 
 }
 
-//#region CryptoKeyStorage
+// #region CryptoKeyStorage
 
 export interface CryptoKeyStorage extends CryptoStorage<CryptoKey> {
 
@@ -76,9 +76,9 @@ export interface CryptoKeyStorage extends CryptoStorage<CryptoKey> {
 
 }
 
-//#endregion CryptoKeyStorage
+// #endregion CryptoKeyStorage
 
-//#region CryptoCertificateStorage
+// #region CryptoCertificateStorage
 
 export type CryptoCertificateFormat = "raw" | "pem";
 export type CryptoCertificateType = "x509" | "request";
@@ -116,7 +116,7 @@ export interface CryptoCertificateStorage extends CryptoStorage<CryptoCertificat
   importCert(format: "pem", data: string, algorithm: ImportAlgorithms, keyUsages: KeyUsage[]): Promise<CryptoCertificate>;
 }
 
-//#endregion CryptoCertificateStorage
+// #endregion CryptoCertificateStorage
 
 export interface CryptoStorages {
   keyStorage: CryptoKeyStorage;

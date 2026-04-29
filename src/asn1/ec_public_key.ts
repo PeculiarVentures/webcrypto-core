@@ -1,4 +1,6 @@
-import { AsnProp, AsnPropTypes, AsnType, AsnTypeTypes } from "@peculiar/asn1-schema";
+import {
+  AsnProp, AsnPropTypes, AsnType, AsnTypeTypes,
+} from "@peculiar/asn1-schema";
 import { IJsonConvertible } from "@peculiar/json-schema";
 import { combine, Convert } from "pvtsutils";
 import { CryptoError } from "../errors";
@@ -10,7 +12,6 @@ import { CryptoError } from "../errors";
 
 @AsnType({ type: AsnTypeTypes.Choice })
 export class EcPublicKey implements IJsonConvertible {
-
   @AsnProp({ type: AsnPropTypes.OctetString })
   public value = new ArrayBuffer(0);
 
@@ -60,5 +61,4 @@ export class EcPublicKey implements IJsonConvertible {
 
     return this;
   }
-
 }

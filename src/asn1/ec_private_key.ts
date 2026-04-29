@@ -1,4 +1,6 @@
-import { AsnIntegerConverter, AsnProp, AsnPropTypes, AsnSerializer } from "@peculiar/asn1-schema";
+import {
+  AsnIntegerConverter, AsnProp, AsnPropTypes, AsnSerializer,
+} from "@peculiar/asn1-schema";
 import { IJsonConvertible } from "@peculiar/json-schema";
 import { Convert } from "pvtsutils";
 import { EcPublicKey } from "./ec_public_key";
@@ -14,17 +16,22 @@ import { EcPublicKey } from "./ec_public_key";
 // }
 
 export class EcPrivateKey implements IJsonConvertible {
-
-  @AsnProp({ type: AsnPropTypes.Integer, converter: AsnIntegerConverter })
+  @AsnProp({
+    type: AsnPropTypes.Integer, converter: AsnIntegerConverter,
+  })
   public version = 1;
 
   @AsnProp({ type: AsnPropTypes.OctetString })
   public privateKey = new ArrayBuffer(0);
 
-  @AsnProp({ context: 0, type: AsnPropTypes.Any, optional: true })
+  @AsnProp({
+    context: 0, type: AsnPropTypes.Any, optional: true,
+  })
   public parameters?: ArrayBuffer;
 
-  @AsnProp({ context: 1, type: AsnPropTypes.BitString, optional: true })
+  @AsnProp({
+    context: 1, type: AsnPropTypes.BitString, optional: true,
+  })
   public publicKey?: ArrayBuffer;
 
   public fromJSON(json: any): this {
@@ -45,6 +52,7 @@ export class EcPrivateKey implements IJsonConvertible {
 
     return this;
   }
+
   public toJSON(): JsonWebKey {
     const jwk: JsonWebKey = {};
     jwk.d = Convert.ToBase64Url(this.privateKey);
@@ -53,5 +61,4 @@ export class EcPrivateKey implements IJsonConvertible {
     }
     return jwk;
   }
-
 }

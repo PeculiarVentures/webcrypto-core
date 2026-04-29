@@ -4,7 +4,6 @@ import { Convert } from "pvtsutils";
  * PEM converter
  */
 export class PemConverter {
-
   /**
    * Converts PEM to Array buffer
    * @param pem PEM string
@@ -55,7 +54,6 @@ export class PemConverter {
    * @param data Data
    */
   public static isPEM(data: string): boolean {
-    // tslint:disable-next-line:max-line-length
     return /-----BEGIN .+-----[A-Za-z0-9+/+=\s\n]+-----END .+-----/i.test(data);
   }
 
@@ -100,5 +98,4 @@ export class PemConverter {
   public static isPublicKey(pem: string): boolean {
     return this.hasTagName(pem, "public key");
   }
-
 }

@@ -1,4 +1,6 @@
-import { AsnProp, AsnPropTypes, AsnType, AsnTypeTypes } from "@peculiar/asn1-schema";
+import {
+  AsnProp, AsnPropTypes, AsnType, AsnTypeTypes,
+} from "@peculiar/asn1-schema";
 import { IJsonConvertible } from "@peculiar/json-schema";
 import { Convert } from "pvtsutils";
 
@@ -9,7 +11,6 @@ import { Convert } from "pvtsutils";
 
 @AsnType({ type: AsnTypeTypes.Choice })
 export class EdPublicKey implements IJsonConvertible {
-
   @AsnProp({ type: AsnPropTypes.BitString })
   public value = new ArrayBuffer(0);
 
@@ -20,9 +21,7 @@ export class EdPublicKey implements IJsonConvertible {
   }
 
   public toJSON(): JsonWebKey {
-    const json: JsonWebKey = {
-      x: Convert.ToBase64Url(this.value),
-    };
+    const json: JsonWebKey = { x: Convert.ToBase64Url(this.value) };
 
     return json;
   }
@@ -36,5 +35,4 @@ export class EdPublicKey implements IJsonConvertible {
 
     return this;
   }
-
 }

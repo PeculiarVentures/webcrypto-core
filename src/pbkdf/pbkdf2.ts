@@ -3,7 +3,6 @@ import { ProviderCrypto } from "../provider";
 import { KeyUsages } from "../types";
 
 export abstract class Pbkdf2Provider extends ProviderCrypto {
-
   public name = "PBKDF2";
 
   public hashAlgorithms = ["SHA-1", "SHA-256", "SHA-384", "SHA-512"];
@@ -41,5 +40,4 @@ export abstract class Pbkdf2Provider extends ProviderCrypto {
 
   public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
   public abstract onDeriveBits(algorithm: Pbkdf2Params, baseKey: CryptoKey, length: number, ...args: any[]): Promise<ArrayBuffer>;
-
 }

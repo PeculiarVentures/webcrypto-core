@@ -22,7 +22,6 @@ export interface DesDerivedKeyParams extends Algorithm {
 export interface DesImportParams extends Algorithm { }
 
 export abstract class DesProvider extends ProviderCrypto {
-
   public usages: KeyUsages = ["encrypt", "decrypt", "wrapKey", "unwrapKey"];
 
   public abstract keySizeBits: number;
@@ -60,5 +59,4 @@ export abstract class DesProvider extends ProviderCrypto {
   public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: DesImportParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
   public abstract onEncrypt(algorithm: DesParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
   public abstract onDecrypt(algorithm: DesParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
-
 }
