@@ -1,9 +1,9 @@
-import * as assert from "assert";
+import assert from "node:assert";
 import { AsnConvert } from "@peculiar/asn1-schema";
 import { JsonSerializer } from "@peculiar/json-schema";
 import { Convert } from "pvtsutils";
 import {
-  CurvePrivateKey, EcPrivateKey, idX25519, idX448, PrivateKeyInfo, PublicKeyInfo,
+  CurvePrivateKey, idX25519, idX448, PrivateKeyInfo, PublicKeyInfo,
 } from "../../src/asn1";
 
 describe("EdDSA and ECDH-ES keys", () => {

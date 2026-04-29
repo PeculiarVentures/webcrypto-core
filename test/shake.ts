@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import {
   Shake128Provider, Shake256Provider, ShakeParams,
 } from "../src";

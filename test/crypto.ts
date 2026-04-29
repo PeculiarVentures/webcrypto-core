@@ -1,4 +1,4 @@
-import * as assert from "node:assert";
+import assert from "node:assert";
 import * as nodeCrypto from "node:crypto";
 import { Crypto, SubtleCrypto } from "../src";
 

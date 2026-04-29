@@ -1,4 +1,4 @@
-import * as assert from "assert";
+import assert from "node:assert";
 import { AsnConvert, AsnSerializer } from "@peculiar/asn1-schema";
 import { Convert } from "pvtsutils";
 import {

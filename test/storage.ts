@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import { ProviderStorage, CryptoKey } from "../src";
 import * as rsa from "../src/rsa";
 

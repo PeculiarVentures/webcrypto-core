@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import { OperationError } from "../src/errors";
 import { HmacProvider } from "../src/hmac";
 

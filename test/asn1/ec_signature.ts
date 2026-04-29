@@ -1,4 +1,4 @@
-import * as assert from "assert";
+import assert from "node:assert";
 import { Convert } from "pvtsutils";
 import { AsnSerializer, AsnParser } from "@peculiar/asn1-schema";
 import { EcDsaSignature } from "../../src/asn1";

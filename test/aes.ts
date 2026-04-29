@@ -1,4 +1,4 @@
-import assert from "assert";
+import assert from "node:assert";
 import {
   AesCbcProvider, AesCmacProvider, AesCtrProvider, AesGcmProvider,
 } from "../src/aes";

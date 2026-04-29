@@ -1,4 +1,4 @@
-import * as assert from "assert";
+import assert from "node:assert";
 import * as crypto from "node:crypto";
 import { Convert } from "pvtsutils";
 import { JwkUtils } from "../src";
