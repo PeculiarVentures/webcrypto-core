@@ -1,11 +1,16 @@
-[![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat)](https://raw.githubusercontent.com/PeculiarVentures/webcrypto-core/master/LICENSE)
-[![test](https://github.com/PeculiarVentures/webcrypto-core/actions/workflows/test.yml/badge.svg)](https://github.com/PeculiarVentures/webcrypto-core/actions/workflows/test.yml)
-[![Coverage Status](https://coveralls.io/repos/github/PeculiarVentures/webcrypto-core/badge.svg?branch=master)](https://coveralls.io/github/PeculiarVentures/webcrypto-core?branch=master)
-[![npm version](https://badge.fury.io/js/webcrypto-core.svg)](https://badge.fury.io/js/webcrypto-core)
+<h1 align="center">
+  webcrypto-core
+</h1>
 
-[![NPM](https://nodei.co/npm/webcrypto-core.png)](https://nodei.co/npm/webcrypto-core/)
+<div align="center">
 
-# webcrypto-core
+![NPM License](https://img.shields.io/npm/l/webcrypto-core)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/PeculiarVentures/webcrypto-core/test.yml?label=test)
+[![npm version](https://img.shields.io/npm/v/webcrypto-core.svg)](https://www.npmjs.com/package/webcrypto-core)
+![Coveralls](https://img.shields.io/coverallsCoverage/github/PeculiarVentures/webcrypto-core)
+[![npm downloads](https://img.shields.io/npm/dm/webcrypto-core.svg)](https://www.npmjs.com/package/webcrypto-core)
+
+</div>
 
 We have created a number of WebCrypto polyfills including: [node-webcrypto-ossl](https://github.com/PeculiarVentures/node-webcrypto-ossl), [node-webcrypto-p11](https://github.com/PeculiarVentures/node-webcrypto-p11), and [webcrypto-liner](https://github.com/PeculiarVentures/webcrypto-liner).  `webcrypto-core` was designed to be a common layer to be used by all of these libraries for input validation.
 
