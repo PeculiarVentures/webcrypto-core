@@ -1,3 +1,4 @@
+/* eslint-disable prefer-spread */
 import assert from "node:assert";
 import {
   CryptoKey, ProviderCrypto, SubtleCrypto,
@@ -8,39 +9,39 @@ describe("SubtleCrypto", () => {
     public name = "TEST";
     public usages: KeyUsage[] = ["sign", "verify", "deriveKey", "deriveBits", "encrypt", "decrypt", "wrapKey", "unwrapKey"];
 
-    public async onDigest(_algorithm: Algorithm, _data: ArrayBuffer): Promise<ArrayBuffer> {
+    public override async onDigest(_algorithm: Algorithm, _data: ArrayBuffer): Promise<ArrayBuffer> {
       return new ArrayBuffer(0);
     }
 
-    public async onGenerateKey(_algorithm: Algorithm, _extractable: boolean, _keyUsages: KeyUsage[]): Promise<CryptoKey> {
+    public override async onGenerateKey(_algorithm: Algorithm, _extractable: boolean, _keyUsages: KeyUsage[]): Promise<CryptoKey> {
       return key;
     }
 
-    public async onSign(_algorithm: Algorithm, _sKey: CryptoKey, _data: ArrayBuffer): Promise<ArrayBuffer> {
+    public override async onSign(_algorithm: Algorithm, _sKey: CryptoKey, _data: ArrayBuffer): Promise<ArrayBuffer> {
       return new ArrayBuffer(0);
     }
 
-    public async onVerify(_algorithm: Algorithm, _sKey: CryptoKey, _signature: ArrayBuffer, _data: ArrayBuffer): Promise<boolean> {
+    public override async onVerify(_algorithm: Algorithm, _sKey: CryptoKey, _signature: ArrayBuffer, _data: ArrayBuffer): Promise<boolean> {
       return true;
     }
 
-    public async onEncrypt(_algorithm: Algorithm, _sKey: CryptoKey, _data: ArrayBuffer): Promise<ArrayBuffer> {
+    public override async onEncrypt(_algorithm: Algorithm, _sKey: CryptoKey, _data: ArrayBuffer): Promise<ArrayBuffer> {
       return new ArrayBuffer(0);
     }
 
-    public async onDecrypt(_algorithm: Algorithm, _sKey: CryptoKey, _data: ArrayBuffer): Promise<ArrayBuffer> {
+    public override async onDecrypt(_algorithm: Algorithm, _sKey: CryptoKey, _data: ArrayBuffer): Promise<ArrayBuffer> {
       return new ArrayBuffer(0);
     }
 
-    public async onDeriveBits(_algorithm: Algorithm, _sKey: CryptoKey, _length: number): Promise<ArrayBuffer> {
+    public override async onDeriveBits(_algorithm: Algorithm, _sKey: CryptoKey, _length: number): Promise<ArrayBuffer> {
       return new ArrayBuffer(0);
     }
 
-    public async onExportKey(_format: KeyFormat, _sKey: CryptoKey): Promise<JsonWebKey | ArrayBuffer> {
+    public override async onExportKey(_format: KeyFormat, _sKey: CryptoKey): Promise<JsonWebKey | ArrayBuffer> {
       return new ArrayBuffer(0);
     }
 
-    public async onImportKey(_format: KeyFormat, _keyData: JsonWebKey | ArrayBuffer, _algorithm: Algorithm, _extractable: boolean, _keyUsages: KeyUsage[]): Promise<CryptoKey> {
+    public override async onImportKey(_format: KeyFormat, _keyData: JsonWebKey | ArrayBuffer, _algorithm: Algorithm, _extractable: boolean, _keyUsages: KeyUsage[]): Promise<CryptoKey> {
       return key;
     }
   }
@@ -56,7 +57,7 @@ describe("SubtleCrypto", () => {
   const subtle = new TestSubtleCrypto();
   const key = new CryptoKey();
   key.algorithm = { name: "TEST" };
-  key.type = "secret",
+  key.type = "secret";
   key.usages = ["sign", "verify", "deriveKey", "deriveBits", "encrypt", "decrypt", "wrapKey", "unwrapKey"];
   key.extractable = true;
 
@@ -217,7 +218,7 @@ describe("SubtleCrypto", () => {
 
   describe("checkRequiredArguments", () => {
     it("error if less than required", async () => {
-      await assert.rejects(subtle.digest.apply(subtle, ["test"]));
+      await assert.rejects(subtle.digest.apply(subtle, ["test"] as unknown as [AlgorithmIdentifier, BufferSource]), TypeError);
     });
 
     it("no error if greater than required", async () => {

@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { Convert } from "pvtsutils";
+import * as encoding from "@peculiar/utils/encoding";
 import { AsnSerializer, AsnParser } from "@peculiar/asn1-schema";
 import { EcDsaSignature } from "../../src/asn1";
 
@@ -55,9 +55,9 @@ describe("ASN1", () => {
     describe("From WebCrypto to DER", () => {
       vectors.forEach((vector) => {
         it(vector.name, () => {
-          const value = EcDsaSignature.fromWebCryptoSignature(Convert.FromHex(vector.webCrypto));
+          const value = EcDsaSignature.fromWebCryptoSignature(encoding.hex.decode(vector.webCrypto));
           const der = AsnSerializer.serialize(value);
-          assert.strictEqual(Convert.ToHex(der), vector.asn1);
+          assert.strictEqual(encoding.hex.encode(der), vector.asn1);
         });
       });
     });
@@ -65,9 +65,9 @@ describe("ASN1", () => {
     describe("From DER to WebCrypto", () => {
       vectors.forEach((vector) => {
         it(vector.name, () => {
-          const value = AsnParser.parse(Convert.FromHex(vector.asn1), EcDsaSignature);
+          const value = AsnParser.parse(encoding.hex.decode(vector.asn1), EcDsaSignature);
           const signature = value.toWebCryptoSignature();
-          assert.strictEqual(Convert.ToHex(signature), vector.webCrypto);
+          assert.strictEqual(encoding.hex.encode(signature), vector.webCrypto);
         });
       });
     });

@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import { AsnConvert } from "@peculiar/asn1-schema";
 import { JsonSerializer } from "@peculiar/json-schema";
-import { Convert } from "pvtsutils";
+import * as encoding from "@peculiar/utils/encoding";
 import {
   CurvePrivateKey, idX25519, idX448, PrivateKeyInfo, PublicKeyInfo,
 } from "../../src/asn1";
@@ -21,11 +21,11 @@ describe("EdDSA and ECDH-ES keys", () => {
 
   it("Public key", () => {
     const b64 = "MCowBQYDK2VuAyEAR-a_Z6rz2HuBXn7m7v_pjef6nHfCWSIObVWCTr5nxjg";
-    const raw = Convert.FromBase64Url(b64);
+    const raw = encoding.base64url.decode(b64);
 
     const spki = AsnConvert.parse(raw, PublicKeyInfo);
     assert.strictEqual(spki.publicKeyAlgorithm.algorithm, idX25519);
 
-    assert.strictEqual(Convert.ToBase64Url(spki.publicKey), "R-a_Z6rz2HuBXn7m7v_pjef6nHfCWSIObVWCTr5nxjg");
+    assert.strictEqual(encoding.base64url.encode(spki.publicKey), "R-a_Z6rz2HuBXn7m7v_pjef6nHfCWSIObVWCTr5nxjg");
   });
 });
