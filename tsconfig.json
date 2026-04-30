@@ -3,11 +3,15 @@
     "target": "es2022",
     "module": "esnext",
     "moduleResolution": "bundler",
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
+    "stripInternal": true,
     "skipLibCheck": true,
     "removeComments": true,
     "importHelpers": true,
     "types": [
-      "node",
       "vitest/globals",
     ],
     "strict": true,
