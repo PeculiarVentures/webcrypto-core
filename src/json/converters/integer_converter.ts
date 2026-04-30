@@ -1,5 +1,5 @@
 import { IAsnConverter } from "@peculiar/asn1-schema";
-import { combine } from "pvtsutils";
+import * as bytes from "@peculiar/utils/bytes";
 import * as asn1 from "asn1js";
 
 export const AsnIntegerArrayBufferConverter: IAsnConverter<ArrayBuffer> = {
@@ -11,7 +11,7 @@ export const AsnIntegerArrayBufferConverter: IAsnConverter<ArrayBuffer> = {
   },
   toASN: (value: ArrayBuffer) => {
     const valueHex = new Uint8Array(value)[0] > 127
-      ? combine(new Uint8Array([0]).buffer, value)
+      ? bytes.concat(new Uint8Array([0]).buffer, value)
       : value;
     return new asn1.Integer({ valueHex } as any);
   },

@@ -1,7 +1,6 @@
 import { KeyUsages } from "./types";
 
-export interface KeyAlgorithm extends Algorithm {
-}
+export type KeyAlgorithm = Algorithm;
 
 const KEY_TYPES = ["secret", "private", "public"];
 
@@ -26,7 +25,5 @@ export class CryptoKey implements globalThis.CryptoKey {
   public extractable!: boolean;
 
   // @internal
-  public get [Symbol.toStringTag](): string {
-    return "CryptoKey";
-  }
+  public readonly [Symbol.toStringTag] = "CryptoKey";
 }

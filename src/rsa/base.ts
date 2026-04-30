@@ -1,11 +1,11 @@
-import { Convert } from "pvtsutils";
+import * as encoding from "@peculiar/utils/encoding";
 import { CryptoKey } from "../crypto_key";
 import { ProviderCrypto } from "../provider";
 
 export abstract class RsaProvider extends ProviderCrypto {
   public hashAlgorithms = ["SHA-1", "SHA-256", "SHA-384", "SHA-512"];
 
-  public checkGenerateKeyParams(algorithm: RsaHashedKeyGenParams): void {
+  public override checkGenerateKeyParams(algorithm: RsaHashedKeyGenParams): void {
     // hash
     this.checkRequiredProperty(algorithm, "hash");
     this.checkHashAlgorithm(algorithm.hash as Algorithm, this.hashAlgorithms);
@@ -15,7 +15,7 @@ export abstract class RsaProvider extends ProviderCrypto {
     if (!(algorithm.publicExponent && algorithm.publicExponent instanceof Uint8Array)) {
       throw new TypeError("publicExponent: Missing or not a Uint8Array");
     }
-    const publicExponent = Convert.ToBase64(algorithm.publicExponent);
+    const publicExponent = encoding.base64url.encode(algorithm.publicExponent);
     if (!(publicExponent === "Aw==" || publicExponent === "AQAB")) {
       throw new TypeError("publicExponent: Must be [3] or [1,0,1]");
     }
@@ -29,12 +29,19 @@ export abstract class RsaProvider extends ProviderCrypto {
     }
   }
 
-  public checkImportParams(algorithm: RsaHashedImportParams): void {
+  public override checkImportParams(algorithm: RsaHashedImportParams): void {
     this.checkRequiredProperty(algorithm, "hash");
     this.checkHashAlgorithm(algorithm.hash as Algorithm, this.hashAlgorithms);
   }
 
-  public abstract onGenerateKey(algorithm: RsaHashedKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKeyPair>;
-  public abstract onExportKey(format: KeyFormat, key: CryptoKey, ...args: any[]): Promise<JsonWebKey | ArrayBuffer>;
-  public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: RsaHashedImportParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
+  public abstract override onGenerateKey(algorithm: RsaHashedKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKeyPair>;
+  public abstract override onExportKey(format: KeyFormat, key: CryptoKey, ...args: any[]): Promise<JsonWebKey | ArrayBuffer>;
+  public abstract override onImportKey(
+    format: KeyFormat,
+    keyData: JsonWebKey | ArrayBuffer,
+    algorithm: RsaHashedImportParams,
+    extractable: boolean,
+    keyUsages: KeyUsage[],
+    ...args: any[]
+  ): Promise<CryptoKey>;
 }

@@ -9,9 +9,9 @@ export abstract class X25519Provider extends ProviderCrypto {
     publicKey: [],
   };
 
-  public checkAlgorithmParams(algorithm: EcdhKeyDeriveParams): void {
+  public override checkAlgorithmParams(algorithm: EcdhKeyDeriveParams): void {
     this.checkRequiredProperty(algorithm, "public");
   }
 
-  public abstract onDeriveBits(algorithm: EcdhKeyDeriveParams, baseKey: CryptoKey, length: number): Promise<ArrayBuffer>;
+  public abstract override onDeriveBits(algorithm: EcdhKeyDeriveParams, baseKey: CryptoKey, length: number): Promise<ArrayBuffer>;
 }

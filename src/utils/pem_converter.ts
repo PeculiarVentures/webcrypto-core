@@ -1,4 +1,5 @@
-import { Convert } from "pvtsutils";
+import * as bytes from "@peculiar/utils/bytes";
+import * as encoding from "@peculiar/utils/encoding";
 
 /**
  * PEM converter
@@ -13,7 +14,7 @@ export class PemConverter {
       .replace(/-{5}(BEGIN|END) .*-{5}/g, "")
       .replace("\r", "")
       .replace("\n", "");
-    return Convert.FromBase64(base64);
+    return bytes.toArrayBuffer(encoding.base64.decode(base64));
   }
 
   /**
@@ -31,7 +32,7 @@ export class PemConverter {
    * @param tag PEM tag name
    */
   public static fromBufferSource(buffer: BufferSource, tag: string): string {
-    const base64 = Convert.ToBase64(buffer);
+    const base64 = encoding.base64.encode(buffer);
     let sliced: string;
     let offset = 0;
     const rows: string[] = [];

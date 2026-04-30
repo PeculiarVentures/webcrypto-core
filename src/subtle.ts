@@ -1,4 +1,5 @@
-import { BufferSourceConverter, Convert } from "pvtsutils";
+import * as bytes from "@peculiar/utils/bytes";
+import * as encoding from "@peculiar/utils/encoding";
 import { AlgorithmError } from "./errors";
 import { ProviderCrypto } from "./provider";
 import { ProviderStorage } from "./storage";
@@ -26,9 +27,7 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
   public providers = new ProviderStorage();
 
   // @internal
-  public get [Symbol.toStringTag](): string {
-    return "SubtleCrypto";
-  }
+  public readonly [Symbol.toStringTag] = "SubtleCrypto";
 
   public async digest(algorithm: AlgorithmIdentifier, data: BufferSource, ...args: any[]): Promise<ArrayBuffer>;
   public async digest(...args: any[]): Promise<ArrayBuffer> {
@@ -36,7 +35,7 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     const [algorithm, data, ...params] = args;
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
-    const preparedData = BufferSourceConverter.toArrayBuffer(data);
+    const preparedData = bytes.toArrayBuffer(data);
 
     const provider = this.getProvider(preparedAlgorithm.name);
     const result = await provider.digest(preparedAlgorithm, preparedData, ...params);
@@ -44,6 +43,7 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     return result;
   }
 
+  public async generateKey(algorithm: "X25519", extractable: boolean, keyUsages: readonly ("deriveBits" | "deriveKey")[], ...args: any[]): Promise<CryptoKeyPair>;
   public async generateKey(algorithm: "Ed25519", extractable: boolean, keyUsages: readonly ("sign" | "verify")[], ...args: any[]): Promise<CryptoKeyPair>;
   public async generateKey(algorithm: RsaHashedKeyGenParams | EcKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<globalThis.CryptoKeyPair>;
   public async generateKey(algorithm: AesKeyGenParams | HmacKeyGenParams | Pbkdf2Params, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<globalThis.CryptoKey>;
@@ -69,7 +69,7 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     this.checkCryptoKey(key);
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
-    const preparedData = BufferSourceConverter.toArrayBuffer(data);
+    const preparedData = bytes.toArrayBuffer(data);
 
     const provider = this.getProvider(preparedAlgorithm.name);
     const result = await provider.sign({
@@ -86,8 +86,8 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     this.checkCryptoKey(key);
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
-    const preparedData = BufferSourceConverter.toArrayBuffer(data);
-    const preparedSignature = BufferSourceConverter.toArrayBuffer(signature);
+    const preparedData = bytes.toArrayBuffer(data);
+    const preparedSignature = bytes.toArrayBuffer(signature);
 
     const provider = this.getProvider(preparedAlgorithm.name);
     const result = await provider.verify({
@@ -104,7 +104,7 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     this.checkCryptoKey(key);
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
-    const preparedData = BufferSourceConverter.toArrayBuffer(data);
+    const preparedData = bytes.toArrayBuffer(data);
 
     const provider = this.getProvider(preparedAlgorithm.name);
     const result = await provider.encrypt({
@@ -121,7 +121,7 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     this.checkCryptoKey(key);
 
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
-    const preparedData = BufferSourceConverter.toArrayBuffer(data);
+    const preparedData = bytes.toArrayBuffer(data);
 
     const provider = this.getProvider(preparedAlgorithm.name);
     const result = await provider.decrypt({
@@ -208,7 +208,7 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
         throw new TypeError("Key data must be an object for JWK import");
       }
     } else if (sourceBufferKeyFormats.includes(format)) {
-      if (!BufferSourceConverter.isBufferSource(keyData)) {
+      if (!bytes.isBufferSource(keyData)) {
         throw new TypeError("Key data must be a BufferSource for non-JWK formats");
       }
     } else {
@@ -224,12 +224,12 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     let keyData = await this.exportKey(format, key, ...args);
     if (format === "jwk") {
       const json = JSON.stringify(keyData);
-      keyData = Convert.FromUtf8String(json);
+      keyData = bytes.toArrayBuffer(encoding.utf8.encode(json));
     }
 
     // encrypt key data
     const preparedAlgorithm = this.prepareAlgorithm(wrapAlgorithm);
-    const preparedData = BufferSourceConverter.toArrayBuffer(keyData as ArrayBuffer);
+    const preparedData = bytes.toArrayBuffer(keyData as ArrayBuffer);
     const provider = this.getProvider(preparedAlgorithm.name);
     return provider.encrypt({
       ...preparedAlgorithm, name: provider.name,
@@ -247,14 +247,14 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     ...args: any[]): Promise<globalThis.CryptoKey> {
     // decrypt wrapped key
     const preparedAlgorithm = this.prepareAlgorithm(unwrapAlgorithm);
-    const preparedData = BufferSourceConverter.toArrayBuffer(wrappedKey);
+    const preparedData = bytes.toArrayBuffer(wrappedKey);
     const provider = this.getProvider(preparedAlgorithm.name);
     let keyData = await provider.decrypt({
       ...preparedAlgorithm, name: provider.name,
     }, unwrappingKey, preparedData, { keyUsage: false }, ...args);
     if (format === "jwk") {
       try {
-        keyData = JSON.parse(Convert.ToUtf8String(keyData));
+        keyData = JSON.parse(encoding.utf8.decode(keyData));
       } catch (e) {
         const error = new TypeError("wrappedKey: Is not a JSON");
         (error as any).internal = e;

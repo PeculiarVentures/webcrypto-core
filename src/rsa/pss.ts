@@ -9,7 +9,7 @@ export abstract class RsaPssProvider extends RsaProvider {
     publicKey: ["verify"],
   };
 
-  public checkAlgorithmParams(algorithm: RsaPssParams): void {
+  public override checkAlgorithmParams(algorithm: RsaPssParams): void {
     this.checkRequiredProperty(algorithm, "saltLength");
     if (typeof algorithm.saltLength !== "number") {
       throw new TypeError("saltLength: Is not a Number");
@@ -19,6 +19,6 @@ export abstract class RsaPssProvider extends RsaProvider {
     }
   }
 
-  public abstract onSign(algorithm: RsaPssParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
-  public abstract onVerify(algorithm: RsaPssParams, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer, ...args: any[]): Promise<boolean>;
+  public abstract override onSign(algorithm: RsaPssParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
+  public abstract override onVerify(algorithm: RsaPssParams, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer, ...args: any[]): Promise<boolean>;
 }

@@ -1,4 +1,4 @@
-import { BufferSourceConverter } from "pvtsutils";
+import * as bytes from "@peculiar/utils/bytes";
 import { CryptoKey } from "../crypto_key";
 import { ProviderCrypto } from "../provider";
 import { KeyUsages } from "../types";
@@ -8,25 +8,25 @@ export abstract class HkdfProvider extends ProviderCrypto {
   public hashAlgorithms = ["SHA-1", "SHA-256", "SHA-384", "SHA-512"];
   public usages: KeyUsages = ["deriveKey", "deriveBits"];
 
-  public checkAlgorithmParams(algorithm: HkdfParams): void {
+  public override checkAlgorithmParams(algorithm: HkdfParams): void {
     // hash
     this.checkRequiredProperty(algorithm, "hash");
     this.checkHashAlgorithm(algorithm.hash as Algorithm, this.hashAlgorithms);
 
     // salt
     this.checkRequiredProperty(algorithm, "salt");
-    if (!BufferSourceConverter.isBufferSource(algorithm.salt)) {
+    if (!bytes.isBufferSource(algorithm.salt)) {
       throw new TypeError("salt: Is not of type '(ArrayBuffer or ArrayBufferView)'");
     }
 
     // info
     this.checkRequiredProperty(algorithm, "info");
-    if (!BufferSourceConverter.isBufferSource(algorithm.info)) {
-      throw new TypeError("salt: Is not of type '(ArrayBuffer or ArrayBufferView)'");
+    if (!bytes.isBufferSource(algorithm.info)) {
+      throw new TypeError("info: Is not of type '(ArrayBuffer or ArrayBufferView)'");
     }
   }
 
-  public checkImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): void {
+  public override checkImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): void {
     super.checkImportKey(format, keyData, algorithm, extractable, keyUsages, ...args);
     if (extractable) {
       // If extractable is not false, then throw a SyntaxError
@@ -34,6 +34,6 @@ export abstract class HkdfProvider extends ProviderCrypto {
     }
   }
 
-  public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
-  public abstract onDeriveBits(algorithm: HkdfParams, baseKey: CryptoKey, length: number, ...args: any[]): Promise<ArrayBuffer>;
+  public abstract override onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
+  public abstract override onDeriveBits(algorithm: HkdfParams, baseKey: CryptoKey, length: number, ...args: any[]): Promise<ArrayBuffer>;
 }

@@ -2,7 +2,8 @@ import {
   AsnIntegerConverter, AsnProp, AsnPropTypes, AsnSerializer,
 } from "@peculiar/asn1-schema";
 import { IJsonConvertible } from "@peculiar/json-schema";
-import { Convert } from "pvtsutils";
+import * as encoding from "@peculiar/utils/encoding";
+import * as bytes from "@peculiar/utils/bytes";
 import { EcPublicKey } from "./ec_public_key";
 
 // RFC 5915
@@ -38,7 +39,7 @@ export class EcPrivateKey implements IJsonConvertible {
     if (!("d" in json)) {
       throw new Error("d: Missing required property");
     }
-    this.privateKey = Convert.FromBase64Url(json.d);
+    this.privateKey = bytes.toArrayBuffer(encoding.base64url.decode(json.d));
 
     if ("x" in json) {
       const publicKey = new EcPublicKey();
@@ -55,7 +56,7 @@ export class EcPrivateKey implements IJsonConvertible {
 
   public toJSON(): JsonWebKey {
     const jwk: JsonWebKey = {};
-    jwk.d = Convert.ToBase64Url(this.privateKey);
+    jwk.d = encoding.base64url.encode(this.privateKey);
     if (this.publicKey) {
       Object.assign(jwk, new EcPublicKey(this.publicKey).toJSON());
     }

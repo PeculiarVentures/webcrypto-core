@@ -9,7 +9,7 @@ export abstract class RsaOaepProvider extends RsaProvider {
     publicKey: ["encrypt", "wrapKey"],
   };
 
-  public checkAlgorithmParams(algorithm: RsaOaepParams): void {
+  public override checkAlgorithmParams(algorithm: RsaOaepParams): void {
     // label
     if (algorithm.label
       && !(algorithm.label instanceof ArrayBuffer || ArrayBuffer.isView(algorithm.label))) {
@@ -17,6 +17,6 @@ export abstract class RsaOaepProvider extends RsaProvider {
     }
   }
 
-  public abstract onEncrypt(algorithm: RsaOaepParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
-  public abstract onDecrypt(algorithm: RsaOaepParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
+  public abstract override onEncrypt(algorithm: RsaOaepParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
+  public abstract override onDecrypt(algorithm: RsaOaepParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
 }

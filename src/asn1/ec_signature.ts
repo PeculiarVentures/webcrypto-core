@@ -1,5 +1,6 @@
 import { AsnProp, AsnPropTypes } from "@peculiar/asn1-schema";
-import { BufferSourceConverter, BufferSource } from "pvtsutils";
+import type { BufferSourceLike } from "@peculiar/utils/bytes";
+import * as bytes from "@peculiar/utils/bytes";
 import { EcUtils } from "../ec/utils";
 import { AsnIntegerWithoutPaddingConverter } from "./converters";
 
@@ -17,13 +18,13 @@ export class EcDsaSignature {
    * @param value X9.62 signature
    * @returns EcDsaSignature
    */
-  public static fromWebCryptoSignature(value: BufferSource): EcDsaSignature {
+  public static fromWebCryptoSignature(value: BufferSourceLike): EcDsaSignature {
     const pointSize = value.byteLength / 2;
 
     const point = EcUtils.decodeSignature(value, pointSize * 8);
     const ecSignature = new EcDsaSignature();
-    ecSignature.r = BufferSourceConverter.toArrayBuffer(point.r);
-    ecSignature.s = BufferSourceConverter.toArrayBuffer(point.s);
+    ecSignature.r = bytes.toArrayBuffer(point.r);
+    ecSignature.s = bytes.toArrayBuffer(point.s);
 
     return ecSignature;
   }
@@ -57,6 +58,6 @@ export class EcDsaSignature {
 
     const signature = EcUtils.encodeSignature(this, pointSize);
 
-    return signature.buffer;
+    return bytes.toArrayBuffer(signature);
   }
 }

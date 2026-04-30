@@ -7,7 +7,7 @@ export abstract class AesGcmProvider extends AesProvider {
 
   public usages: KeyUsages = ["encrypt", "decrypt", "wrapKey", "unwrapKey"];
 
-  public checkAlgorithmParams(algorithm: AesGcmParams): void {
+  public override checkAlgorithmParams(algorithm: AesGcmParams): void {
     // iv
     this.checkRequiredProperty(algorithm, "iv");
     if (!(algorithm.iv instanceof ArrayBuffer || ArrayBuffer.isView(algorithm.iv))) {
@@ -33,6 +33,6 @@ export abstract class AesGcmProvider extends AesProvider {
     }
   }
 
-  public abstract onEncrypt(algorithm: AesGcmParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
-  public abstract onDecrypt(algorithm: AesGcmParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
+  public abstract override onEncrypt(algorithm: AesGcmParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
+  public abstract override onDecrypt(algorithm: AesGcmParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
 }

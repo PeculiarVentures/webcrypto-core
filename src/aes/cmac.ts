@@ -11,7 +11,7 @@ export abstract class AesCmacProvider extends AesProvider {
 
   public usages: KeyUsages = ["sign", "verify"];
 
-  public checkAlgorithmParams(algorithm: AesCmacParams): void {
+  public override checkAlgorithmParams(algorithm: AesCmacParams): void {
     this.checkRequiredProperty(algorithm, "length");
     if (typeof algorithm.length !== "number") {
       throw new TypeError("length: Is not a Number");
@@ -21,6 +21,6 @@ export abstract class AesCmacProvider extends AesProvider {
     }
   }
 
-  public abstract onSign(algorithm: AesCmacParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
-  public abstract onVerify(algorithm: AesCmacParams, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer, ...args: any[]): Promise<boolean>;
+  public abstract override onSign(algorithm: AesCmacParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
+  public abstract override onVerify(algorithm: AesCmacParams, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer, ...args: any[]): Promise<boolean>;
 }

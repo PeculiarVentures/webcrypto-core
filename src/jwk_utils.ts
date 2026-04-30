@@ -1,4 +1,5 @@
-import { Convert } from "pvtsutils";
+import * as encoding from "@peculiar/utils/encoding";
+import * as bytes from "@peculiar/utils/bytes";
 
 const REQUIRED_FIELDS = ["crv", "e", "k", "kty", "n", "x", "y"];
 
@@ -6,7 +7,7 @@ export class JwkUtils {
   public static async thumbprint(hash: AlgorithmIdentifier, jwk: JsonWebKey, crypto: Crypto): Promise<ArrayBuffer> {
     const data = this.format(jwk, true);
 
-    return crypto.subtle.digest(hash, Convert.FromBinary(JSON.stringify(data)));
+    return crypto.subtle.digest(hash, bytes.toArrayBuffer(encoding.binary.decode(JSON.stringify(data))));
   }
 
   public static format(jwk: JsonWebKey, remove = false): JsonWebKey {

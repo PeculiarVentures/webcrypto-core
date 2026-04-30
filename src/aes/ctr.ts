@@ -7,7 +7,7 @@ export abstract class AesCtrProvider extends AesProvider {
 
   public usages: KeyUsages = ["encrypt", "decrypt", "wrapKey", "unwrapKey"];
 
-  public checkAlgorithmParams(algorithm: AesCtrParams): void {
+  public override checkAlgorithmParams(algorithm: AesCtrParams): void {
     // counter
     this.checkRequiredProperty(algorithm, "counter");
     if (!(algorithm.counter instanceof ArrayBuffer || ArrayBuffer.isView(algorithm.counter))) {
@@ -26,6 +26,6 @@ export abstract class AesCtrProvider extends AesProvider {
     }
   }
 
-  public abstract onEncrypt(algorithm: AesCtrParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
-  public abstract onDecrypt(algorithm: AesCtrParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
+  public abstract override onEncrypt(algorithm: AesCtrParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
+  public abstract override onDecrypt(algorithm: AesCtrParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
 }

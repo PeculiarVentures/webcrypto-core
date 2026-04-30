@@ -2,7 +2,8 @@ import {
   AsnProp, AsnPropTypes, AsnType, AsnTypeTypes,
 } from "@peculiar/asn1-schema";
 import { IJsonConvertible } from "@peculiar/json-schema";
-import { combine, Convert } from "pvtsutils";
+import * as bytes from "@peculiar/utils/bytes";
+import * as encoding from "@peculiar/utils/encoding";
 import { CryptoError } from "../errors";
 
 // RFC 5480
@@ -33,8 +34,8 @@ export class EcPublicKey implements IJsonConvertible {
 
     const offset = 0;
     const json = {
-      x: Convert.ToBase64Url(bytes.buffer.slice(offset, offset + size)),
-      y: Convert.ToBase64Url(bytes.buffer.slice(offset + size, offset + size + size)),
+      x: encoding.base64url.encode(bytes.buffer.slice(offset, offset + size)),
+      y: encoding.base64url.encode(bytes.buffer.slice(offset + size, offset + size + size)),
     };
 
     return json;
@@ -48,16 +49,16 @@ export class EcPublicKey implements IJsonConvertible {
       throw new Error("y: Missing required property");
     }
 
-    const x = Convert.FromBase64Url(json.x);
-    const y = Convert.FromBase64Url(json.y);
+    const x = encoding.base64url.decode(json.x);
+    const y = encoding.base64url.decode(json.y);
 
-    const value = combine(
+    const value = bytes.concat(
       new Uint8Array([0x04]).buffer, // uncompressed bit
       x,
       y,
     );
 
-    this.value = new Uint8Array(value).buffer;
+    this.value = bytes.toArrayBuffer(value);
 
     return this;
   }
