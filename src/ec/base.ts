@@ -3,10 +3,9 @@ import { CryptoKey } from "../crypto_key";
 import { ProviderCrypto } from "../provider";
 
 export abstract class EllipticProvider extends ProviderCrypto {
-
   public abstract namedCurves: string[];
 
-  public checkGenerateKeyParams(algorithm: EcKeyGenParams): void {
+  public override checkGenerateKeyParams(algorithm: EcKeyGenParams): void {
     // named curve
     this.checkRequiredProperty(algorithm, "namedCurve");
     this.checkNamedCurve(algorithm.namedCurve);
@@ -21,8 +20,14 @@ export abstract class EllipticProvider extends ProviderCrypto {
     throw new OperationError(`namedCurve: Must be one of ${this.namedCurves.join(", ")}`);
   }
 
-  public abstract onGenerateKey(algorithm: EcKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKeyPair>;
-  public abstract onExportKey(format: KeyFormat, key: CryptoKey, ...args: any[]): Promise<JsonWebKey | ArrayBuffer>;
-  public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: EcKeyImportParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
-
+  public abstract override onGenerateKey(algorithm: EcKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKeyPair>;
+  public abstract override onExportKey(format: KeyFormat, key: CryptoKey, ...args: any[]): Promise<JsonWebKey | ArrayBuffer>;
+  public abstract override onImportKey(
+    format: KeyFormat,
+    keyData: JsonWebKey | ArrayBuffer,
+    algorithm: EcKeyImportParams,
+    extractable: boolean,
+    keyUsages: KeyUsage[],
+    ...args: any[]
+  ): Promise<CryptoKey>;
 }

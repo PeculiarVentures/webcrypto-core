@@ -1,37 +1,50 @@
-import path from "path";
-import url from "url";
-import typescript from "rollup-plugin-typescript2";
-import dts from "rollup-plugin-dts";
-import pkg from "./package.json" assert { type: "json" };
+import path from "node:path";
+import url from "node:url";
+import typescript from "@rollup/plugin-typescript";
+import { dts } from "rollup-plugin-dts";
+import pkg from "./package.json" with { type: "json" };
 
 const __filename = url.fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const startYear = 2019;
+const currentYear = new Date().getFullYear();
+
+const year
+  = startYear === currentYear
+    ? `${startYear}`
+    : `${startYear}-${currentYear}`;
 
 const banner = [
-  "/*!",
-  " Copyright (c) Peculiar Ventures, LLC",
-  "*/",
+  "/**",
+  ` * Copyright (c) ${year}, Peculiar Ventures`,
+  " * SPDX-License-Identifier: MIT",
+  " */",
   "",
 ].join("\n");
 const input = "src/index.ts";
-const external = Object.keys(pkg.dependencies || {});
+const externalDeps = new Set([
+  "node:crypto",
+  "node:process",
+  "node:buffer",
+  ...Object.keys(pkg.dependencies || {}),
+]);
+
+const external = (id) => {
+  return [...externalDeps].some((dep) => {
+    return id === dep || id.startsWith(`${dep}/`);
+  });
+};
 
 export default [
   {
     input,
     plugins: [
       typescript({
-        check: true,
-        clean: true,
-        tsconfigOverride: {
-          compilerOptions: {
-            module: "ES2015",
-            removeComments: true,
-          }
-        }
+        tsconfig: "./tsconfig.json",
+        compilerOptions: { module: "ES2015" },
       }),
     ],
-    external: [...external],
+    external,
     output: [
       {
         banner,
@@ -47,17 +60,15 @@ export default [
   },
   {
     input,
-    external: [...external],
+    external,
     plugins: [
-      dts({
-        tsconfig: path.resolve(__dirname, "./tsconfig.json")
-      })
+      dts({ tsconfig: path.resolve(__dirname, "./tsconfig.json") }),
     ],
     output: [
       {
         banner,
         file: pkg.types,
-      }
-    ]
+      },
+    ],
   },
 ];

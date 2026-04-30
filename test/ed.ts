@@ -1,34 +1,35 @@
+import assert from "node:assert";
 import { AsnConvert, AsnSerializer } from "@peculiar/asn1-schema";
-import * as assert from "assert";
-import { Convert } from "pvtsutils";
-import { EdPrivateKey, EdPublicKey, OneAsymmetricKey, PublicKeyInfo } from "../src/asn1";
-import { CryptoKey, Ed25519Provider, X25519Provider } from "../src";
+import * as encoding from "@peculiar/utils/encoding";
+import {
+  EdPrivateKey, EdPublicKey, OneAsymmetricKey, PublicKeyInfo,
+} from "../src/asn1";
+import {
+  CryptoKey, Ed25519Provider, X25519Provider,
+} from "../src";
 
-context("ED", () => {
-
-  context("asn", () => {
-
+describe("ED", () => {
+  describe("asn", () => {
     it("spki - jwk", () => {
       const pem = "MCowBQYDK2VwAyEAGb9ECWmEzf6FQbrBZ9w7lshQhqowtrbLDFw4rXAxZuE=";
 
-      const keyInfo = AsnConvert.parse(Convert.FromBase64(pem), PublicKeyInfo);
+      const keyInfo = AsnConvert.parse(encoding.base64.decode(pem), PublicKeyInfo);
       const key = new EdPublicKey(keyInfo.publicKey);
       const jwk = key.toJSON();
 
       const key2 = new EdPublicKey();
       key2.fromJSON(jwk);
       assert.strictEqual(
-        Convert.ToBase64(AsnSerializer.serialize(key2)),
-        Convert.ToBase64(AsnSerializer.serialize(key)),
+        encoding.base64.encode(AsnSerializer.serialize(key2)),
+        encoding.base64.encode(AsnSerializer.serialize(key)),
       );
     });
 
-    context("pkcs8 -jwk", () => {
-
+    describe("pkcs8 -jwk", () => {
       it("without public key", () => {
         const pem = "MC4CAQAwBQYDK2VwBCIEINTuctv5E1hK1bbY8fdp+K06/nwoy/HU++CXqI9EdVhC";
 
-        const keyInfo = AsnConvert.parse(Convert.FromBase64(pem), OneAsymmetricKey);
+        const keyInfo = AsnConvert.parse(encoding.base64.decode(pem), OneAsymmetricKey);
         assert.strictEqual(keyInfo.publicKey, undefined);
         const key = AsnConvert.parse(keyInfo.privateKey, EdPrivateKey);
         const jwk = key.toJSON();
@@ -36,15 +37,15 @@ context("ED", () => {
         const key2 = new EdPrivateKey();
         key2.fromJSON(jwk);
         assert.strictEqual(
-          Convert.ToBase64(AsnSerializer.serialize(key2)),
-          Convert.ToBase64(AsnSerializer.serialize(key)),
+          encoding.base64.encode(AsnSerializer.serialize(key2)),
+          encoding.base64.encode(AsnSerializer.serialize(key)),
         );
       });
 
       it("with public key", () => {
         const pem = "MHICAQEwBQYDK2VwBCIEINTuctv5E1hK1bbY8fdp+K06/nwoy/HU++CXqI9EdVhCoB8wHQYKKoZIhvcNAQkJFDEPDA1DdXJkbGUgQ2hhaXJzgSEAGb9ECWmEzf6FQbrBZ9w7lshQhqowtrbLDFw4rXAxZuE=";
 
-        const keyInfo = AsnConvert.parse(Convert.FromBase64(pem), OneAsymmetricKey);
+        const keyInfo = AsnConvert.parse(encoding.base64.decode(pem), OneAsymmetricKey);
         assert.ok(keyInfo.publicKey);
         const key = AsnConvert.parse(keyInfo.privateKey, EdPrivateKey);
         const jwk = key.toJSON();
@@ -52,18 +53,16 @@ context("ED", () => {
         const key2 = new EdPrivateKey();
         key2.fromJSON(jwk);
         assert.strictEqual(
-          Convert.ToBase64(AsnSerializer.serialize(key2)),
-          Convert.ToBase64(AsnSerializer.serialize(key)),
+          encoding.base64.encode(AsnSerializer.serialize(key2)),
+          encoding.base64.encode(AsnSerializer.serialize(key)),
         );
       });
-
     });
-
   });
 
-  context("Ed25519", () => {
+  describe("Ed25519", () => {
     class TestEd25519Provider extends Ed25519Provider {
-      public override async onGenerateKey(algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[], ..._args: any[]): Promise<CryptoKeyPair> {
+      public override async onGenerateKey(_algorithm: Algorithm, extractable: boolean, _keyUsages: KeyUsage[], ..._args: any[]): Promise<CryptoKeyPair> {
         const privateKey = new CryptoKey();
         privateKey.algorithm = { name: "Ed25519" };
         privateKey.type = "private";
@@ -82,21 +81,20 @@ context("ED", () => {
         };
       }
 
-      public async onSign(algorithm: Algorithm, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer> {
+      public async onSign(_algorithm: Algorithm, _key: CryptoKey, _data: ArrayBuffer, ..._args: any[]): Promise<ArrayBuffer> {
         return new ArrayBuffer(64);
       }
-      public async onVerify(algorithm: Algorithm, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer, ...args: any[]): Promise<boolean> {
+
+      public async onVerify(_algorithm: Algorithm, _key: CryptoKey, _signature: ArrayBuffer, _data: ArrayBuffer, ..._args: any[]): Promise<boolean> {
         return true;
       }
     }
 
     const provider = new TestEd25519Provider();
 
-    context("generateKey", () => {
+    describe("generateKey", () => {
       it("should generate key pair", async () => {
-        const keys = await provider.generateKey({
-          name: "Ed25519",
-        }, true, ["sign", "verify"]);
+        const keys = await provider.generateKey({ name: "Ed25519" }, true, ["sign", "verify"]);
         assert.ok("privateKey" in keys);
         assert.ok("publicKey" in keys);
         assert.strictEqual(keys.privateKey.algorithm.name, "Ed25519");
@@ -109,71 +107,43 @@ context("ED", () => {
         assert.deepStrictEqual(keys.publicKey.usages, ["verify"]);
       });
       it("should throw error when algorithm is not correct", async () => {
-        await assert.rejects(provider.generateKey({
-          name: "RSASSA-PKCS1-v1_5",
-        }, true, ["sign", "verify"]), {
-          message: "Unrecognized name",
-        });
+        await assert.rejects(provider.generateKey({ name: "RSASSA-PKCS1-v1_5" }, true, ["sign", "verify"]), { message: "Unrecognized name" });
       });
       it("should throw error when keyUsages is not correct", async () => {
-        await assert.rejects(provider.generateKey({
-          name: "Ed25519",
-        }, true, ["encrypt", "decrypt"]), {
-          message: "Cannot create a key using the specified key usages",
-        });
+        await assert.rejects(provider.generateKey({ name: "Ed25519" }, true, ["encrypt", "decrypt"]), { message: "Cannot create a key using the specified key usages" });
       });
     });
-    context("sign", () => {
+    describe("sign", () => {
       it("should sign data", async () => {
-        const keys = await provider.generateKey({
-          name: "Ed25519",
-        }, true, ["sign", "verify"]);
+        const keys = await provider.generateKey({ name: "Ed25519" }, true, ["sign", "verify"]);
         assert.ok("privateKey" in keys);
-        const signature = await provider.sign({
-          name: "Ed25519",
-        }, keys.privateKey, new ArrayBuffer(32));
+        await provider.sign({ name: "Ed25519" }, keys.privateKey, new ArrayBuffer(32));
       });
       it("should throw error when algorithm is not correct", async () => {
-        const keys = await provider.generateKey({
-          name: "Ed25519",
-        }, true, ["sign", "verify"]);
+        const keys = await provider.generateKey({ name: "Ed25519" }, true, ["sign", "verify"]);
         assert.ok("privateKey" in keys);
-        await assert.rejects(provider.sign({
-          name: "RSASSA-PKCS1-v1_5",
-        }, keys.privateKey, new ArrayBuffer(32)), {
-          message: "Unrecognized name",
-        });
+        await assert.rejects(provider.sign({ name: "RSASSA-PKCS1-v1_5" }, keys.privateKey, new ArrayBuffer(32)), { message: "Unrecognized name" });
       });
     });
-    context("verify", () => {
+    describe("verify", () => {
       it("should verify signature", async () => {
-        const keys = await provider.generateKey({
-          name: "Ed25519",
-        }, true, ["sign", "verify"]);
+        const keys = await provider.generateKey({ name: "Ed25519" }, true, ["sign", "verify"]);
         assert.ok("privateKey" in keys);
         const signature = new ArrayBuffer(64);
-        const res = await provider.verify({
-          name: "Ed25519",
-        }, keys.publicKey, signature, new ArrayBuffer(32));
+        const res = await provider.verify({ name: "Ed25519" }, keys.publicKey, signature, new ArrayBuffer(32));
         assert.strictEqual(res, true);
       });
       it("should throw error when algorithm is not correct", async () => {
-        const keys = await provider.generateKey({
-          name: "Ed25519",
-        }, true, ["sign", "verify"]);
+        const keys = await provider.generateKey({ name: "Ed25519" }, true, ["sign", "verify"]);
         assert.ok("privateKey" in keys);
         const signature = new ArrayBuffer(64);
-        await assert.rejects(provider.verify({
-          name: "RSASSA-PKCS1-v1_5",
-        }, keys.publicKey, signature, new ArrayBuffer(32)), {
-          message: "Unrecognized name",
-        });
+        await assert.rejects(provider.verify({ name: "RSASSA-PKCS1-v1_5" }, keys.publicKey, signature, new ArrayBuffer(32)), { message: "Unrecognized name" });
       });
     });
   });
-  context("X25519", () => {
+  describe("X25519", () => {
     class TestX25519Provider extends X25519Provider {
-      public override async onGenerateKey(algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[], ..._args: any[]): Promise<CryptoKeyPair> {
+      public override async onGenerateKey(_algorithm: Algorithm, extractable: boolean, _keyUsages: KeyUsage[], ..._args: any[]): Promise<CryptoKeyPair> {
         const privateKey = new CryptoKey();
         privateKey.algorithm = { name: "X25519" };
         privateKey.type = "private";
@@ -192,21 +162,20 @@ context("ED", () => {
         };
       }
 
-      public async onDeriveKey(algorithm: Algorithm, baseKey: CryptoKey, derivedKeyType: Algorithm, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey> {
+      public async onDeriveKey(_algorithm: Algorithm, _baseKey: CryptoKey, _derivedKeyType: Algorithm, _extractable: boolean, _keyUsages: KeyUsage[]): Promise<CryptoKey> {
         return new CryptoKey();
       }
-      public async onDeriveBits(algorithm: Algorithm, baseKey: CryptoKey, length: number): Promise<ArrayBuffer> {
+
+      public async onDeriveBits(_algorithm: Algorithm, _baseKey: CryptoKey, _length: number): Promise<ArrayBuffer> {
         return new ArrayBuffer(32);
       }
     }
 
     const provider = new TestX25519Provider();
 
-    context("generateKey", () => {
+    describe("generateKey", () => {
       it("should generate key pair", async () => {
-        const keys = await provider.generateKey({
-          name: "X25519",
-        }, true, ["deriveKey", "deriveBits"]);
+        const keys = await provider.generateKey({ name: "X25519" }, true, ["deriveKey", "deriveBits"]);
         assert.ok("privateKey" in keys);
         assert.ok("publicKey" in keys);
         assert.strictEqual(keys.privateKey.algorithm.name, "X25519");
@@ -219,41 +188,25 @@ context("ED", () => {
         assert.deepStrictEqual(keys.publicKey.usages, []);
       });
       it("should throw error when algorithm is not correct", async () => {
-        await assert.rejects(provider.generateKey({
-          name: "RSASSA-PKCS1-v1_5",
-        }, true, ["deriveKey", "deriveBits"]), {
-          message: "Unrecognized name",
-        });
+        await assert.rejects(provider.generateKey({ name: "RSASSA-PKCS1-v1_5" }, true, ["deriveKey", "deriveBits"]), { message: "Unrecognized name" });
       });
       it("should throw error when keyUsages is not correct", async () => {
-        await assert.rejects(provider.generateKey({
-          name: "X25519",
-        }, true, ["encrypt", "decrypt"]), {
-          message: "Cannot create a key using the specified key usages",
-        });
+        await assert.rejects(provider.generateKey({ name: "X25519" }, true, ["encrypt", "decrypt"]), { message: "Cannot create a key using the specified key usages" });
       });
     });
-    context("deriveBits", () => {
+    describe("deriveBits", () => {
       it("should derive bits", async () => {
-        const keys = await provider.generateKey({
-          name: "X25519",
-        }, true, ["deriveKey", "deriveBits"]);
+        const keys = await provider.generateKey({ name: "X25519" }, true, ["deriveKey", "deriveBits"]);
         assert.ok("privateKey" in keys);
-        const bits = await provider.deriveBits({
+        await provider.deriveBits({
           name: "X25519",
           public: keys.publicKey,
         } as EcdhKeyDeriveParams, keys.privateKey, 32);
       });
       it("should throw error when algorithm is not correct", async () => {
-        const keys = await provider.generateKey({
-          name: "X25519",
-        }, true, ["deriveKey", "deriveBits"]);
+        const keys = await provider.generateKey({ name: "X25519" }, true, ["deriveKey", "deriveBits"]);
         assert.ok("privateKey" in keys);
-        await assert.rejects(provider.deriveBits({
-          name: "RSASSA-PKCS1-v1_5",
-        } as EcdhKeyDeriveParams, keys.privateKey, 32), {
-          message: "Unrecognized name",
-        });
+        await assert.rejects(provider.deriveBits({ name: "RSASSA-PKCS1-v1_5" } as EcdhKeyDeriveParams, keys.privateKey, 32), { message: "Unrecognized name" });
       });
     });
   });

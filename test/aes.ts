@@ -1,17 +1,14 @@
-import assert from "assert";
-import { AesCbcProvider, AesCmacProvider, AesCtrProvider, AesGcmProvider } from "../src/aes";
+import assert from "node:assert";
+import {
+  AesCbcProvider, AesCmacProvider, AesCtrProvider, AesGcmProvider,
+} from "../src/aes";
 import { OperationError } from "../src/errors";
 
-// tslint:disable:max-classes-per-file
-
-context("AES", () => {
-
-  context("AES-CBC", () => {
-
+describe("AES", () => {
+  describe("AES-CBC", () => {
     const provider = Reflect.construct(AesCbcProvider, []) as AesCbcProvider;
 
-    context("checkGenerateKeyParams", () => {
-
+    describe("checkGenerateKeyParams", () => {
       it("error if `length` is not present", () => {
         assert.throws(() => {
           provider.checkGenerateKeyParams({ name: "AES-CBC" } as any);
@@ -20,32 +17,34 @@ context("AES", () => {
 
       it("error if `length` has wrong type", () => {
         assert.throws(() => {
-          provider.checkGenerateKeyParams({ name: "AES-CBC", length: "s" } as any);
+          provider.checkGenerateKeyParams({
+            name: "AES-CBC", length: "s",
+          } as any);
         }, TypeError);
       });
 
       it("error if `length` has wrong value", () => {
         assert.throws(() => {
-          provider.checkGenerateKeyParams({ name: "AES-CBC", length: 1 } as any);
+          provider.checkGenerateKeyParams({
+            name: "AES-CBC", length: 1,
+          } as any);
         }, TypeError);
       });
 
       [128, 192, 256].forEach((length) => {
         it(`correct length:${length}`, () => {
-          provider.checkGenerateKeyParams({ name: "AES-CBC", length } as any);
+          provider.checkGenerateKeyParams({
+            name: "AES-CBC", length,
+          } as any);
         });
       });
-
     });
-
   });
 
-  context("AES-CBC", () => {
-
+  describe("AES-CBC", () => {
     const provider = Reflect.construct(AesCbcProvider, []) as AesCbcProvider;
 
-    context("checkAlgorithmParams", () => {
-
+    describe("checkAlgorithmParams", () => {
       it("error if parameter `iv` is not present", () => {
         assert.throws(() => {
           provider.checkAlgorithmParams({} as any);
@@ -54,36 +53,26 @@ context("AES", () => {
 
       it("error if parameter `iv` has wrong type", () => {
         assert.throws(() => {
-          provider.checkAlgorithmParams({
-            iv: "wrong type",
-          } as any);
+          provider.checkAlgorithmParams({ iv: "wrong type" } as any);
         }, TypeError);
       });
 
       it("error if parameter `iv` has wrong length", () => {
         assert.throws(() => {
-          provider.checkAlgorithmParams({
-            iv: new Uint8Array(20),
-          } as any);
+          provider.checkAlgorithmParams({ iv: new Uint8Array(20) } as any);
         }, TypeError);
       });
 
       it("correct parameter `iv`", () => {
-        provider.checkAlgorithmParams({
-          iv: new Uint8Array(16),
-        } as any);
+        provider.checkAlgorithmParams({ iv: new Uint8Array(16) } as any);
       });
-
     });
-
   });
 
-  context("AES-CMAC", () => {
-
+  describe("AES-CMAC", () => {
     const provider = Reflect.construct(AesCmacProvider, []) as AesCmacProvider;
 
-    context("checkAlgorithmParams", () => {
-
+    describe("checkAlgorithmParams", () => {
       it("error if parameter `length` is not present", () => {
         assert.throws(() => {
           provider.checkAlgorithmParams({} as any);
@@ -92,41 +81,29 @@ context("AES", () => {
 
       it("error if parameter `length` has wrong type", () => {
         assert.throws(() => {
-          provider.checkAlgorithmParams({
-            length: "128",
-          } as any);
+          provider.checkAlgorithmParams({ length: "128" } as any);
         }, TypeError);
       });
 
       it("error if parameter `length` less than 1", () => {
         assert.throws(() => {
-          provider.checkAlgorithmParams({
-            length: 0,
-          } as any);
+          provider.checkAlgorithmParams({ length: 0 } as any);
         }, OperationError);
       });
 
       it("correct parameter `length`", () => {
-        provider.checkAlgorithmParams({
-          length: 1,
-        } as any);
+        provider.checkAlgorithmParams({ length: 1 } as any);
       });
-
     });
-
   });
 
-  context("AES-CTR", () => {
-
+  describe("AES-CTR", () => {
     const provider = Reflect.construct(AesCtrProvider, []) as AesCtrProvider;
 
-    context("checkAlgorithmParams", () => {
-
+    describe("checkAlgorithmParams", () => {
       it("error if parameter `counter` is not present", () => {
         assert.throws(() => {
-          provider.checkAlgorithmParams({
-            length: 1,
-          } as any);
+          provider.checkAlgorithmParams({ length: 1 } as any);
         }, Error);
       });
 
@@ -164,9 +141,7 @@ context("AES", () => {
 
       it("error if parameter `length` is not present", () => {
         assert.throws(() => {
-          provider.checkAlgorithmParams({
-            counter: new Uint8Array(16),
-          } as any);
+          provider.checkAlgorithmParams({ counter: new Uint8Array(16) } as any);
         }, Error);
       });
 
@@ -194,17 +169,13 @@ context("AES", () => {
           length: 1,
         } as any);
       });
-
     });
-
   });
 
-  context("AES-GCM", () => {
-
+  describe("AES-GCM", () => {
     const provider = Reflect.construct(AesGcmProvider, []) as AesGcmProvider;
 
-    context("checkAlgorithmParams", () => {
-
+    describe("checkAlgorithmParams", () => {
       it("error if parameter `iv` is not present", () => {
         assert.throws(() => {
           provider.checkAlgorithmParams({} as any);
@@ -213,24 +184,18 @@ context("AES", () => {
 
       it("error if parameter `iv` has wrong type", () => {
         assert.throws(() => {
-          provider.checkAlgorithmParams({
-            iv: "wrong type",
-          } as any);
+          provider.checkAlgorithmParams({ iv: "wrong type" } as any);
         }, TypeError);
       });
 
       it("error if parameter `iv` has wrong length", () => {
         assert.throws(() => {
-          provider.checkAlgorithmParams({
-            iv: new Uint8Array(0),
-          } as any);
+          provider.checkAlgorithmParams({ iv: new Uint8Array(0) } as any);
         }, OperationError);
       });
 
       it("correct parameter `iv`", () => {
-        provider.checkAlgorithmParams({
-          iv: new ArrayBuffer(1),
-        } as any);
+        provider.checkAlgorithmParams({ iv: new ArrayBuffer(1) } as any);
       });
 
       it("error if parameter `tagLength` has wrong value", () => {
@@ -250,9 +215,6 @@ context("AES", () => {
           } as any);
         });
       });
-
     });
-
   });
-
 });

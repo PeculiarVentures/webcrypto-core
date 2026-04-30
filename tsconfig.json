@@ -1,16 +1,26 @@
 {
   "compilerOptions": {
-    "target": "ES2019",
-    "module": "CommonJS",
-    "moduleResolution": "node",
+    "target": "es2022",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "lib": [
+      "ES2022",
+      "DOM"
+    ],
     "stripInternal": true,
+    "skipLibCheck": true,
+    "removeComments": true,
     "importHelpers": true,
+    "types": [
+      "vitest/globals",
+    ],
     "strict": true,
-    "strictBindCallApply": false,
     "esModuleInterop": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "noImplicitOverride": true
   },
   "exclude": [
-    "build/**/*.d.ts",
+    "build/**/*",
+    "index.d.ts"
   ]
 }

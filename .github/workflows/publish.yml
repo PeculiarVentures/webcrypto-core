@@ -1,103 +1,87 @@
-name: publish
+name: Release
 
 on:
-  pull_request:
-    branches:
-      - master
-    types: [closed]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release type"
+        required: true
+        default: "patch"
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
 
-env:
-  CI: true
-  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+permissions:
+  contents: write
+  id-token: write
 
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Pull Request Merged
-        if: github.event.pull_request.merged == false
-        run: |
-          echo 'The pull request has not been merged'
-          exit 1
+    environment: npm
 
-      - uses: actions/checkout@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - name: Set git config
-        run: |
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-
-      - name: Use Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
         with:
-          node-version: 20.x
-          registry-url: "https://registry.npmjs.org"
-
-      - name: Setup .npmrc
-        shell: bash
-        run: |
-          npm set //registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-
-      - name: Ensure access
-        shell: bash
-        run: npm whoami --registry https://registry.npmjs.org/
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-
-      - name: Install global dependencies
-        run: npm i yarn standard-version -g
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+          cache: npm
 
       - name: Install dependencies
-        run: yarn
+        run: npm ci
 
-      - name: Get Prev Version
-        shell: bash -ex {0}
-        run: |
-          PREV_VERSION=$(node -p 'require("./package.json").version')
-          echo "::set-env name=PREV_VERSION::${PREV_VERSION}"
+      - name: Test
+        run: npm test
 
-      - name: Bump version
-        run: |
-          standard-version
+      - name: Build
+        run: npm run build
 
-      - name: Get Current Version
-        shell: bash -ex {0}
-        run: |
-          CURRENT_VERSION=$(node -p 'require("./package.json").version')
-          echo "::set-env name=CURRENT_VERSION::${CURRENT_VERSION}"
+      - name: Validate package contents
+        run: npm pack --dry-run
 
-      - name: Publish
-        if: env.PREV_VERSION != env.CURRENT_VERSION
+      - name: Configure git
         run: |
-          npm run build
-          npm publish
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump version and create local tag
+        id: version
+        run: |
+          npm version "${{ inputs.version }}" -m "chore(release): v%s"
+
+          VERSION=$(node -p "require('./package.json').version")
+          MAJOR=$(node -p "require('./package.json').version.split('.')[0]")
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "release_tag=v$VERSION" >> "$GITHUB_OUTPUT"
+          echo "major_tag=v$MAJOR" >> "$GITHUB_OUTPUT"
+
+      - name: Publish to npm via Trusted Publisher
+        run: npm publish --access public
+
+      - name: Push commit and tag
+        run: |
+          git push origin HEAD:${{ github.event.repository.default_branch }}
+          git push origin "${{ steps.version.outputs.release_tag }}"
+
+      - name: Update major tag
+        run: |
+          git tag -f "${{ steps.version.outputs.major_tag }}" "${{ steps.version.outputs.release_tag }}"
+          git push origin "${{ steps.version.outputs.major_tag }}" --force
+
+      - name: Create GitHub Release
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-
-      - name: Push changes
-        uses: ad-m/github-push-action@v0.8.0
-        if: env.PREV_VERSION != env.CURRENT_VERSION
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ github.ref }}
-          tags: true
-
-      - name: Create comment
-        uses: actions/github-script@v7
-        if: env.PREV_VERSION != env.CURRENT_VERSION
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: 'NPM package v${{ env.CURRENT_VERSION }} has been published 🎉'
-            })
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ steps.version.outputs.release_tag }}" \
+            --verify-tag \
+            --title "${{ steps.version.outputs.release_tag }}" \
+            --generate-notes

@@ -11,13 +11,19 @@ import { AsnIntegerArrayBufferConverter, JsonBase64UrlArrayBufferConverter } fro
 // }
 
 export class RsaPublicKey {
-
-  @AsnProp({ type: AsnPropTypes.Integer, converter: AsnIntegerArrayBufferConverter })
-  @JsonProp({ name: "n", converter: JsonBase64UrlArrayBufferConverter })
+  @AsnProp({
+    type: AsnPropTypes.Integer, converter: AsnIntegerArrayBufferConverter,
+  })
+  @JsonProp({
+    name: "n", converter: JsonBase64UrlArrayBufferConverter,
+  })
   public modulus = new ArrayBuffer(0);
 
-  @AsnProp({ type: AsnPropTypes.Integer, converter: AsnIntegerArrayBufferConverter })
-  @JsonProp({ name: "e", converter: JsonBase64UrlArrayBufferConverter })
+  @AsnProp({
+    type: AsnPropTypes.Integer, converter: AsnIntegerArrayBufferConverter,
+  })
+  @JsonProp({
+    name: "e", converter: JsonBase64UrlArrayBufferConverter,
+  })
   public publicExponent = new ArrayBuffer(0);
-
 }

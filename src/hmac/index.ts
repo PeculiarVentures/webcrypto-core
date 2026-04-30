@@ -3,7 +3,6 @@ import { ProviderCrypto } from "../provider";
 import { KeyUsages } from "../types";
 
 export abstract class HmacProvider extends ProviderCrypto {
-
   public name = "HMAC";
 
   public hashAlgorithms = ["SHA-1", "SHA-256", "SHA-384", "SHA-512"];
@@ -27,7 +26,7 @@ export abstract class HmacProvider extends ProviderCrypto {
     }
   }
 
-  public checkGenerateKeyParams(algorithm: HmacKeyGenParams): void {
+  public override checkGenerateKeyParams(algorithm: HmacKeyGenParams): void {
     // hash
     this.checkRequiredProperty(algorithm, "hash");
     this.checkHashAlgorithm(algorithm.hash as Algorithm, this.hashAlgorithms);
@@ -43,14 +42,20 @@ export abstract class HmacProvider extends ProviderCrypto {
     }
   }
 
-  public checkImportParams(algorithm: HmacImportParams): void {
+  public override checkImportParams(algorithm: HmacImportParams): void {
     // hash
     this.checkRequiredProperty(algorithm, "hash");
     this.checkHashAlgorithm(algorithm.hash as Algorithm, this.hashAlgorithms);
   }
 
-  public abstract onGenerateKey(algorithm: HmacKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
-  public abstract onExportKey(format: KeyFormat, key: CryptoKey, ...args: any[]): Promise<JsonWebKey | ArrayBuffer>;
-  public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: HmacImportParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
-
+  public abstract override onGenerateKey(algorithm: HmacKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
+  public abstract override onExportKey(format: KeyFormat, key: CryptoKey, ...args: any[]): Promise<JsonWebKey | ArrayBuffer>;
+  public abstract override onImportKey(
+    format: KeyFormat,
+    keyData: JsonWebKey | ArrayBuffer,
+    algorithm: HmacImportParams,
+    extractable: boolean,
+    keyUsages: KeyUsage[],
+    ...args: any[]
+  ): Promise<CryptoKey>;
 }

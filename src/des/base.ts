@@ -19,16 +19,15 @@ export interface DesDerivedKeyParams extends Algorithm {
   length: number;
 }
 
-export interface DesImportParams extends Algorithm { }
+export type DesImportParams = Algorithm;
 
 export abstract class DesProvider extends ProviderCrypto {
-
   public usages: KeyUsages = ["encrypt", "decrypt", "wrapKey", "unwrapKey"];
 
   public abstract keySizeBits: number;
   public abstract ivSize: number;
 
-  public checkAlgorithmParams(algorithm: AesCbcParams): void {
+  public override checkAlgorithmParams(algorithm: AesCbcParams): void {
     if (this.ivSize) {
       this.checkRequiredProperty(algorithm, "iv");
       if (!(algorithm.iv instanceof ArrayBuffer || ArrayBuffer.isView(algorithm.iv))) {
@@ -40,7 +39,7 @@ export abstract class DesProvider extends ProviderCrypto {
     }
   }
 
-  public checkGenerateKeyParams(algorithm: DesKeyGenParams): void {
+  public override checkGenerateKeyParams(algorithm: DesKeyGenParams): void {
     // length
     this.checkRequiredProperty(algorithm, "length");
     if (typeof algorithm.length !== "number") {
@@ -51,14 +50,20 @@ export abstract class DesProvider extends ProviderCrypto {
     }
   }
 
-  public checkDerivedKeyParams(algorithm: DesDerivedKeyParams): void {
+  public override checkDerivedKeyParams(algorithm: DesDerivedKeyParams): void {
     this.checkGenerateKeyParams(algorithm);
   }
 
-  public abstract onGenerateKey(algorithm: DesKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
-  public abstract onExportKey(format: KeyFormat, key: CryptoKey, ...args: any[]): Promise<JsonWebKey | ArrayBuffer>;
-  public abstract onImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: DesImportParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
-  public abstract onEncrypt(algorithm: DesParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
-  public abstract onDecrypt(algorithm: DesParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
-
+  public abstract override onGenerateKey(algorithm: DesKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
+  public abstract override onExportKey(format: KeyFormat, key: CryptoKey, ...args: any[]): Promise<JsonWebKey | ArrayBuffer>;
+  public abstract override onImportKey(
+    format: KeyFormat,
+    keyData: JsonWebKey | ArrayBuffer,
+    algorithm: DesImportParams,
+    extractable: boolean,
+    keyUsages: KeyUsage[],
+    ...args: any[]
+  ): Promise<CryptoKey>;
+  public abstract override onEncrypt(algorithm: DesParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
+  public abstract override onDecrypt(algorithm: DesParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
 }

@@ -1,4 +1,4 @@
-import { Convert } from "pvtsutils";
+import * as encoding from "@peculiar/utils/encoding";
 import { SubtleCrypto } from "./subtle";
 
 export abstract class Crypto implements globalThis.Crypto {
@@ -9,9 +9,7 @@ export abstract class Crypto implements globalThis.Crypto {
   public abstract readonly subtle: SubtleCrypto;
 
   // @internal
-  public get [Symbol.toStringTag](): string {
-    return "Crypto";
-  }
+  public readonly [Symbol.toStringTag] = "Crypto";
 
   /**
    * Generates cryptographically random values
@@ -33,10 +31,9 @@ export abstract class Crypto implements globalThis.Crypto {
     b[8] = (b[8] & 0x3f) | 0x80;
 
     // Lowercasing the result after converting each element in hexadecimal format
-    const uuid = Convert.ToHex(b).toLowerCase();
+    const uuid = encoding.hex.encode(b, { case: "lower" });
 
     // Return the string created by extracting substrings from the given result
     return `${uuid.substring(0, 8)}-${uuid.substring(8, 12)}-${uuid.substring(12, 16)}-${uuid.substring(16, 20)}-${uuid.substring(20)}`;
-
   }
 }

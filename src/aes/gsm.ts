@@ -3,12 +3,11 @@ import { KeyUsages } from "../types";
 import { AesProvider } from "./base";
 
 export abstract class AesGcmProvider extends AesProvider {
-
   public readonly name = "AES-GCM";
 
   public usages: KeyUsages = ["encrypt", "decrypt", "wrapKey", "unwrapKey"];
 
-  public checkAlgorithmParams(algorithm: AesGcmParams): void {
+  public override checkAlgorithmParams(algorithm: AesGcmParams): void {
     // iv
     this.checkRequiredProperty(algorithm, "iv");
     if (!(algorithm.iv instanceof ArrayBuffer || ArrayBuffer.isView(algorithm.iv))) {
@@ -18,7 +17,7 @@ export abstract class AesGcmProvider extends AesProvider {
       throw new OperationError("iv: Must have length more than 0 and less than 2^64 - 1");
     }
     // tagLength
-    algorithm.tagLength ??= 128;    
+    algorithm.tagLength ??= 128;
 
     switch (algorithm.tagLength) {
       case 32:
@@ -34,7 +33,6 @@ export abstract class AesGcmProvider extends AesProvider {
     }
   }
 
-  public abstract onEncrypt(algorithm: AesGcmParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
-  public abstract onDecrypt(algorithm: AesGcmParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
-
+  public abstract override onEncrypt(algorithm: AesGcmParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
+  public abstract override onDecrypt(algorithm: AesGcmParams, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
 }

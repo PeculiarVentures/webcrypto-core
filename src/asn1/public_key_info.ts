@@ -9,11 +9,9 @@ import { AlgorithmIdentifier } from "./algorithm_identifier";
 //   subjectPublicKey     BIT STRING
 
 export class PublicKeyInfo {
-
   @AsnProp({ type: AlgorithmIdentifier })
   public publicKeyAlgorithm = new AlgorithmIdentifier();
 
   @AsnProp({ type: AsnPropTypes.BitString })
   public publicKey = new ArrayBuffer(0);
-
 }

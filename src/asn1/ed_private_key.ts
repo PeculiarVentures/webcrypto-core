@@ -1,10 +1,12 @@
-import { AsnProp, AsnPropTypes, AsnType, AsnTypeTypes } from "@peculiar/asn1-schema";
+import {
+  AsnProp, AsnPropTypes, AsnType, AsnTypeTypes,
+} from "@peculiar/asn1-schema";
 import { IJsonConvertible } from "@peculiar/json-schema";
-import { Convert } from "pvtsutils";
+import * as encoding from "@peculiar/utils/encoding";
+import * as bytes from "@peculiar/utils/bytes";
 
 @AsnType({ type: AsnTypeTypes.Choice })
 export class EdPrivateKey implements IJsonConvertible {
-
   @AsnProp({ type: AsnPropTypes.OctetString })
   public value = new ArrayBuffer(0);
 
@@ -12,14 +14,13 @@ export class EdPrivateKey implements IJsonConvertible {
     if (!json.d) {
       throw new Error("d: Missing required property");
     }
-    this.value = Convert.FromBase64Url(json.d);
+    this.value = bytes.toArrayBuffer(encoding.base64url.decode(json.d));
 
     return this;
   }
+
   public toJSON(): JsonWebKey {
-    const jwk: JsonWebKey = {
-      d: Convert.ToBase64Url(this.value),
-    };
+    const jwk: JsonWebKey = { d: encoding.base64url.encode(this.value) };
 
     return jwk;
   }

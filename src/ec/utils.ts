@@ -1,17 +1,17 @@
-import { BufferSource, BufferSourceConverter } from "pvtsutils";
+import type { BufferSourceLike, StrictBufferSource } from "@peculiar/utils/bytes";
+import * as bytes from "@peculiar/utils/bytes";
 
 interface EcPoint {
-  x: BufferSource;
-  y: BufferSource;
+  x: StrictBufferSource;
+  y: StrictBufferSource;
 }
 
 interface EcSignaturePoint {
-  r: BufferSource;
-  s: BufferSource;
+  r: StrictBufferSource;
+  s: StrictBufferSource;
 }
 
 export class EcUtils {
-
   /**
    * Decodes ANSI X9.62 encoded point
    * @note Used by SunPKCS11 and SunJSSE
@@ -19,8 +19,8 @@ export class EcUtils {
    * @param pointSize Size of the point in bits
    * @returns Decoded point with x and y coordinates
    */
-  public static decodePoint(data: BufferSource, pointSize: number): EcPoint {
-    const view = BufferSourceConverter.toUint8Array(data);
+  public static decodePoint(data: BufferSourceLike, pointSize: number): EcPoint {
+    const view = bytes.toUint8Array(data);
     if ((view.length === 0) || (view[0] !== 4)) {
       throw new Error("Only uncompressed point format supported");
     }
@@ -34,7 +34,9 @@ export class EcUtils {
     const xb = view.slice(1, n + 1);
     const yb = view.slice(n + 1, n + 1 + n);
 
-    return { x: xb, y: yb };
+    return {
+      x: xb, y: yb,
+    };
   }
 
   /**
@@ -52,8 +54,8 @@ export class EcUtils {
       throw new Error("X,Y coordinates don't match point size criteria");
     }
 
-    const x = BufferSourceConverter.toUint8Array(point.x);
-    const y = BufferSourceConverter.toUint8Array(point.y);
+    const x = bytes.toUint8Array(point.x);
+    const y = bytes.toUint8Array(point.y);
     const res = new Uint8Array(size * 2 + 1);
     res[0] = 4;
     res.set(x, 1);
@@ -68,8 +70,8 @@ export class EcUtils {
 
   public static encodeSignature(signature: EcSignaturePoint, pointSize: number): Uint8Array {
     const size = this.getSize(pointSize);
-    const r = BufferSourceConverter.toUint8Array(signature.r);
-    const s = BufferSourceConverter.toUint8Array(signature.s);
+    const r = bytes.toUint8Array(signature.r);
+    const s = bytes.toUint8Array(signature.s);
 
     const res = new Uint8Array(size * 2);
 
@@ -79,9 +81,9 @@ export class EcUtils {
     return res;
   }
 
-  public static decodeSignature(data: BufferSource, pointSize: number): EcSignaturePoint {
+  public static decodeSignature(data: BufferSourceLike, pointSize: number): EcSignaturePoint {
     const size = this.getSize(pointSize);
-    const view = BufferSourceConverter.toUint8Array(data);
+    const view = bytes.toUint8Array(data);
     if (view.length !== (size * 2)) {
       throw new Error("Incorrect size of the signature");
     }
@@ -90,9 +92,9 @@ export class EcUtils {
     const s = view.slice(size);
 
     return {
-      r: this.trimStart(r),
-      s: this.trimStart(s),
-    }
+      r: bytes.toArrayBuffer(this.trimStart(r)),
+      s: bytes.toArrayBuffer(this.trimStart(s)),
+    };
   }
 
   public static trimStart(data: Uint8Array): Uint8Array {
@@ -113,9 +115,8 @@ export class EcUtils {
     }
 
     const res = new Uint8Array(size);
-    res.set(data, size - data.length)
+    res.set(data, size - data.length);
 
     return res;
   }
-
 }

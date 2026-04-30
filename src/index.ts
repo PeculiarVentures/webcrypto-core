@@ -14,8 +14,10 @@ export * from "./storage";
 export * from "./subtle";
 export * from "./crypto_key";
 export * from "./utils";
-export { BufferSourceConverter } from "pvtsutils";
+export { BufferSourceConverter } from "@peculiar/utils/legacy";
 export * from "./types";
-export * as asn1 from "./asn1";
-export * as json from "./json";
+import * as asn1 from "./asn1";
+import * as json from "./json";
+
+export { asn1, json };
 export * from "./jwk_utils";

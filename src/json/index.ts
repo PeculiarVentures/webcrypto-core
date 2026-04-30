@@ -1,1 +1,3 @@
-export * as converters from "./converters";
+import * as converters from "./converters";
+
+export { converters };

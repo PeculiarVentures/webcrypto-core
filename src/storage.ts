@@ -1,7 +1,7 @@
 import { ProviderCrypto } from "./provider";
 
 export class ProviderStorage {
-  private items: { [algorithmName: string]: ProviderCrypto; } = {};
+  private items: Record<string, ProviderCrypto> = {};
 
   public get(algorithmName: string): ProviderCrypto | null {
     return this.items[algorithmName.toLowerCase()] || null;
@@ -14,6 +14,7 @@ export class ProviderStorage {
   public removeAt(algorithmName: string): ProviderCrypto | null {
     const provider = this.get(algorithmName.toLowerCase());
     if (provider) {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete this.items[algorithmName];
     }
     return provider;
@@ -35,5 +36,4 @@ export class ProviderStorage {
     }
     return algorithms.sort();
   }
-
 }

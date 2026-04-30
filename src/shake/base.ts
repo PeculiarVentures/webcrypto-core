@@ -8,15 +8,16 @@ export interface ShakeParams extends Algorithm {
 }
 
 export abstract class ShakeProvider extends ProviderCrypto {
-
   public usages = [];
   public defaultLength = 0;
 
   public override digest(algorithm: Algorithm, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
   public override digest(...args: any[]): Promise<ArrayBuffer> {
-    args[0] = { length: this.defaultLength, ...args[0] };
+    args[0] = {
+      length: this.defaultLength, ...args[0],
+    };
 
-    return super.digest.apply(this, args);
+    return super.digest.apply(this, args as [Algorithm, ArrayBuffer, ...any[]]);
   }
 
   public override checkDigest(algorithm: ShakeParams, data: ArrayBuffer): void {
@@ -31,6 +32,5 @@ export abstract class ShakeProvider extends ProviderCrypto {
     }
   }
 
-  public abstract onDigest(algorithm: Required<ShakeParams>, data: ArrayBuffer): Promise<ArrayBuffer>;
-
+  public abstract override onDigest(algorithm: Required<ShakeParams>, data: ArrayBuffer): Promise<ArrayBuffer>;
 }

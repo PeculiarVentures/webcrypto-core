@@ -1,6 +1,9 @@
-import { AsnProp, AsnPropTypes, AsnType, AsnTypeTypes } from "@peculiar/asn1-schema";
+import {
+  AsnProp, AsnPropTypes, AsnType, AsnTypeTypes,
+} from "@peculiar/asn1-schema";
 import { IJsonConvertible } from "@peculiar/json-schema";
-import { Convert } from "pvtsutils";
+import * as encoding from "@peculiar/utils/encoding";
+import * as bytes from "@peculiar/utils/bytes";
 
 // RFC 8410
 // https://datatracker.ietf.org/doc/html/rfc8410
@@ -9,7 +12,6 @@ import { Convert } from "pvtsutils";
 
 @AsnType({ type: AsnTypeTypes.Choice })
 export class EdPublicKey implements IJsonConvertible {
-
   @AsnProp({ type: AsnPropTypes.BitString })
   public value = new ArrayBuffer(0);
 
@@ -20,9 +22,7 @@ export class EdPublicKey implements IJsonConvertible {
   }
 
   public toJSON(): JsonWebKey {
-    const json: JsonWebKey = {
-      x: Convert.ToBase64Url(this.value),
-    };
+    const json: JsonWebKey = { x: encoding.base64url.encode(this.value) };
 
     return json;
   }
@@ -32,9 +32,8 @@ export class EdPublicKey implements IJsonConvertible {
       throw new Error("x: Missing required property");
     }
 
-    this.value = Convert.FromBase64Url(json.x);
+    this.value = bytes.toArrayBuffer(encoding.base64url.decode(json.x));
 
     return this;
   }
-
 }

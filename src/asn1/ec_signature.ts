@@ -1,5 +1,7 @@
 import { AsnProp, AsnPropTypes } from "@peculiar/asn1-schema";
-import { BufferSourceConverter, BufferSource } from "pvtsutils";
+import type { BufferSourceLike } from "@peculiar/utils/bytes";
+import * as bytes from "@peculiar/utils/bytes";
+import { EcUtils } from "../ec/utils";
 import { AsnIntegerWithoutPaddingConverter } from "./converters";
 
 // RFC 3279
@@ -11,27 +13,30 @@ import { AsnIntegerWithoutPaddingConverter } from "./converters";
 // }
 
 export class EcDsaSignature {
-
   /**
    * Create EcDsaSignature from X9.62 signature
    * @param value X9.62 signature
    * @returns EcDsaSignature
    */
-  public static fromWebCryptoSignature(value: BufferSource): EcDsaSignature {
+  public static fromWebCryptoSignature(value: BufferSourceLike): EcDsaSignature {
     const pointSize = value.byteLength / 2;
 
     const point = EcUtils.decodeSignature(value, pointSize * 8);
     const ecSignature = new EcDsaSignature();
-    ecSignature.r = BufferSourceConverter.toArrayBuffer(point.r);
-    ecSignature.s = BufferSourceConverter.toArrayBuffer(point.s);
+    ecSignature.r = bytes.toArrayBuffer(point.r);
+    ecSignature.s = bytes.toArrayBuffer(point.s);
 
     return ecSignature;
   }
 
-  @AsnProp({ type: AsnPropTypes.Integer, converter: AsnIntegerWithoutPaddingConverter })
+  @AsnProp({
+    type: AsnPropTypes.Integer, converter: AsnIntegerWithoutPaddingConverter,
+  })
   public r = new ArrayBuffer(0);
 
-  @AsnProp({ type: AsnPropTypes.Integer, converter: AsnIntegerWithoutPaddingConverter })
+  @AsnProp({
+    type: AsnPropTypes.Integer, converter: AsnIntegerWithoutPaddingConverter,
+  })
   public s = new ArrayBuffer(0);
 
   /**
@@ -53,9 +58,6 @@ export class EcDsaSignature {
 
     const signature = EcUtils.encodeSignature(this, pointSize);
 
-    return signature.buffer;
+    return bytes.toArrayBuffer(signature);
   }
-
 }
-
-import { EcUtils } from "../ec/utils";

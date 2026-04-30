@@ -1,9 +1,8 @@
-import assert from "assert";
+import assert from "node:assert";
 import { CryptoKey } from "../src/crypto_key";
 
-context("CryptoKey", () => {
-
-  context("isKeyType", () => {
+describe("CryptoKey", () => {
+  describe("isKeyType", () => {
     it("correct key type", () => {
       assert.equal(CryptoKey.isKeyType("secret"), true);
     });
@@ -11,5 +10,4 @@ context("CryptoKey", () => {
       assert.equal(CryptoKey.isKeyType("Secret"), false);
     });
   });
-
 });

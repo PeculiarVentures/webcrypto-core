@@ -19,7 +19,6 @@ import { AlgorithmIdentifier } from "./algorithm_identifier";
 // Attributes ::= SET OF Attribute
 
 export class PrivateKeyInfo {
-
   @AsnProp({ type: AsnPropTypes.Integer })
   public version = 0;
 
@@ -29,7 +28,8 @@ export class PrivateKeyInfo {
   @AsnProp({ type: AsnPropTypes.OctetString })
   public privateKey = new ArrayBuffer(0);
 
-  @AsnProp({ type: AsnPropTypes.Any, optional: true })
+  @AsnProp({
+    type: AsnPropTypes.Any, optional: true,
+  })
   public attributes?: ArrayBuffer;
-
 }

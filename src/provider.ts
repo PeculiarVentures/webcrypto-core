@@ -1,6 +1,8 @@
 /* eslint-disable prefer-spread */
-import { BufferSourceConverter } from "pvtsutils";
-import { AlgorithmError, CryptoError, OperationError, RequiredPropertyError, UnsupportedOperationError } from "./errors";
+import * as bytes from "@peculiar/utils/bytes";
+import {
+  AlgorithmError, CryptoError, OperationError, RequiredPropertyError, UnsupportedOperationError,
+} from "./errors";
 import { KeyUsages, ProviderKeyUsages } from "./types";
 import { isJWK } from "./utils";
 
@@ -9,7 +11,6 @@ export interface IProviderCheckOptions {
 }
 
 export abstract class ProviderCrypto {
-
   /**
    * Name of the algorithm
    */
@@ -20,34 +21,37 @@ export abstract class ProviderCrypto {
    */
   public abstract readonly usages: ProviderKeyUsages;
 
-  //#region Digest
+  // #region Digest
   public async digest(algorithm: Algorithm, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
   public async digest(...args: any[]): Promise<ArrayBuffer> {
-    this.checkDigest.apply(this, args);
-    return this.onDigest.apply(this, args);
+    this.checkDigest.apply(this, args as [Algorithm, ArrayBuffer]);
+    return this.onDigest.apply(this, args as [Algorithm, ArrayBuffer]);
   }
+
   public checkDigest(algorithm: Algorithm, _data: ArrayBuffer): void {
     this.checkAlgorithmName(algorithm);
   }
+
   public async onDigest(_algorithm: Algorithm, _data: ArrayBuffer): Promise<ArrayBuffer> {
     throw new UnsupportedOperationError("digest");
   }
-  //#endregion
+  // #endregion
 
-  //#region Generate key
-  public async generateKey(algorithm: "Ed25519", extractable: boolean, keyUsages: ReadonlyArray<"sign" | "verify">): Promise<CryptoKeyPair>;
+  // #region Generate key
+  public async generateKey(algorithm: "Ed25519", extractable: boolean, keyUsages: readonly ("sign" | "verify")[]): Promise<CryptoKeyPair>;
   public async generateKey(algorithm: RsaHashedKeyGenParams | EcKeyGenParams, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKeyPair>;
   public async generateKey(algorithm: AesKeyGenParams | HmacKeyGenParams | Pbkdf2Params, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
   public async generateKey(algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKeyPair | CryptoKey>;
   public async generateKey(...args: any[]): Promise<CryptoKeyPair | CryptoKey> {
-    this.checkGenerateKey.apply(this, args);
-    return this.onGenerateKey.apply(this, args);
+    this.checkGenerateKey.apply(this, args as [Algorithm, boolean, KeyUsage[], ...any[]]);
+    return this.onGenerateKey.apply(this, args as [Algorithm, boolean, KeyUsage[], ...any[]]);
   }
+
   public checkGenerateKey(algorithm: Algorithm, _extractable: boolean, keyUsages: KeyUsage[], ..._args: any[]): void {
     this.checkAlgorithmName(algorithm);
     this.checkGenerateKeyParams(algorithm);
     if (!(keyUsages && keyUsages.length)) {
-      throw new TypeError(`Usages cannot be empty when creating a key.`);
+      throw new TypeError("Usages cannot be empty when creating a key.");
     }
     let allowedUsages: KeyUsages;
     if (Array.isArray(this.usages)) {
@@ -57,84 +61,95 @@ export abstract class ProviderCrypto {
     }
     this.checkKeyUsages(keyUsages, allowedUsages);
   }
+
   public checkGenerateKeyParams(_algorithm: Algorithm): void {
     // nothing
   }
+
   public async onGenerateKey(_algorithm: Algorithm, _extractable: boolean, _keyUsages: KeyUsage[], ..._args: any[]): Promise<CryptoKeyPair | CryptoKey> {
     throw new UnsupportedOperationError("generateKey");
   }
-  //#endregion
+  // #endregion
 
-  //#region Sign
+  // #region Sign
   public async sign(algorithm: Algorithm, key: CryptoKey, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
   public async sign(...args: any[]): Promise<ArrayBuffer> {
-    this.checkSign.apply(this, args);
-    return this.onSign.apply(this, args);
+    this.checkSign.apply(this, args as [Algorithm, CryptoKey, ArrayBuffer]);
+    return this.onSign.apply(this, args as [Algorithm, CryptoKey, ArrayBuffer]);
   }
+
   public checkSign(algorithm: Algorithm, key: CryptoKey, _data: ArrayBuffer, ..._args: any[]): void {
     this.checkAlgorithmName(algorithm);
     this.checkAlgorithmParams(algorithm);
     this.checkCryptoKey(key, "sign");
   }
+
   public async onSign(_algorithm: Algorithm, _key: CryptoKey, _data: ArrayBuffer, ..._args: any[]): Promise<ArrayBuffer> {
     throw new UnsupportedOperationError("sign");
   }
-  //#endregion
+  // #endregion
 
-  //#region Verify
+  // #region Verify
   public async verify(algorithm: Algorithm, key: CryptoKey, signature: ArrayBuffer, data: ArrayBuffer, ...args: any[]): Promise<boolean>;
   public async verify(...args: any[]): Promise<boolean> {
-    this.checkVerify.apply(this, args);
-    return this.onVerify.apply(this, args);
+    this.checkVerify.apply(this, args as [Algorithm, CryptoKey, ArrayBuffer, ArrayBuffer]);
+    return this.onVerify.apply(this, args as [Algorithm, CryptoKey, ArrayBuffer, ArrayBuffer]);
   }
+
   public checkVerify(algorithm: Algorithm, key: CryptoKey, _signature: ArrayBuffer, _data: ArrayBuffer, ..._args: any[]): void {
     this.checkAlgorithmName(algorithm);
     this.checkAlgorithmParams(algorithm);
     this.checkCryptoKey(key, "verify");
   }
+
   public async onVerify(_algorithm: Algorithm, _key: CryptoKey, _signature: ArrayBuffer, _data: ArrayBuffer, ..._args: any[]): Promise<boolean> {
     throw new UnsupportedOperationError("verify");
   }
-  //#endregion
+  // #endregion
 
-  //#region Encrypt
+  // #region Encrypt
   public async encrypt(algorithm: Algorithm, key: CryptoKey, data: ArrayBuffer, options?: IProviderCheckOptions, ...args: any[]): Promise<ArrayBuffer>;
   public async encrypt(...args: any[]): Promise<ArrayBuffer> {
-    this.checkEncrypt.apply(this, args);
-    return this.onEncrypt.apply(this, args);
+    this.checkEncrypt.apply(this, args as [Algorithm, CryptoKey, ArrayBuffer, IProviderCheckOptions]);
+    return this.onEncrypt.apply(this, args as [Algorithm, CryptoKey, ArrayBuffer, IProviderCheckOptions]);
   }
+
   public checkEncrypt(algorithm: Algorithm, key: CryptoKey, _data: ArrayBuffer, options: IProviderCheckOptions = {}, ..._args: any[]): void {
     this.checkAlgorithmName(algorithm);
     this.checkAlgorithmParams(algorithm);
     this.checkCryptoKey(key, options.keyUsage ? "encrypt" : void 0);
   }
+
   public async onEncrypt(_algorithm: Algorithm, _key: CryptoKey, _data: ArrayBuffer, ..._args: any[]): Promise<ArrayBuffer> {
     throw new UnsupportedOperationError("encrypt");
   }
-  //#endregion
+  // #endregion
 
-  //#region
+  // #region
   public async decrypt(algorithm: Algorithm, key: CryptoKey, data: ArrayBuffer, options?: IProviderCheckOptions, ...args: any[]): Promise<ArrayBuffer>;
   public async decrypt(...args: any[]): Promise<ArrayBuffer> {
-    this.checkDecrypt.apply(this, args);
-    return this.onDecrypt.apply(this, args);
+    this.checkDecrypt.apply(this, args as [Algorithm, CryptoKey, ArrayBuffer, IProviderCheckOptions]);
+    return this.onDecrypt.apply(this, args as [Algorithm, CryptoKey, ArrayBuffer, IProviderCheckOptions]);
   }
+
   public checkDecrypt(algorithm: Algorithm, key: CryptoKey, _data: ArrayBuffer, options: IProviderCheckOptions = {}, ..._args: any[]): void {
     this.checkAlgorithmName(algorithm);
     this.checkAlgorithmParams(algorithm);
     this.checkCryptoKey(key, options.keyUsage ? "decrypt" : void 0);
   }
+
   public async onDecrypt(_algorithm: Algorithm, _key: CryptoKey, _data: ArrayBuffer, ..._args: any[]): Promise<ArrayBuffer> {
     throw new UnsupportedOperationError("decrypt");
   }
-  //#endregion
+  // #endregion
 
-  //#region Derive bits
+  // #region Derive bits
   public async deriveBits(algorithm: Algorithm, baseKey: CryptoKey, length: number, options?: IProviderCheckOptions, ...args: any[]): Promise<ArrayBuffer>;
   public async deriveBits(...args: any[]): Promise<ArrayBuffer> {
-    this.checkDeriveBits.apply(this, args);
-    return this.onDeriveBits.apply(this, args);
+    this.checkDeriveBits.apply(this, args as [Algorithm, CryptoKey, number, IProviderCheckOptions]);
+    return this.onDeriveBits.apply(this, args as [Algorithm, CryptoKey, number, IProviderCheckOptions]);
   }
+
   public checkDeriveBits(algorithm: Algorithm, baseKey: CryptoKey, length: number, options: IProviderCheckOptions = {}, ..._args: any[]): void {
     this.checkAlgorithmName(algorithm);
     this.checkAlgorithmParams(algorithm);
@@ -143,17 +158,19 @@ export abstract class ProviderCrypto {
       throw new OperationError("length: Is not multiple of 8");
     }
   }
+
   public async onDeriveBits(_algorithm: Algorithm, _baseKey: CryptoKey, _length: number, ..._args: any[]): Promise<ArrayBuffer> {
     throw new UnsupportedOperationError("deriveBits");
   }
-  //#endregion
+  // #endregion
 
-  //#region Export key
+  // #region Export key
   public async exportKey(format: KeyFormat, key: CryptoKey, ...args: any[]): Promise<JsonWebKey | ArrayBuffer>;
   public async exportKey(...args: any[]): Promise<JsonWebKey | ArrayBuffer> {
-    this.checkExportKey.apply(this, args);
-    return this.onExportKey.apply(this, args);
+    this.checkExportKey.apply(this, args as [KeyFormat, CryptoKey]);
+    return this.onExportKey.apply(this, args as [KeyFormat, CryptoKey]);
   }
+
   public checkExportKey(format: KeyFormat, key: CryptoKey, ..._args: any[]): void {
     this.checkKeyFormat(format);
     this.checkCryptoKey(key);
@@ -162,17 +179,19 @@ export abstract class ProviderCrypto {
       throw new CryptoError("key: Is not extractable");
     }
   }
+
   public async onExportKey(_format: KeyFormat, _key: CryptoKey, ..._args: any[]): Promise<JsonWebKey | ArrayBuffer> {
     throw new UnsupportedOperationError("exportKey");
   }
-  //#endregion
+  // #endregion
 
-  //#region Import key
+  // #region Import key
   public async importKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
   public async importKey(...args: any[]): Promise<CryptoKey> {
-    this.checkImportKey.apply(this, args);
-    return this.onImportKey.apply(this, args);
+    this.checkImportKey.apply(this, args as [KeyFormat, JsonWebKey | ArrayBuffer, Algorithm, boolean, KeyUsage[]]);
+    return this.onImportKey.apply(this, args as [KeyFormat, JsonWebKey | ArrayBuffer, Algorithm, boolean, KeyUsage[]]);
   }
+
   public checkImportKey(format: KeyFormat, keyData: JsonWebKey | ArrayBuffer, algorithm: Algorithm, _extractable: boolean, keyUsages: KeyUsage[], ..._args: any[]): void {
     this.checkKeyFormat(format);
     this.checkKeyData(format, keyData);
@@ -188,10 +207,11 @@ export abstract class ProviderCrypto {
       // TODO: implement
     }
   }
+
   public async onImportKey(_format: KeyFormat, _keyData: JsonWebKey | ArrayBuffer, _algorithm: Algorithm, _extractable: boolean, _keyUsages: KeyUsage[], ..._args: any[]): Promise<CryptoKey> {
     throw new UnsupportedOperationError("importKey");
   }
-  //#endregion
+  // #endregion
 
   public checkAlgorithmName(algorithm: Algorithm): void {
     if (algorithm.name.toLowerCase() !== this.name.toLowerCase()) {
@@ -218,7 +238,7 @@ export abstract class ProviderCrypto {
   public checkCryptoKey(key: CryptoKey, keyUsage?: KeyUsage): void {
     this.checkAlgorithmName(key.algorithm);
     if (keyUsage && key.usages.indexOf(keyUsage) === -1) {
-      throw new CryptoError(`key does not match that of operation`);
+      throw new CryptoError("key does not match that of operation");
     }
   }
 
@@ -261,12 +281,12 @@ export abstract class ProviderCrypto {
       if (!isJWK(keyData)) {
         throw new TypeError("keyData: Is not JsonWebToken");
       }
-    } else if (!BufferSourceConverter.isBufferSource(keyData)) {
+    } else if (!bytes.isBufferSource(keyData)) {
       throw new TypeError("keyData: Is not ArrayBufferView or ArrayBuffer");
     }
   }
 
   protected prepareData(data: any): ArrayBuffer {
-    return BufferSourceConverter.toArrayBuffer(data);
+    return bytes.toArrayBuffer(data);
   }
 }

@@ -1,6 +1,9 @@
-import { AsnIntegerConverter, AsnProp, AsnPropTypes, AsnSerializer } from "@peculiar/asn1-schema";
+import {
+  AsnIntegerConverter, AsnProp, AsnPropTypes, AsnSerializer,
+} from "@peculiar/asn1-schema";
 import { IJsonConvertible } from "@peculiar/json-schema";
-import { Convert } from "pvtsutils";
+import * as encoding from "@peculiar/utils/encoding";
+import * as bytes from "@peculiar/utils/bytes";
 import { EcPublicKey } from "./ec_public_key";
 
 // RFC 5915
@@ -14,24 +17,29 @@ import { EcPublicKey } from "./ec_public_key";
 // }
 
 export class EcPrivateKey implements IJsonConvertible {
-
-  @AsnProp({ type: AsnPropTypes.Integer, converter: AsnIntegerConverter })
+  @AsnProp({
+    type: AsnPropTypes.Integer, converter: AsnIntegerConverter,
+  })
   public version = 1;
 
   @AsnProp({ type: AsnPropTypes.OctetString })
   public privateKey = new ArrayBuffer(0);
 
-  @AsnProp({ context: 0, type: AsnPropTypes.Any, optional: true })
+  @AsnProp({
+    context: 0, type: AsnPropTypes.Any, optional: true,
+  })
   public parameters?: ArrayBuffer;
 
-  @AsnProp({ context: 1, type: AsnPropTypes.BitString, optional: true })
+  @AsnProp({
+    context: 1, type: AsnPropTypes.BitString, optional: true,
+  })
   public publicKey?: ArrayBuffer;
 
   public fromJSON(json: any): this {
     if (!("d" in json)) {
       throw new Error("d: Missing required property");
     }
-    this.privateKey = Convert.FromBase64Url(json.d);
+    this.privateKey = bytes.toArrayBuffer(encoding.base64url.decode(json.d));
 
     if ("x" in json) {
       const publicKey = new EcPublicKey();
@@ -45,13 +53,13 @@ export class EcPrivateKey implements IJsonConvertible {
 
     return this;
   }
+
   public toJSON(): JsonWebKey {
     const jwk: JsonWebKey = {};
-    jwk.d = Convert.ToBase64Url(this.privateKey);
+    jwk.d = encoding.base64url.encode(this.privateKey);
     if (this.publicKey) {
       Object.assign(jwk, new EcPublicKey(this.publicKey).toJSON());
     }
     return jwk;
   }
-
 }

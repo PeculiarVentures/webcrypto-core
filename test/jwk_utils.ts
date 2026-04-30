@@ -1,13 +1,12 @@
-import * as assert from "assert";
-import * as crypto from "crypto";
-import { Convert } from "pvtsutils";
+import assert from "node:assert";
+import * as crypto from "node:crypto";
+import * as encoding from "@peculiar/utils/encoding";
 import { JwkUtils } from "../src";
 
 // crypto.webcrypto
-const ctx = crypto.webcrypto ? context : context.skip;
+const ctx = crypto.webcrypto ? describe : describe.skip;
 
 ctx("JWK utils", () => {
-
   it("format with odd removing", () => {
     const jwk: JsonWebKey = {
       n: "n value",
@@ -43,7 +42,6 @@ ctx("JWK utils", () => {
       n: "n value",
     }, crypto.webcrypto as any);
 
-    assert.strictEqual(Convert.ToBase64(digest), "MkHJT3yHfy0O9t4OHK/331Pb3HNa4LRG62yPa4NNnSc=");
+    assert.strictEqual(encoding.base64.encode(digest), "MkHJT3yHfy0O9t4OHK/331Pb3HNa4LRG62yPa4NNnSc=");
   });
-
 });
