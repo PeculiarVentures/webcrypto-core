@@ -4,7 +4,7 @@ import { EllipticProvider } from "./base";
 export abstract class EcdsaProvider extends EllipticProvider {
   public readonly name: string = "ECDSA";
 
-  public readonly hashAlgorithms = ["SHA-1", "SHA-256", "SHA-384", "SHA-512"];
+  public readonly hashAlgorithms = ["SHA-1", "SHA-256", "SHA-384", "SHA-512", "NO-HASH"];
 
   public usages: ProviderKeyUsages = {
     privateKey: ["sign"],
