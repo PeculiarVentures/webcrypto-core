@@ -200,13 +200,13 @@ jobs:
           cache: npm
 
       - name: Download release package
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: npm-package
           path: ./release-package
 
       - name: Download release version files
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           name: release-version-files
           path: ./release-version-files
