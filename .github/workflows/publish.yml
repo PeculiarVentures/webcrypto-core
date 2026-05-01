@@ -73,7 +73,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          PREVIOUS_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          CURRENT_SHA=$(git rev-parse HEAD)
+          PREVIOUS_TAG=$(git tag --merged "$CURRENT_SHA" --sort=-version:refname | head -n 1)
 
           echo "## Release preview" >> "$GITHUB_STEP_SUMMARY"
           echo "" >> "$GITHUB_STEP_SUMMARY"
@@ -114,10 +115,10 @@ jobs:
               else
                 echo "- $COMMIT_SUBJECT ($COMMIT_SHORT_SHA)" >> "$GITHUB_STEP_SUMMARY"
               fi
-            done < <(git rev-list --reverse --first-parent "$PREVIOUS_TAG"..HEAD)
+            done < <(git rev-list --reverse "$PREVIOUS_TAG".."$CURRENT_SHA")
 
             echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "[View full diff](https://github.com/${{ github.repository }}/compare/$PREVIOUS_TAG...HEAD)" >> "$GITHUB_STEP_SUMMARY"
+            echo "[View full diff](https://github.com/${{ github.repository }}/compare/$PREVIOUS_TAG...$CURRENT_SHA)" >> "$GITHUB_STEP_SUMMARY"
           else
             declare -A SEEN_PRS=()
 
@@ -142,7 +143,7 @@ jobs:
               else
                 echo "- $COMMIT_SUBJECT ($COMMIT_SHORT_SHA)" >> "$GITHUB_STEP_SUMMARY"
               fi
-            done < <(git rev-list --reverse --first-parent HEAD)
+            done < <(git rev-list --reverse HEAD)
           fi
 
           echo "" >> "$GITHUB_STEP_SUMMARY"
