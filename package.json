@@ -35,6 +35,14 @@
     "ec",
     "shake"
   ],
+  "exports": {
+    ".": {
+      "types": "./build/index.d.ts",
+      "import": "./build/webcrypto-core.es.js",
+      "require": "./build/webcrypto-core.js"
+    },
+    "./package.json": "./package.json"
+  },
   "dependencies": {
     "@peculiar/asn1-schema": "^2.7.0",
     "@peculiar/json-schema": "^1.1.12",
