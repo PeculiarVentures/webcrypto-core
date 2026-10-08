@@ -1,11 +1,11 @@
 name: test
 
 on:
-  pull_request:
-    branches: [main, master]
-    types: [opened, synchronize]
   push:
-    branches: [main, master]
+    branches:
+      - master
+      - main
+  pull_request:
 
 jobs:
   test:
