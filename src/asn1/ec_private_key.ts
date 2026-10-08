@@ -1,6 +1,4 @@
-import {
-  AsnIntegerConverter, AsnProp, AsnPropTypes, AsnSerializer,
-} from "@peculiar/asn1-schema";
+import { AsnIntegerConverter, AsnProp, AsnPropTypes, AsnSerializer } from "@peculiar/asn1-schema";
 import { IJsonConvertible } from "@peculiar/json-schema";
 import * as encoding from "@peculiar/utils/encoding";
 import * as bytes from "@peculiar/utils/bytes";
@@ -18,7 +16,8 @@ import { EcPublicKey } from "./ec_public_key";
 
 export class EcPrivateKey implements IJsonConvertible {
   @AsnProp({
-    type: AsnPropTypes.Integer, converter: AsnIntegerConverter,
+    type: AsnPropTypes.Integer,
+    converter: AsnIntegerConverter,
   })
   public version = 1;
 
@@ -26,12 +25,16 @@ export class EcPrivateKey implements IJsonConvertible {
   public privateKey = new ArrayBuffer(0);
 
   @AsnProp({
-    context: 0, type: AsnPropTypes.Any, optional: true,
+    context: 0,
+    type: AsnPropTypes.Any,
+    optional: true,
   })
   public parameters?: ArrayBuffer;
 
   @AsnProp({
-    context: 1, type: AsnPropTypes.BitString, optional: true,
+    context: 1,
+    type: AsnPropTypes.BitString,
+    optional: true,
   })
   public publicKey?: ArrayBuffer;
 

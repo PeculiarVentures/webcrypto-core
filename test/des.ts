@@ -1,7 +1,5 @@
 import assert from "node:assert";
-import {
-  CryptoKey, DesProvider, OperationError,
-} from "../src";
+import { CryptoKey, DesProvider, OperationError } from "../src";
 
 class DesTestProvider extends DesProvider {
   public keySizeBits = 64;

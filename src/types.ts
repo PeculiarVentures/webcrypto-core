@@ -64,16 +64,13 @@ export interface CryptoStorage<T> {
    * @param index Index of crypto storage
    */
   removeItem(index: string): Promise<void>;
-
 }
 
 // #region CryptoKeyStorage
 
 export interface CryptoKeyStorage extends CryptoStorage<CryptoKey> {
-
   getItem(index: string): Promise<CryptoKey>;
   getItem(index: string, algorithm: ImportAlgorithms, extractable: boolean, keyUsages: KeyUsage[]): Promise<CryptoKey>;
-
 }
 
 // #endregion CryptoKeyStorage
@@ -103,7 +100,6 @@ export interface CryptoX509CertificateRequest extends CryptoCertificate {
 }
 
 export interface CryptoCertificateStorage extends CryptoStorage<CryptoCertificate> {
-
   getItem(index: string): Promise<CryptoCertificate>;
   getItem(index: string, algorithm: ImportAlgorithms, keyUsages: KeyUsage[]): Promise<CryptoCertificate>;
 

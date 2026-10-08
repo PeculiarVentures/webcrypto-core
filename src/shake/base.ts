@@ -14,7 +14,8 @@ export abstract class ShakeProvider extends ProviderCrypto {
   public override digest(algorithm: Algorithm, data: ArrayBuffer, ...args: any[]): Promise<ArrayBuffer>;
   public override digest(...args: any[]): Promise<ArrayBuffer> {
     args[0] = {
-      length: this.defaultLength, ...args[0],
+      length: this.defaultLength,
+      ...args[0],
     };
 
     return super.digest.apply(this, args as [Algorithm, ArrayBuffer, ...any[]]);

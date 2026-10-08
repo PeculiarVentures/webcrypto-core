@@ -4,30 +4,16 @@ import typescript from "@rollup/plugin-typescript";
 import { dts } from "rollup-plugin-dts";
 import pkg from "./package.json" with { type: "json" };
 
-const __filename = url.fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const filename = url.fileURLToPath(import.meta.url);
+const dirname = path.dirname(filename);
 const startYear = 2019;
 const currentYear = new Date().getFullYear();
 
-const year
-  = startYear === currentYear
-    ? `${startYear}`
-    : `${startYear}-${currentYear}`;
+const year = startYear === currentYear ? `${startYear}` : `${startYear}-${currentYear}`;
 
-const banner = [
-  "/**",
-  ` * Copyright (c) ${year}, Peculiar Ventures`,
-  " * SPDX-License-Identifier: MIT",
-  " */",
-  "",
-].join("\n");
+const banner = ["/**", ` * Copyright (c) ${year}, Peculiar Ventures`, " * SPDX-License-Identifier: MIT", " */", ""].join("\n");
 const input = "src/index.ts";
-const externalDeps = new Set([
-  "node:crypto",
-  "node:process",
-  "node:buffer",
-  ...Object.keys(pkg.dependencies || {}),
-]);
+const externalDeps = new Set(["node:crypto", "node:process", "node:buffer", ...Object.keys(pkg.dependencies || {})]);
 
 const external = (id) => {
   return [...externalDeps].some((dep) => {
@@ -61,9 +47,7 @@ export default [
   {
     input,
     external,
-    plugins: [
-      dts({ tsconfig: path.resolve(__dirname, "./tsconfig.json") }),
-    ],
+    plugins: [dts({ tsconfig: path.resolve(dirname, "./tsconfig.json") })],
     output: [
       {
         banner,

@@ -1,7 +1,5 @@
 import assert from "node:assert";
-import {
-  AesCbcProvider, AesCmacProvider, AesCtrProvider, AesGcmProvider,
-} from "../src/aes";
+import { AesCbcProvider, AesCmacProvider, AesCtrProvider, AesGcmProvider } from "../src/aes";
 import { OperationError } from "../src/errors";
 
 describe("AES", () => {
@@ -18,7 +16,8 @@ describe("AES", () => {
       it("error if `length` has wrong type", () => {
         assert.throws(() => {
           provider.checkGenerateKeyParams({
-            name: "AES-CBC", length: "s",
+            name: "AES-CBC",
+            length: "s",
           } as any);
         }, TypeError);
       });
@@ -26,7 +25,8 @@ describe("AES", () => {
       it("error if `length` has wrong value", () => {
         assert.throws(() => {
           provider.checkGenerateKeyParams({
-            name: "AES-CBC", length: 1,
+            name: "AES-CBC",
+            length: 1,
           } as any);
         }, TypeError);
       });
@@ -34,7 +34,8 @@ describe("AES", () => {
       [128, 192, 256].forEach((length) => {
         it(`correct length:${length}`, () => {
           provider.checkGenerateKeyParams({
-            name: "AES-CBC", length,
+            name: "AES-CBC",
+            length,
           } as any);
         });
       });

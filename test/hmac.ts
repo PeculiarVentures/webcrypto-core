@@ -21,7 +21,8 @@ describe("HMAC", () => {
     it("error if `length` is not of type Number", () => {
       assert.throws(() => {
         provider.checkGenerateKeyParams({
-          hash: { name: "SHA-256" }, length: "128",
+          hash: { name: "SHA-256" },
+          length: "128",
         } as any);
       }, TypeError);
     });
@@ -29,7 +30,8 @@ describe("HMAC", () => {
     it("error if `length` is less than 1", () => {
       assert.throws(() => {
         provider.checkGenerateKeyParams({
-          hash: { name: "SHA-256" }, length: 0,
+          hash: { name: "SHA-256" },
+          length: 0,
         } as any);
       }, RangeError);
     });
@@ -41,7 +43,8 @@ describe("HMAC", () => {
     it("custom length", () => {
       provider.checkGenerateKeyParams({
         hash: {
-          name: "SHA-256", length: 128,
+          name: "SHA-256",
+          length: 128,
         },
       } as any);
     });

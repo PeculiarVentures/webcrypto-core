@@ -21,13 +21,13 @@ export class EcUtils {
    */
   public static decodePoint(data: BufferSourceLike, pointSize: number): EcPoint {
     const view = bytes.toUint8Array(data);
-    if ((view.length === 0) || (view[0] !== 4)) {
+    if (view.length === 0 || view[0] !== 4) {
       throw new Error("Only uncompressed point format supported");
     }
     // Per ANSI X9.62, an encoded point is a 1 byte type followed by
     // ceiling(log base 2 field-size / 8) bytes of x and the same of y.
     const n = (view.length - 1) / 2;
-    if (n !== (Math.ceil(pointSize / 8))) {
+    if (n !== Math.ceil(pointSize / 8)) {
       throw new Error("Point does not match field size");
     }
 
@@ -35,7 +35,8 @@ export class EcUtils {
     const yb = view.slice(n + 1, n + 1 + n);
 
     return {
-      x: xb, y: yb,
+      x: xb,
+      y: yb,
     };
   }
 
@@ -84,7 +85,7 @@ export class EcUtils {
   public static decodeSignature(data: BufferSourceLike, pointSize: number): EcSignaturePoint {
     const size = this.getSize(pointSize);
     const view = bytes.toUint8Array(data);
-    if (view.length !== (size * 2)) {
+    if (view.length !== size * 2) {
       throw new Error("Incorrect size of the signature");
     }
 
@@ -99,7 +100,7 @@ export class EcUtils {
 
   public static trimStart(data: Uint8Array): Uint8Array {
     let i = 0;
-    while ((i < data.length - 1) && (data[i] === 0)) {
+    while (i < data.length - 1 && data[i] === 0) {
       i++;
     }
     if (i === 0) {

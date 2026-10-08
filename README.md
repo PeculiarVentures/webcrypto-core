@@ -12,7 +12,7 @@
 
 </div>
 
-We have created a number of WebCrypto polyfills including: [node-webcrypto-ossl](https://github.com/PeculiarVentures/node-webcrypto-ossl), [node-webcrypto-p11](https://github.com/PeculiarVentures/node-webcrypto-p11), and [webcrypto-liner](https://github.com/PeculiarVentures/webcrypto-liner).  `webcrypto-core` was designed to be a common layer to be used by all of these libraries for input validation.
+We have created a number of WebCrypto polyfills including: [node-webcrypto-ossl](https://github.com/PeculiarVentures/node-webcrypto-ossl), [node-webcrypto-p11](https://github.com/PeculiarVentures/node-webcrypto-p11), and [webcrypto-liner](https://github.com/PeculiarVentures/webcrypto-liner). `webcrypto-core` was designed to be a common layer to be used by all of these libraries for input validation.
 
 Unless you intend to create a WebCrypto polyfill this library is probably not useful to you.
 
@@ -31,7 +31,6 @@ const core = require(".");
 const crypto = require("crypto");
 
 class Sha1Provider extends core.ProviderCrypto {
-
   constructor() {
     super();
 
@@ -43,7 +42,6 @@ class Sha1Provider extends core.ProviderCrypto {
     const hash = crypto.createHash("SHA1").update(Buffer.from(data)).digest();
     return new Uint8Array(hash).buffer;
   }
-
 }
 
 class SubtleCrypto extends core.SubtleCrypto {
@@ -56,7 +54,6 @@ class SubtleCrypto extends core.SubtleCrypto {
 }
 
 class Crypto extends core.Crypto {
-
   constructor() {
     this.subtle = new SubtleCrypto();
   }
@@ -66,11 +63,11 @@ class Crypto extends core.Crypto {
     crypto.randomFillSync(buffer);
     return array;
   }
-
 }
 
 const webcrypto = new Crypto();
-webcrypto.subtle.digest("SHA-1", Buffer.from("TEST MESSAGE"))
+webcrypto.subtle
+  .digest("SHA-1", Buffer.from("TEST MESSAGE"))
   .then((hash) => {
     console.log(Buffer.from(hash).toString("hex")); // dbca505deb07e1612d944a69c0c851f79f3a4a60
   })

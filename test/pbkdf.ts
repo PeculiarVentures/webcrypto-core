@@ -8,7 +8,8 @@ describe("HMAC", () => {
     it("error if `hash` is missing", () => {
       assert.throws(() => {
         provider.checkAlgorithmParams({
-          salt: new Uint8Array(4), iterations: 1000,
+          salt: new Uint8Array(4),
+          iterations: 1000,
         } as any);
       }, Error);
     });
@@ -16,7 +17,9 @@ describe("HMAC", () => {
     it("error if `hash` is wrong", () => {
       assert.throws(() => {
         provider.checkAlgorithmParams({
-          hash: { name: "WRONG" }, salt: new Uint8Array(4), iterations: 1000,
+          hash: { name: "WRONG" },
+          salt: new Uint8Array(4),
+          iterations: 1000,
         } as any);
       }, OperationError);
     });
@@ -24,7 +27,8 @@ describe("HMAC", () => {
     it("error if `salt` is missing", () => {
       assert.throws(() => {
         provider.checkAlgorithmParams({
-          hash: { name: "SHA-256" }, iterations: 1000,
+          hash: { name: "SHA-256" },
+          iterations: 1000,
         } as any);
       }, Error);
     });
@@ -32,7 +36,9 @@ describe("HMAC", () => {
     it("error if `salt` wrong type", () => {
       assert.throws(() => {
         provider.checkAlgorithmParams({
-          hash: { name: "SHA-256" }, salt: "wrong", iterations: 1000,
+          hash: { name: "SHA-256" },
+          salt: "wrong",
+          iterations: 1000,
         } as any);
       }, TypeError);
     });
@@ -40,7 +46,8 @@ describe("HMAC", () => {
     it("error if `iterations` is missing", () => {
       assert.throws(() => {
         provider.checkAlgorithmParams({
-          hash: { name: "SHA-256" }, salt: new Uint8Array(4),
+          hash: { name: "SHA-256" },
+          salt: new Uint8Array(4),
         } as any);
       }, Error);
     });
@@ -48,7 +55,9 @@ describe("HMAC", () => {
     it("error if `iterations` wrong type", () => {
       assert.throws(() => {
         provider.checkAlgorithmParams({
-          hash: { name: "SHA-256" }, salt: new Uint8Array(4), iterations: "123",
+          hash: { name: "SHA-256" },
+          salt: new Uint8Array(4),
+          iterations: "123",
         } as any);
       }, TypeError);
     });
@@ -56,14 +65,18 @@ describe("HMAC", () => {
     it("error if `iterations` less than 1", () => {
       assert.throws(() => {
         provider.checkAlgorithmParams({
-          hash: { name: "SHA-256" }, salt: new Uint8Array(4), iterations: 0,
+          hash: { name: "SHA-256" },
+          salt: new Uint8Array(4),
+          iterations: 0,
         } as any);
       }, TypeError);
     });
 
     it("correct value", () => {
       provider.checkAlgorithmParams({
-        hash: { name: "SHA-256" }, salt: new Uint8Array(4), iterations: 1000,
+        hash: { name: "SHA-256" },
+        salt: new Uint8Array(4),
+        iterations: 1000,
       } as any);
     });
   });

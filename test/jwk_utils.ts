@@ -15,10 +15,13 @@ ctx("JWK utils", () => {
     };
 
     const formattedJwk = JwkUtils.format(jwk, true);
-    assert.strictEqual(JSON.stringify(formattedJwk), JSON.stringify({
-      e: "e value",
-      n: "n value",
-    }));
+    assert.strictEqual(
+      JSON.stringify(formattedJwk),
+      JSON.stringify({
+        e: "e value",
+        n: "n value",
+      }),
+    );
   });
 
   it("format without removing", () => {
@@ -29,18 +32,25 @@ ctx("JWK utils", () => {
     };
 
     const formattedJwk = JwkUtils.format(jwk, false);
-    assert.strictEqual(JSON.stringify(formattedJwk), JSON.stringify({
-      e: "e value",
-      ext: true,
-      n: "n value",
-    }));
+    assert.strictEqual(
+      JSON.stringify(formattedJwk),
+      JSON.stringify({
+        e: "e value",
+        ext: true,
+        n: "n value",
+      }),
+    );
   });
 
   it("thumbprint", async () => {
-    const digest = await JwkUtils.thumbprint("SHA-256", {
-      e: "e value",
-      n: "n value",
-    }, crypto.webcrypto as any);
+    const digest = await JwkUtils.thumbprint(
+      "SHA-256",
+      {
+        e: "e value",
+        n: "n value",
+      },
+      crypto.webcrypto as any,
+    );
 
     assert.strictEqual(encoding.base64.encode(digest), "MkHJT3yHfy0O9t4OHK/331Pb3HNa4LRG62yPa4NNnSc=");
   });
