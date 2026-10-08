@@ -2,14 +2,12 @@ import assert from "node:assert";
 import { AsnConvert } from "@peculiar/asn1-schema";
 import { JsonSerializer } from "@peculiar/json-schema";
 import * as encoding from "@peculiar/utils/encoding";
-import {
-  EcPrivateKey, EcPublicKey, PrivateKeyInfo, PublicKeyInfo,
-} from "../../src/asn1";
+import { EcPrivateKey, EcPublicKey, PrivateKeyInfo, PublicKeyInfo } from "../../src/asn1";
 
 describe("ECDSA keys", () => {
   it("Private key", () => {
-    // eslint-disable-next-line @stylistic/max-len
-    const hex = "308187020100301306072a8648ce3d020106082a8648ce3d030107046d306b020101042020c42828fe6dccb3f01dced6d40db1a1d9f7829e502b2de4a2243def60dfda4fa14403420004578e6cdfba9fba0b8180ebd3c9176695e4054179be0c8ce03ae93bcd0c8695407e6426d13c2aa20d2f8ced0224249d9a29c3738cd2a535eac51051e05dfd6406";
+    const hex =
+      "308187020100301306072a8648ce3d020106082a8648ce3d030107046d306b020101042020c42828fe6dccb3f01dced6d40db1a1d9f7829e502b2de4a2243def60dfda4fa14403420004578e6cdfba9fba0b8180ebd3c9176695e4054179be0c8ce03ae93bcd0c8695407e6426d13c2aa20d2f8ced0224249d9a29c3738cd2a535eac51051e05dfd6406";
     const raw = Buffer.from(hex, "hex");
 
     const pki = AsnConvert.parse(raw, PrivateKeyInfo);
@@ -28,14 +26,13 @@ describe("ECDSA keys", () => {
     const raw2 = AsnConvert.serialize(fromJson);
     assert.strictEqual(
       encoding.hex.encode(raw2),
-      // eslint-disable-next-line @stylistic/max-len
       "306b020101042020c42828fe6dccb3f01dced6d40db1a1d9f7829e502b2de4a2243def60dfda4fa14403420004578e6cdfba9fba0b8180ebd3c9176695e4054179be0c8ce03ae93bcd0c8695407e6426d13c2aa20d2f8ced0224249d9a29c3738cd2a535eac51051e05dfd6406",
     );
   });
 
   it("Public key", () => {
-    // eslint-disable-next-line @stylistic/max-len
-    const hex = "3059301306072a8648ce3d020106082a8648ce3d0301070342000420cc0f60fe5fc30f889cbf4a5cd9eb7a632682572b62856098e29b34c288f39014f2271a29221e6f9e849a95da99edcc7e3826cddec2701aafb9479cae146ee2";
+    const hex =
+      "3059301306072a8648ce3d020106082a8648ce3d0301070342000420cc0f60fe5fc30f889cbf4a5cd9eb7a632682572b62856098e29b34c288f39014f2271a29221e6f9e849a95da99edcc7e3826cddec2701aafb9479cae146ee2";
     const raw = encoding.hex.decode(hex);
 
     const pki = AsnConvert.parse(raw, PublicKeyInfo);

@@ -1,8 +1,6 @@
 import assert from "node:assert";
 import { ProviderKeyPairUsage } from "../src";
-import {
-  AlgorithmError, CryptoError, OperationError, UnsupportedOperationError,
-} from "../src/errors";
+import { AlgorithmError, CryptoError, OperationError, UnsupportedOperationError } from "../src/errors";
 import { CryptoKey } from "../src/crypto_key";
 import { ProviderCrypto } from "../src/provider";
 
@@ -37,110 +35,49 @@ describe("ProviderCrypto", () => {
 
   describe("digest", () => {
     it("correct data", async () => {
-      await assert.rejects(
-        crypto.digest({ name: "custom-alg" }, new ArrayBuffer(0)),
-        UnsupportedOperationError,
-      );
+      await assert.rejects(crypto.digest({ name: "custom-alg" }, new ArrayBuffer(0)), UnsupportedOperationError);
     });
 
     it("wrong name of algorithm", async () => {
-      await assert.rejects(
-        crypto.digest({ name: "wrong" }, new ArrayBuffer(0)),
-      );
+      await assert.rejects(crypto.digest({ name: "wrong" }, new ArrayBuffer(0)));
     });
   });
 
   describe("generateKey", () => {
     it("correct data", async () => {
-      await assert.rejects(
-        crypto.generateKey({ name: "custom-alg" }, true, ["sign"]),
-        UnsupportedOperationError,
-      );
+      await assert.rejects(crypto.generateKey({ name: "custom-alg" }, true, ["sign"]), UnsupportedOperationError);
     });
 
     it("wrong name of algorithm", async () => {
-      await assert.rejects(
-        crypto.generateKey({ name: "wrong" }, false, ["sign"]),
-      );
+      await assert.rejects(crypto.generateKey({ name: "wrong" }, false, ["sign"]));
     });
 
     it("wrong key usages", async () => {
-      await assert.rejects(
-        crypto.generateKey({ name: "custom-alg" }, false, ["verify"]),
-      );
+      await assert.rejects(crypto.generateKey({ name: "custom-alg" }, false, ["verify"]));
     });
   });
 
   describe("sign", () => {
-    const correctKey = CryptoKey.create(
-      { name: "custom-alg" },
-      "secret",
-      false,
-      ["sign"],
-    );
+    const correctKey = CryptoKey.create({ name: "custom-alg" }, "secret", false, ["sign"]);
 
     it("correct data", async () => {
-      await assert.rejects(
-        crypto.sign(
-          { name: "custom-alg" },
-          correctKey,
-          new ArrayBuffer(0),
-        ),
-        UnsupportedOperationError,
-      );
+      await assert.rejects(crypto.sign({ name: "custom-alg" }, correctKey, new ArrayBuffer(0)), UnsupportedOperationError);
     });
 
     it("wrong name of algorithm", async () => {
-      await assert.rejects(
-        crypto.sign(
-          { name: "wrong" },
-          correctKey,
-          new ArrayBuffer(0),
-        ),
-      );
+      await assert.rejects(crypto.sign({ name: "wrong" }, correctKey, new ArrayBuffer(0)));
     });
 
     it("wrong key type", async () => {
-      await assert.rejects(
-        crypto.sign(
-          { name: "custom-alg" },
-          {} as CryptoKey,
-          new ArrayBuffer(0),
-        ),
-        TypeError,
-      );
+      await assert.rejects(crypto.sign({ name: "custom-alg" }, {} as CryptoKey, new ArrayBuffer(0)), TypeError);
     });
 
     it("wrong key algorithm", async () => {
-      await assert.rejects(
-        crypto.sign(
-          { name: "custom-alg" },
-          CryptoKey.create(
-            { name: "wrong" },
-            "secret",
-            true,
-            ["sign", "decrypt"],
-          ),
-          new ArrayBuffer(0),
-        ),
-        AlgorithmError,
-      );
+      await assert.rejects(crypto.sign({ name: "custom-alg" }, CryptoKey.create({ name: "wrong" }, "secret", true, ["sign", "decrypt"]), new ArrayBuffer(0)), AlgorithmError);
     });
 
     it("wrong key usage", async () => {
-      await assert.rejects(
-        crypto.sign(
-          { name: "custom-alg" },
-          CryptoKey.create(
-            { name: "custom-alg" },
-            "secret",
-            true,
-            ["verify"],
-          ),
-          new ArrayBuffer(0),
-        ),
-        CryptoError,
-      );
+      await assert.rejects(crypto.sign({ name: "custom-alg" }, CryptoKey.create({ name: "custom-alg" }, "secret", true, ["verify"]), new ArrayBuffer(0)), CryptoError);
     });
   });
 

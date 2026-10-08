@@ -1,12 +1,8 @@
 import assert from "node:assert";
 import { AsnConvert, AsnSerializer } from "@peculiar/asn1-schema";
 import * as encoding from "@peculiar/utils/encoding";
-import {
-  EdPrivateKey, EdPublicKey, OneAsymmetricKey, PublicKeyInfo,
-} from "../src/asn1";
-import {
-  CryptoKey, Ed25519Provider, X25519Provider,
-} from "../src";
+import { EdPrivateKey, EdPublicKey, OneAsymmetricKey, PublicKeyInfo } from "../src/asn1";
+import { CryptoKey, Ed25519Provider, X25519Provider } from "../src";
 
 describe("ED", () => {
   describe("asn", () => {
@@ -19,10 +15,7 @@ describe("ED", () => {
 
       const key2 = new EdPublicKey();
       key2.fromJSON(jwk);
-      assert.strictEqual(
-        encoding.base64.encode(AsnSerializer.serialize(key2)),
-        encoding.base64.encode(AsnSerializer.serialize(key)),
-      );
+      assert.strictEqual(encoding.base64.encode(AsnSerializer.serialize(key2)), encoding.base64.encode(AsnSerializer.serialize(key)));
     });
 
     describe("pkcs8 -jwk", () => {
@@ -36,10 +29,7 @@ describe("ED", () => {
 
         const key2 = new EdPrivateKey();
         key2.fromJSON(jwk);
-        assert.strictEqual(
-          encoding.base64.encode(AsnSerializer.serialize(key2)),
-          encoding.base64.encode(AsnSerializer.serialize(key)),
-        );
+        assert.strictEqual(encoding.base64.encode(AsnSerializer.serialize(key2)), encoding.base64.encode(AsnSerializer.serialize(key)));
       });
 
       it("with public key", () => {
@@ -52,10 +42,7 @@ describe("ED", () => {
 
         const key2 = new EdPrivateKey();
         key2.fromJSON(jwk);
-        assert.strictEqual(
-          encoding.base64.encode(AsnSerializer.serialize(key2)),
-          encoding.base64.encode(AsnSerializer.serialize(key)),
-        );
+        assert.strictEqual(encoding.base64.encode(AsnSerializer.serialize(key2)), encoding.base64.encode(AsnSerializer.serialize(key)));
       });
     });
   });
@@ -198,10 +185,14 @@ describe("ED", () => {
       it("should derive bits", async () => {
         const keys = await provider.generateKey({ name: "X25519" }, true, ["deriveKey", "deriveBits"]);
         assert.ok("privateKey" in keys);
-        await provider.deriveBits({
-          name: "X25519",
-          public: keys.publicKey,
-        } as EcdhKeyDeriveParams, keys.privateKey, 32);
+        await provider.deriveBits(
+          {
+            name: "X25519",
+            public: keys.publicKey,
+          } as EcdhKeyDeriveParams,
+          keys.privateKey,
+          32,
+        );
       });
       it("should throw error when algorithm is not correct", async () => {
         const keys = await provider.generateKey({ name: "X25519" }, true, ["deriveKey", "deriveBits"]);

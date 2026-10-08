@@ -1,7 +1,5 @@
 import assert from "node:assert";
-import {
-  RsaOaepProvider, RsaPssProvider, RsaSsaProvider,
-} from "../src";
+import { RsaOaepProvider, RsaPssProvider, RsaSsaProvider } from "../src";
 
 describe("RSA", () => {
   describe("RSASSA-PKCS1-v1_5", () => {

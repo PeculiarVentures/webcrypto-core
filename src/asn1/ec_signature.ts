@@ -30,12 +30,14 @@ export class EcDsaSignature {
   }
 
   @AsnProp({
-    type: AsnPropTypes.Integer, converter: AsnIntegerWithoutPaddingConverter,
+    type: AsnPropTypes.Integer,
+    converter: AsnIntegerWithoutPaddingConverter,
   })
   public r = new ArrayBuffer(0);
 
   @AsnProp({
-    type: AsnPropTypes.Integer, converter: AsnIntegerWithoutPaddingConverter,
+    type: AsnPropTypes.Integer,
+    converter: AsnIntegerWithoutPaddingConverter,
   })
   public s = new ArrayBuffer(0);
 

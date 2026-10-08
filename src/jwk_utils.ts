@@ -1,7 +1,7 @@
 import * as encoding from "@peculiar/utils/encoding";
 import * as bytes from "@peculiar/utils/bytes";
 
-const REQUIRED_FIELDS = ["crv", "e", "k", "kty", "n", "x", "y"];
+const REQUIRED_FIELDS = new Set(["crv", "e", "k", "kty", "n", "x", "y"]);
 
 export class JwkUtils {
   public static async thumbprint(hash: AlgorithmIdentifier, jwk: JsonWebKey, crypto: Crypto): Promise<ArrayBuffer> {
@@ -13,12 +13,10 @@ export class JwkUtils {
   public static format(jwk: JsonWebKey, remove = false): JsonWebKey {
     let res = Object.entries(jwk);
     if (remove) {
-      res = res.filter((o) => REQUIRED_FIELDS.includes(o[0]));
+      res = res.filter((o) => REQUIRED_FIELDS.has(o[0]));
     }
 
-    res = res.sort(([keyA], [keyB]) =>
-      // eslint-disable-next-line no-nested-ternary
-      keyA > keyB ? 1 : keyA < keyB ? -1 : 0);
+    res = res.sort(([keyA], [keyB]) => (keyA > keyB ? 1 : keyA < keyB ? -1 : 0));
 
     return Object.fromEntries(res) as JsonWebKey;
   }

@@ -1,4 +1,3 @@
 import { CryptoError } from "./crypto";
 
-export class AlgorithmError extends CryptoError {
-}
+export class AlgorithmError extends CryptoError {}

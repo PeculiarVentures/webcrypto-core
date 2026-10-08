@@ -1,8 +1,5 @@
-/* eslint-disable prefer-spread */
 import assert from "node:assert";
-import {
-  CryptoKey, ProviderCrypto, SubtleCrypto,
-} from "../src";
+import { CryptoKey, ProviderCrypto, SubtleCrypto } from "../src";
 
 describe("SubtleCrypto", () => {
   class TestProvider extends ProviderCrypto {
@@ -77,18 +74,29 @@ describe("SubtleCrypto", () => {
 
   describe("sign", () => {
     it("correct values", async () => {
-      const res = await subtle.sign({
-        name: "test", hash: "SHA-1",
-      } as any, key, new Uint8Array(0));
+      const res = await subtle.sign(
+        {
+          name: "test",
+          hash: "SHA-1",
+        } as any,
+        key,
+        new Uint8Array(0),
+      );
       assert.equal(!!res, true);
     });
   });
 
   describe("verify", () => {
     it("correct values", async () => {
-      const res = await subtle.verify({
-        name: "test", hash: { name: "SHA-1" },
-      } as any, key, new ArrayBuffer(0), new Uint8Array(0));
+      const res = await subtle.verify(
+        {
+          name: "test",
+          hash: { name: "SHA-1" },
+        } as any,
+        key,
+        new ArrayBuffer(0),
+        new Uint8Array(0),
+      );
       assert.equal(!!res, true);
     });
   });
@@ -116,9 +124,16 @@ describe("SubtleCrypto", () => {
 
   describe("deriveKey", () => {
     it("correct values", async () => {
-      const res = await subtle.deriveKey("test", key, {
-        name: "test", length: 128,
-      } as any, false, ["verify"]);
+      const res = await subtle.deriveKey(
+        "test",
+        key,
+        {
+          name: "test",
+          length: 128,
+        } as any,
+        false,
+        ["verify"],
+      );
       assert.equal(!!res, true);
     });
   });
@@ -130,24 +145,17 @@ describe("SubtleCrypto", () => {
     });
 
     it("throws for invalid key format", async () => {
-      await assert.rejects(
-        subtle.exportKey("invalid_format" as any, key),
-        TypeError,
-        "Invalid keyFormat argument",
-      );
+      await assert.rejects(subtle.exportKey("invalid_format" as any, key), TypeError, "Invalid keyFormat argument");
     });
 
     it("throws for key not of expected type", async () => {
       const key = new CryptoKey();
       key.type = "wrong_type" as any;
-      await assert.rejects(
-        subtle.exportKey("raw", key),
-        (e: Error) => {
-          assert.ok(e instanceof DOMException, "Error is not an instance of DOMException");
-          assert.strictEqual(e.message, "The key is not of the expected type", "Error message is not as expected");
-          return true;
-        },
-      );
+      await assert.rejects(subtle.exportKey("raw", key), (e: Error) => {
+        assert.ok(e instanceof DOMException, "Error is not an instance of DOMException");
+        assert.strictEqual(e.message, "The key is not of the expected type", "Error message is not as expected");
+        return true;
+      });
     });
   });
 
@@ -178,27 +186,15 @@ describe("SubtleCrypto", () => {
     });
 
     it("throws for non-object JWK", async () => {
-      await assert.rejects(
-        subtle.importKey("jwk", new ArrayBuffer(0), "test", false, ["sign"]),
-        TypeError,
-        "Key data must be an object for JWK import",
-      );
+      await assert.rejects(subtle.importKey("jwk", new ArrayBuffer(0), "test", false, ["sign"]), TypeError, "Key data must be an object for JWK import");
     });
 
     it("throws for non-BufferSource for non-JWK formats", async () => {
-      await assert.rejects(
-        subtle.importKey("spki", {}, "test", false, ["sign"]),
-        TypeError,
-        "Key data must be a BufferSource for non-JWK formats",
-      );
+      await assert.rejects(subtle.importKey("spki", {}, "test", false, ["sign"]), TypeError, "Key data must be a BufferSource for non-JWK formats");
     });
 
     it("throws for invalid format", async () => {
-      await assert.rejects(
-        subtle.importKey("invalid_format", {}, "test", false, ["sign"]),
-        TypeError,
-        "The provided value is not of type '(ArrayBuffer or ArrayBufferView or JsonWebKey)'",
-      );
+      await assert.rejects(subtle.importKey("invalid_format", {}, "test", false, ["sign"]), TypeError, "The provided value is not of type '(ArrayBuffer or ArrayBufferView or JsonWebKey)'");
     });
   });
 
@@ -222,7 +218,7 @@ describe("SubtleCrypto", () => {
     });
 
     it("no error if greater than required", async () => {
-      await assert.doesNotReject(subtle.digest.apply(subtle, ["test", new Uint8Array(0), 1, 2, 3]));
+      await assert.doesNotReject((subtle.digest as (...args: unknown[]) => Promise<ArrayBuffer>).call(subtle, "test", new Uint8Array(0), 1, 2, 3));
     });
   });
 

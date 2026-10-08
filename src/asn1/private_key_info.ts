@@ -29,7 +29,8 @@ export class PrivateKeyInfo {
   public privateKey = new ArrayBuffer(0);
 
   @AsnProp({
-    type: AsnPropTypes.Any, optional: true,
+    type: AsnPropTypes.Any,
+    optional: true,
   })
   public attributes?: ArrayBuffer;
 }

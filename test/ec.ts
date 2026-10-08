@@ -1,11 +1,7 @@
 import assert from "node:assert";
 import * as encoding from "@peculiar/utils/encoding";
 import * as bytes from "@peculiar/utils/bytes";
-import {
-  EcdhEsProvider, EcdhProvider, EcdsaProvider, EcUtils,
-  EdDsaProvider, EllipticProvider, OperationError,
-  CryptoKey, ProviderKeyUsages,
-} from "../src";
+import { EcdhEsProvider, EcdhProvider, EcdsaProvider, EcUtils, EdDsaProvider, EllipticProvider, OperationError, CryptoKey, ProviderKeyUsages } from "../src";
 
 describe("EC", () => {
   describe("EcUtils", () => {
@@ -32,8 +28,8 @@ describe("EC", () => {
     });
     describe("signature point", () => {
       it("encode/decode", () => {
-        // eslint-disable-next-line @stylistic/max-len
-        const encodedHex = "00f3e308185c2d6cb59ec216ba8ce31e0a27db431be250807e604cd858494eb9d1de066b0dc7964f64b31e2f8da7f00741b5ba7e3972fe476099d53f5c5a39905a1f009fc215304c42100a0eec7b9d0bbc5f59c838b604bcceb6ebffd4870c83e76d8eca92e689032caddc69aa87a833216163589f97ce6cb4d10c84b7d6a949e73ca1c5";
+        const encodedHex =
+          "00f3e308185c2d6cb59ec216ba8ce31e0a27db431be250807e604cd858494eb9d1de066b0dc7964f64b31e2f8da7f00741b5ba7e3972fe476099d53f5c5a39905a1f009fc215304c42100a0eec7b9d0bbc5f59c838b604bcceb6ebffd4870c83e76d8eca92e689032caddc69aa87a833216163589f97ce6cb4d10c84b7d6a949e73ca1c5";
         const decoded = EcUtils.decodeSignature(encoding.hex.decode(encodedHex), 521);
         assert.strictEqual(encoding.hex.encode(decoded.r), "f3e308185c2d6cb59ec216ba8ce31e0a27db431be250807e604cd858494eb9d1de066b0dc7964f64b31e2f8da7f00741b5ba7e3972fe476099d53f5c5a39905a1f");
         assert.strictEqual(encoding.hex.encode(decoded.s), "9fc215304c42100a0eec7b9d0bbc5f59c838b604bcceb6ebffd4870c83e76d8eca92e689032caddc69aa87a833216163589f97ce6cb4d10c84b7d6a949e73ca1c5");
@@ -180,7 +176,8 @@ describe("EC", () => {
         _algorithm: EcKeyImportParams,
         _extractable: boolean,
         _keyUsages: KeyUsage[],
-        ..._args: any[]): Promise<CryptoKey> {
+        ..._args: any[]
+      ): Promise<CryptoKey> {
         return null as any;
       }
     }
@@ -189,9 +186,14 @@ describe("EC", () => {
     describe("generateKey", () => {
       ["X25519", "x448"].forEach((namedCurve) => {
         it(namedCurve, async () => {
-          const keys = await provider.generateKey({
-            name: "ECDH-ES", namedCurve,
-          } as globalThis.EcKeyGenParams, false, ["deriveBits", "deriveKey"]);
+          const keys = await provider.generateKey(
+            {
+              name: "ECDH-ES",
+              namedCurve,
+            } as globalThis.EcKeyGenParams,
+            false,
+            ["deriveBits", "deriveKey"],
+          );
           assert.strictEqual(keys, null);
         });
       });
@@ -225,9 +227,14 @@ describe("EC", () => {
     describe("generateKey", () => {
       ["Ed25519", "ed448"].forEach((namedCurve) => {
         it(namedCurve, async () => {
-          const keys = await provider.generateKey({
-            name: "EdDSA", namedCurve,
-          } as globalThis.EcKeyGenParams, false, ["sign", "verify"]);
+          const keys = await provider.generateKey(
+            {
+              name: "EdDSA",
+              namedCurve,
+            } as globalThis.EcKeyGenParams,
+            false,
+            ["sign", "verify"],
+          );
           assert.strictEqual(keys, null);
         });
       });

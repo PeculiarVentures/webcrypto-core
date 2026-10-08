@@ -1,2 +1,1 @@
-export class CryptoError extends Error {
-}
+export class CryptoError extends Error {}

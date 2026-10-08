@@ -1,8 +1,6 @@
 import assert from "node:assert";
 import { toArrayBuffer } from "@peculiar/utils/bytes";
-import {
-  Shake128Provider, Shake256Provider, ShakeParams,
-} from "../src";
+import { Shake128Provider, Shake256Provider, ShakeParams } from "../src";
 
 class TestShake128Provider extends Shake128Provider {
   public async onDigest(algorithm: Required<ShakeParams>, _data: ArrayBuffer): Promise<ArrayBuffer> {
@@ -24,15 +22,29 @@ describe("SHAKE", () => {
   describe("check parameters", () => {
     describe("algorithm.length", () => {
       it("negative value", async () => {
-        assert.rejects(shake128.digest({
-          name: "Shake128", length: -1,
-        } as Algorithm, toArrayBuffer(data)), TypeError);
+        assert.rejects(
+          shake128.digest(
+            {
+              name: "Shake128",
+              length: -1,
+            } as Algorithm,
+            toArrayBuffer(data),
+          ),
+          TypeError,
+        );
       });
 
       it("wrong type", async () => {
-        assert.rejects(shake128.digest({
-          name: "Shake128", length: "wrong",
-        } as Algorithm, toArrayBuffer(data)), TypeError);
+        assert.rejects(
+          shake128.digest(
+            {
+              name: "Shake128",
+              length: "wrong",
+            } as Algorithm,
+            toArrayBuffer(data),
+          ),
+          TypeError,
+        );
       });
     });
   });

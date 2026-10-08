@@ -1,6 +1,4 @@
-import {
-  AsnIntegerConverter, AsnProp, AsnPropTypes,
-} from "@peculiar/asn1-schema";
+import { AsnIntegerConverter, AsnProp, AsnPropTypes } from "@peculiar/asn1-schema";
 import { JsonProp } from "@peculiar/json-schema";
 import { AsnIntegerArrayBufferConverter, JsonBase64UrlArrayBufferConverter } from "../json/converters";
 
@@ -22,76 +20,94 @@ import { AsnIntegerArrayBufferConverter, JsonBase64UrlArrayBufferConverter } fro
 
 export class RsaPrivateKey {
   @AsnProp({
-    type: AsnPropTypes.Integer, converter: AsnIntegerConverter,
+    type: AsnPropTypes.Integer,
+    converter: AsnIntegerConverter,
   })
   public version = 0;
 
   @AsnProp({
-    type: AsnPropTypes.Integer, converter: AsnIntegerArrayBufferConverter,
+    type: AsnPropTypes.Integer,
+    converter: AsnIntegerArrayBufferConverter,
   })
   @JsonProp({
-    name: "n", converter: JsonBase64UrlArrayBufferConverter,
+    name: "n",
+    converter: JsonBase64UrlArrayBufferConverter,
   })
   public modulus = new ArrayBuffer(0);
 
   @AsnProp({
-    type: AsnPropTypes.Integer, converter: AsnIntegerArrayBufferConverter,
+    type: AsnPropTypes.Integer,
+    converter: AsnIntegerArrayBufferConverter,
   })
   @JsonProp({
-    name: "e", converter: JsonBase64UrlArrayBufferConverter,
+    name: "e",
+    converter: JsonBase64UrlArrayBufferConverter,
   })
   public publicExponent = new ArrayBuffer(0);
 
   @AsnProp({
-    type: AsnPropTypes.Integer, converter: AsnIntegerArrayBufferConverter,
+    type: AsnPropTypes.Integer,
+    converter: AsnIntegerArrayBufferConverter,
   })
   @JsonProp({
-    name: "d", converter: JsonBase64UrlArrayBufferConverter,
+    name: "d",
+    converter: JsonBase64UrlArrayBufferConverter,
   })
   public privateExponent = new ArrayBuffer(0);
 
   @AsnProp({
-    type: AsnPropTypes.Integer, converter: AsnIntegerArrayBufferConverter,
+    type: AsnPropTypes.Integer,
+    converter: AsnIntegerArrayBufferConverter,
   })
   @JsonProp({
-    name: "p", converter: JsonBase64UrlArrayBufferConverter,
+    name: "p",
+    converter: JsonBase64UrlArrayBufferConverter,
   })
   public prime1 = new ArrayBuffer(0);
 
   @AsnProp({
-    type: AsnPropTypes.Integer, converter: AsnIntegerArrayBufferConverter,
+    type: AsnPropTypes.Integer,
+    converter: AsnIntegerArrayBufferConverter,
   })
   @JsonProp({
-    name: "q", converter: JsonBase64UrlArrayBufferConverter,
+    name: "q",
+    converter: JsonBase64UrlArrayBufferConverter,
   })
   public prime2 = new ArrayBuffer(0);
 
   @AsnProp({
-    type: AsnPropTypes.Integer, converter: AsnIntegerArrayBufferConverter,
+    type: AsnPropTypes.Integer,
+    converter: AsnIntegerArrayBufferConverter,
   })
   @JsonProp({
-    name: "dp", converter: JsonBase64UrlArrayBufferConverter,
+    name: "dp",
+    converter: JsonBase64UrlArrayBufferConverter,
   })
   public exponent1 = new ArrayBuffer(0);
 
   @AsnProp({
-    type: AsnPropTypes.Integer, converter: AsnIntegerArrayBufferConverter,
+    type: AsnPropTypes.Integer,
+    converter: AsnIntegerArrayBufferConverter,
   })
   @JsonProp({
-    name: "dq", converter: JsonBase64UrlArrayBufferConverter,
+    name: "dq",
+    converter: JsonBase64UrlArrayBufferConverter,
   })
   public exponent2 = new ArrayBuffer(0);
 
   @AsnProp({
-    type: AsnPropTypes.Integer, converter: AsnIntegerArrayBufferConverter,
+    type: AsnPropTypes.Integer,
+    converter: AsnIntegerArrayBufferConverter,
   })
   @JsonProp({
-    name: "qi", converter: JsonBase64UrlArrayBufferConverter,
+    name: "qi",
+    converter: JsonBase64UrlArrayBufferConverter,
   })
   public coefficient = new ArrayBuffer(0);
 
   @AsnProp({
-    type: AsnPropTypes.Any, optional: true,
+    type: AsnPropTypes.Any,
+    optional: true,
   })
   public otherPrimeInfos?: ArrayBuffer;
 }
