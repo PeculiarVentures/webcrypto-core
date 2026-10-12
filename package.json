@@ -66,5 +66,8 @@
   "bugs": {
     "url": "https://github.com/PeculiarVentures/webcrypto-core/issues"
   },
-  "homepage": "https://github.com/PeculiarVentures/webcrypto-core#readme"
+  "homepage": "https://github.com/PeculiarVentures/webcrypto-core#readme",
+  "engines": {
+    "node": ">=16.0.0"
+  }
 }
