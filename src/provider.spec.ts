@@ -1,8 +1,8 @@
 import assert from "node:assert";
-import { ProviderKeyPairUsage } from "../src";
-import { AlgorithmError, CryptoError, OperationError, UnsupportedOperationError } from "../src/errors";
-import { CryptoKey } from "../src/crypto_key";
-import { ProviderCrypto } from "../src/provider";
+import { ProviderKeyPairUsage } from "./index";
+import { AlgorithmError, CryptoError, OperationError, UnsupportedOperationError } from "./errors";
+import { CryptoKey } from "./crypto_key";
+import { ProviderCrypto } from "./provider";
 
 class TestProvider extends ProviderCrypto {
   public name = "CUSTOM-ALG";

@@ -1,12 +1,12 @@
 import assert from "node:assert";
-import { CryptoKey, DesProvider, OperationError } from "../src";
+import { CryptoKey, DesProvider, OperationError } from "../index";
 
 class DesTestProvider extends DesProvider {
   public keySizeBits = 64;
   public ivSize = 8;
   public name = "DES-TEST";
 
-  public onGenerateKey(_algorithm: import("../src/des").DesKeyGenParams, _extractable: boolean, _keyUsages: KeyUsage[]): Promise<CryptoKey> {
+  public onGenerateKey(_algorithm: import("./index").DesKeyGenParams, _extractable: boolean, _keyUsages: KeyUsage[]): Promise<CryptoKey> {
     throw new Error("Method not implemented.");
   }
 
@@ -14,15 +14,15 @@ class DesTestProvider extends DesProvider {
     throw new Error("Method not implemented.");
   }
 
-  public onImportKey(_format: KeyFormat, _keyData: JsonWebKey | ArrayBuffer, _algorithm: import("../src/des").DesImportParams, _extractable: boolean, _keyUsages: KeyUsage[]): Promise<CryptoKey> {
+  public onImportKey(_format: KeyFormat, _keyData: JsonWebKey | ArrayBuffer, _algorithm: import("./index").DesImportParams, _extractable: boolean, _keyUsages: KeyUsage[]): Promise<CryptoKey> {
     throw new Error("Method not implemented.");
   }
 
-  public onEncrypt(_algorithm: import("../src/des").DesParams, _key: CryptoKey, _data: ArrayBuffer): Promise<ArrayBuffer> {
+  public onEncrypt(_algorithm: import("./index").DesParams, _key: CryptoKey, _data: ArrayBuffer): Promise<ArrayBuffer> {
     throw new Error("Method not implemented.");
   }
 
-  public onDecrypt(_algorithm: import("../src/des").DesParams, _key: CryptoKey, _data: ArrayBuffer): Promise<ArrayBuffer> {
+  public onDecrypt(_algorithm: import("./index").DesParams, _key: CryptoKey, _data: ArrayBuffer): Promise<ArrayBuffer> {
     throw new Error("Method not implemented.");
   }
 }

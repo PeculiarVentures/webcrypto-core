@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import { AsnParser, AsnSerializer } from "@peculiar/asn1-schema";
 import { JsonParser, JsonSerializer } from "@peculiar/json-schema";
-import * as asn from "../../src/asn1";
+import * as asn from "./index";
 
 describe("ASN1", () => {
   describe("RSA", () => {

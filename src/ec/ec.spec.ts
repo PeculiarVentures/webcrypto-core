@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import * as encoding from "@peculiar/utils/encoding";
 import * as bytes from "@peculiar/utils/bytes";
-import { EcdhEsProvider, EcdhProvider, EcdsaProvider, EcUtils, EdDsaProvider, EllipticProvider, OperationError, CryptoKey, ProviderKeyUsages } from "../src";
+import { EcdhEsProvider, EcdhProvider, EcdsaProvider, EcUtils, EdDsaProvider, EllipticProvider, OperationError, CryptoKey, ProviderKeyUsages } from "../index";
 
 describe("EC", () => {
   describe("EcUtils", () => {

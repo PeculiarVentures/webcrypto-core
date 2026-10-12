@@ -1,6 +1,6 @@
 import assert from "node:assert";
-import { AesCbcProvider, AesCmacProvider, AesCtrProvider, AesGcmProvider } from "../src/aes";
-import { OperationError } from "../src/errors";
+import { AesCbcProvider, AesCmacProvider, AesCtrProvider, AesGcmProvider } from "./index";
+import { OperationError } from "../errors";
 
 describe("AES", () => {
   describe("AES-CBC", () => {

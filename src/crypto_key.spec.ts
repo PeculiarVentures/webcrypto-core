@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { CryptoKey } from "../src/crypto_key";
+import { CryptoKey } from "./crypto_key";
 
 describe("CryptoKey", () => {
   describe("isKeyType", () => {

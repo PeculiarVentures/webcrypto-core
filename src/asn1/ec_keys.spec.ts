@@ -2,7 +2,7 @@ import assert from "node:assert";
 import { AsnConvert } from "@peculiar/asn1-schema";
 import { JsonSerializer } from "@peculiar/json-schema";
 import * as encoding from "@peculiar/utils/encoding";
-import { EcPrivateKey, EcPublicKey, PrivateKeyInfo, PublicKeyInfo } from "../../src/asn1";
+import { EcPrivateKey, EcPublicKey, PrivateKeyInfo, PublicKeyInfo } from "./index";
 
 describe("ECDSA keys", () => {
   it("Private key", () => {

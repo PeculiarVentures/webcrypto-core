@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import * as encoding from "@peculiar/utils/encoding";
 import { AsnSerializer, AsnParser } from "@peculiar/asn1-schema";
-import { EcDsaSignature } from "../../src/asn1";
+import { EcDsaSignature } from "./index";
 
 interface IEcSignatureTestVector {
   name: string;

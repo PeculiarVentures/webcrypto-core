@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import * as nodeCrypto from "node:crypto";
-import { Crypto, SubtleCrypto } from "../src";
+import { Crypto, SubtleCrypto } from "./index";
 
 describe("Crypto", () => {
   class MyCrypto extends Crypto {

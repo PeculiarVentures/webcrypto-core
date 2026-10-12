@@ -1,5 +1,5 @@
 import assert from "node:assert";
-import { CryptoKey, ProviderCrypto, SubtleCrypto } from "../src";
+import { CryptoKey, ProviderCrypto, SubtleCrypto } from "./index";
 
 describe("SubtleCrypto", () => {
   class TestProvider extends ProviderCrypto {

@@ -1,6 +1,6 @@
 import assert from "node:assert";
-import { ProviderStorage, CryptoKey } from "../src";
-import * as rsa from "../src/rsa";
+import { ProviderStorage, CryptoKey } from "./index";
+import * as rsa from "./rsa";
 
 class RsaSsaProvider extends rsa.RsaSsaProvider {
   public onSign(_algorithm: rsa.RsaSsaParams, _key: CryptoKey, _data: ArrayBuffer): Promise<ArrayBuffer> {

@@ -1,6 +1,6 @@
 import assert from "node:assert";
-import { OperationError } from "../src/errors";
-import { HmacProvider } from "../src/hmac";
+import { OperationError } from "../errors";
+import { HmacProvider } from "./index";
 
 describe("HMAC", () => {
   const provider = Reflect.construct(HmacProvider, []) as HmacProvider;

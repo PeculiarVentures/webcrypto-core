@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import * as encoding from "@peculiar/utils/encoding";
 import * as bytes from "@peculiar/utils/bytes";
-import { PemConverter } from "../src";
+import { PemConverter } from "../index";
 
 describe("PemConverter", () => {
   const raw = encoding.hex.decode(

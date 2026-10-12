@@ -1,8 +1,8 @@
 import assert from "node:assert";
 import { AsnConvert, AsnSerializer } from "@peculiar/asn1-schema";
 import * as encoding from "@peculiar/utils/encoding";
-import { EdPrivateKey, EdPublicKey, OneAsymmetricKey, PublicKeyInfo } from "../src/asn1";
-import { CryptoKey, Ed25519Provider, X25519Provider } from "../src";
+import { EdPrivateKey, EdPublicKey, OneAsymmetricKey, PublicKeyInfo } from "../asn1";
+import { CryptoKey, Ed25519Provider, X25519Provider } from "../index";
 
 describe("ED", () => {
   describe("asn", () => {

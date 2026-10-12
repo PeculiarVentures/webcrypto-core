@@ -1,6 +1,6 @@
 import assert from "node:assert";
 import { toArrayBuffer } from "@peculiar/utils/bytes";
-import { Shake128Provider, Shake256Provider, ShakeParams } from "../src";
+import { Shake128Provider, Shake256Provider, ShakeParams } from "../index";
 
 class TestShake128Provider extends Shake128Provider {
   public async onDigest(algorithm: Required<ShakeParams>, _data: ArrayBuffer): Promise<ArrayBuffer> {

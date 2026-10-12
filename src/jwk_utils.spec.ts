@@ -1,7 +1,7 @@
 import assert from "node:assert";
 import * as crypto from "node:crypto";
 import * as encoding from "@peculiar/utils/encoding";
-import { JwkUtils } from "../src";
+import { JwkUtils } from "./index";
 
 // crypto.webcrypto
 const ctx = crypto.webcrypto ? describe : describe.skip;
