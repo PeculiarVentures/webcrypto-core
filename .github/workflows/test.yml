@@ -50,7 +50,6 @@ jobs:
 
   finish:
     needs: build
-    if: ${{ always() }}
     runs-on: ubuntu-24.04
 
     steps:
@@ -58,4 +57,4 @@ jobs:
         uses: coverallsapp/github-action@v2
         with:
           parallel-finished: true
-          carryforward: "run-22.x,run-24.x"
+          carryforward: "run-24.x"
