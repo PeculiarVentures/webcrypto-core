@@ -1,40 +1,70 @@
-name: Release
+name: Publish
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "Release type"
-        required: true
-        default: "patch"
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
+  push:
+    branches:
+      - master
+    paths:
+      - package.json
 
 permissions:
-  contents: write
-  id-token: write
+  contents: read
+
+concurrency:
+  group: publish
+  cancel-in-progress: false
 
 jobs:
-  prepare-release:
-    runs-on: ubuntu-latest
+  check:
+    runs-on: ubuntu-24.04
 
     outputs:
       version: ${{ steps.version.outputs.version }}
-      release_tag: ${{ steps.version.outputs.release_tag }}
-      major_tag: ${{ steps.version.outputs.major_tag }}
-      tgz: ${{ steps.pack.outputs.tgz }}
+      release: ${{ steps.version.outputs.release }}
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@v7
+
+      - name: Check for unreleased version
+        id: version
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          # The GitHub Release is the last publish step, so its absence means the version is not fully released.
+          STATUS=$(curl -sS -o /dev/null -w '%{http_code}' \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases/tags/v$VERSION")
+
+          case "$STATUS" in
+            200) echo "release=false" >> "$GITHUB_OUTPUT" ;;
+            404) echo "release=true" >> "$GITHUB_OUTPUT" ;;
+            *) echo "::error::Unexpected HTTP $STATUS while checking release v$VERSION"; exit 1 ;;
+          esac
+
+  publish:
+    runs-on: ubuntu-24.04
+    needs: check
+    if: needs.check.outputs.release == 'true'
+    environment: npm
+
+    permissions:
+      contents: write
+      id-token: write
+
+    env:
+      VERSION: ${{ needs.check.outputs.version }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 24
           registry-url: https://registry.npmjs.org
@@ -43,213 +73,76 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Lint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Typecheck
+        run: npm run typecheck
+
       - name: Test
         run: npm test
 
-      - name: Bump version without git tag
-        id: version
-        run: |
-          npm version "${{ inputs.version }}" --no-git-tag-version
-
-          VERSION=$(node -p "require('./package.json').version")
-          MAJOR=$(node -p "require('./package.json').version.split('.')[0]")
-
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "release_tag=v$VERSION" >> "$GITHUB_OUTPUT"
-          echo "major_tag=v$MAJOR" >> "$GITHUB_OUTPUT"
-
-      - name: Build
+      - name: Build package
         run: npm run build
 
-      - name: Pack release artifact
-        id: pack
+      - name: Check generated package exports are committed
+        run: git diff --exit-code package.json
+
+      - name: Extract release notes
         run: |
-          TGZ=$(npm pack --json | node -e "let s='';process.stdin.on('data',d=>s+=d);process.stdin.on('end',()=>console.log(JSON.parse(s)[0].filename))")
+          # Angular preset headings: "# [x.y.0](...)" for minor/major, "## [x.y.z](...)" for patch.
+          awk -v version="$VERSION" '
+            /^##? \[?[0-9]+\.[0-9]+\.[0-9]+/ {
+              if (found) exit
+              if (index($0, "[" version "]") || index($0, " " version " ")) { found = 1; next }
+            }
+            found { print }
+          ' CHANGELOG.md > "$RUNNER_TEMP/release-notes.md"
 
-          echo "tgz=$TGZ" >> "$GITHUB_OUTPUT"
-          sha256sum "$TGZ" > "$TGZ.sha256"
+          if ! grep -q '[^[:space:]]' "$RUNNER_TEMP/release-notes.md"; then
+            echo "::error::No CHANGELOG.md section found for $VERSION"
+            exit 1
+          fi
 
-      - name: Generate release summary
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Publish to npm via Trusted Publisher
         run: |
-          CURRENT_SHA=$(git rev-parse HEAD)
-          PREVIOUS_TAG=$(git tag --merged "$CURRENT_SHA" --sort=-version:refname | head -n 1)
+          NAME=$(node -p "require('./package.json').name")
 
-          echo "## Release preview" >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "**Version:** ${{ steps.version.outputs.release_tag }}" >> "$GITHUB_STEP_SUMMARY"
-          echo "**Release type:** ${{ inputs.version }}" >> "$GITHUB_STEP_SUMMARY"
-          echo "**Package:** \`${{ steps.pack.outputs.tgz }}\`" >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-
-          echo "### SHA256" >> "$GITHUB_STEP_SUMMARY"
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
-          cat "${{ steps.pack.outputs.tgz }}.sha256" >> "$GITHUB_STEP_SUMMARY"
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-
-          echo "### Changes" >> "$GITHUB_STEP_SUMMARY"
-
-          if [ -n "$PREVIOUS_TAG" ]; then
-            declare -A SEEN_PRS=()
-
-            while IFS= read -r COMMIT_SHA; do
-              [ -z "$COMMIT_SHA" ] && continue
-
-              COMMIT_SHORT_SHA=$(git rev-parse --short "$COMMIT_SHA")
-              COMMIT_SUBJECT=$(git show -s --format=%s "$COMMIT_SHA")
-              PR_JSON=$(gh api "repos/${{ github.repository }}/commits/$COMMIT_SHA/pulls" \
-                -H "Accept: application/vnd.github+json" 2>/dev/null || echo "")
-
-              if [ -n "$PR_JSON" ] && [ "$PR_JSON" != "[]" ]; then
-                PR_NUMBER=$(node -e 'const payload = JSON.parse(process.argv[1]); process.stdout.write(String(payload[0].number));' "$PR_JSON")
-
-                if [ -z "${SEEN_PRS[$PR_NUMBER]+x}" ]; then
-                  PR_TITLE=$(node -e 'const payload = JSON.parse(process.argv[1]); process.stdout.write(payload[0].title);' "$PR_JSON")
-                  PR_URL=$(node -e 'const payload = JSON.parse(process.argv[1]); process.stdout.write(payload[0].html_url);' "$PR_JSON")
-
-                  echo "- PR #$PR_NUMBER: [$PR_TITLE]($PR_URL)" >> "$GITHUB_STEP_SUMMARY"
-                  SEEN_PRS[$PR_NUMBER]=1
-                fi
-              else
-                echo "- $COMMIT_SUBJECT ($COMMIT_SHORT_SHA)" >> "$GITHUB_STEP_SUMMARY"
-              fi
-            done < <(git rev-list --reverse "$PREVIOUS_TAG".."$CURRENT_SHA")
-
-            echo "" >> "$GITHUB_STEP_SUMMARY"
-            echo "[View full diff](https://github.com/${{ github.repository }}/compare/$PREVIOUS_TAG...$CURRENT_SHA)" >> "$GITHUB_STEP_SUMMARY"
+          if npm view "$NAME@$VERSION" version > /dev/null 2>&1; then
+            echo "$NAME@$VERSION is already published"
           else
-            declare -A SEEN_PRS=()
-
-            while IFS= read -r COMMIT_SHA; do
-              [ -z "$COMMIT_SHA" ] && continue
-
-              COMMIT_SHORT_SHA=$(git rev-parse --short "$COMMIT_SHA")
-              COMMIT_SUBJECT=$(git show -s --format=%s "$COMMIT_SHA")
-              PR_JSON=$(gh api "repos/${{ github.repository }}/commits/$COMMIT_SHA/pulls" \
-                -H "Accept: application/vnd.github+json" 2>/dev/null || echo "")
-
-              if [ -n "$PR_JSON" ] && [ "$PR_JSON" != "[]" ]; then
-                PR_NUMBER=$(node -e 'const payload = JSON.parse(process.argv[1]); process.stdout.write(String(payload[0].number));' "$PR_JSON")
-
-                if [ -z "${SEEN_PRS[$PR_NUMBER]+x}" ]; then
-                  PR_TITLE=$(node -e 'const payload = JSON.parse(process.argv[1]); process.stdout.write(payload[0].title);' "$PR_JSON")
-                  PR_URL=$(node -e 'const payload = JSON.parse(process.argv[1]); process.stdout.write(payload[0].html_url);' "$PR_JSON")
-
-                  echo "- PR #$PR_NUMBER: [$PR_TITLE]($PR_URL)" >> "$GITHUB_STEP_SUMMARY"
-                  SEEN_PRS[$PR_NUMBER]=1
-                fi
-              else
-                echo "- $COMMIT_SUBJECT ($COMMIT_SHORT_SHA)" >> "$GITHUB_STEP_SUMMARY"
-              fi
-            done < <(git rev-list --reverse HEAD)
+            npm publish
           fi
 
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "### Package contents" >> "$GITHUB_STEP_SUMMARY"
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
-
-          PACKAGE_FILES=$(tar -tzf "${{ steps.pack.outputs.tgz }}")
-          PACKAGE_FILE_COUNT=$(printf '%s\n' "$PACKAGE_FILES" | sed '/^$/d' | wc -l | tr -d ' ')
-
-          printf '%s\n' "$PACKAGE_FILES" | sed -n '1,40p' >> "$GITHUB_STEP_SUMMARY"
-
-          if [ "$PACKAGE_FILE_COUNT" -gt 40 ]; then
-            echo "... and $((PACKAGE_FILE_COUNT - 40)) more files" >> "$GITHUB_STEP_SUMMARY"
-          fi
-
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Upload release package
-        uses: actions/upload-artifact@v7
-        with:
-          name: npm-package
-          path: |
-            *.tgz
-            *.tgz.sha256
-          retention-days: 7
-          if-no-files-found: error
-
-      - name: Upload release version files
-        uses: actions/upload-artifact@v7
-        with:
-          name: release-version-files
-          path: |
-            package.json
-            package-lock.json
-          retention-days: 7
-          if-no-files-found: error
-
-  publish:
-    runs-on: ubuntu-latest
-    needs: prepare-release
-    environment: npm
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 24
-          registry-url: https://registry.npmjs.org
-          cache: npm
-
-      - name: Download release package
-        uses: actions/download-artifact@v7
-        with:
-          name: npm-package
-          path: ./release-package
-
-      - name: Download release version files
-        uses: actions/download-artifact@v7
-        with:
-          name: release-version-files
-          path: ./release-version-files
-
-      - name: Verify package checksum
+      - name: Push tags
         run: |
-          cd release-package
-          sha256sum -c *.tgz.sha256
+          set +e
+          git ls-remote --exit-code --tags origin "refs/tags/v$VERSION" > /dev/null
+          STATUS=$?
+          set -e
 
-      - name: Publish prepared package via Trusted Publisher
-        run: |
-          npm publish ./release-package/*.tgz --access public
+          case "$STATUS" in
+            0)
+              echo "Tag v$VERSION already exists"
+              git fetch --no-tags origin "refs/tags/v$VERSION:refs/tags/v$VERSION"
+              ;;
+            2)
+              git tag "v$VERSION"
+              git push origin "v$VERSION"
+              ;;
+            *)
+              echo "::error::git ls-remote failed with exit code $STATUS"
+              exit 1
+              ;;
+          esac
 
-      - name: Push commit and tag
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          cp ./release-version-files/package.json ./package.json
-
-          if [ -f ./release-version-files/package-lock.json ]; then
-            cp ./release-version-files/package-lock.json ./package-lock.json
-          fi
-
-          git add package.json package-lock.json
-          git commit -m "chore(release): ${{ needs.prepare-release.outputs.release_tag }}"
-          git tag "${{ needs.prepare-release.outputs.release_tag }}"
-
-      - name: Push commit and tag
-        run: |
-          git push origin HEAD:${{ github.event.repository.default_branch }}
-          git push origin "${{ needs.prepare-release.outputs.release_tag }}"
-
-      - name: Update major tag
-        run: |
-          git tag -f "${{ needs.prepare-release.outputs.major_tag }}" "${{ needs.prepare-release.outputs.release_tag }}"
-          git push origin "${{ needs.prepare-release.outputs.major_tag }}" --force
+          git tag -f "v${VERSION%%.*}" "v$VERSION^{commit}"
+          git push -f origin "v${VERSION%%.*}"
 
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          gh release create "${{ needs.prepare-release.outputs.release_tag }}" \
-            --verify-tag \
-            --title "${{ needs.prepare-release.outputs.release_tag }}" \
-            --generate-notes
+        run: gh release create "v$VERSION" --verify-tag --title "v$VERSION" --notes-file "$RUNNER_TEMP/release-notes.md"
