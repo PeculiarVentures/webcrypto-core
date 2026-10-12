@@ -43,5 +43,19 @@ jobs:
         run: npm run coverage
 
       - name: Coveralls
-        if: matrix.node-version == 24
         uses: coverallsapp/github-action@v2
+        with:
+          flag-name: run-${{ matrix.node-version }}.x
+          parallel: true
+
+  finish:
+    needs: build
+    if: ${{ always() }}
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Close parallel build
+        uses: coverallsapp/github-action@v2
+        with:
+          parallel-finished: true
+          carryforward: "run-22.x,run-24.x"
