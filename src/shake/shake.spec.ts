@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import { describe, it, expect } from "vitest";
 import { toArrayBuffer } from "@peculiar/utils/bytes";
 import { Shake128Provider, Shake256Provider, ShakeParams } from "../index";
 
@@ -22,7 +22,7 @@ describe("SHAKE", () => {
   describe("check parameters", () => {
     describe("algorithm.length", () => {
       it("negative value", async () => {
-        assert.rejects(
+        await expect(
           shake128.digest(
             {
               name: "Shake128",
@@ -30,12 +30,11 @@ describe("SHAKE", () => {
             } as Algorithm,
             toArrayBuffer(data),
           ),
-          TypeError,
-        );
+        ).rejects.toThrow(TypeError);
       });
 
       it("wrong type", async () => {
-        assert.rejects(
+        await expect(
           shake128.digest(
             {
               name: "Shake128",
@@ -43,8 +42,7 @@ describe("SHAKE", () => {
             } as Algorithm,
             toArrayBuffer(data),
           ),
-          TypeError,
-        );
+        ).rejects.toThrow(TypeError);
       });
     });
   });
@@ -52,14 +50,14 @@ describe("SHAKE", () => {
   describe("shake128", () => {
     it("default length", async () => {
       const digest = await shake128.digest({ name: "shake128" }, toArrayBuffer(data));
-      assert.strictEqual(digest.byteLength, 16);
+      expect(digest.byteLength).toBe(16);
     });
   });
 
   describe("shake256", () => {
     it("default length", async () => {
       const digest = await shake256.digest({ name: "Shake256" }, toArrayBuffer(data));
-      assert.strictEqual(digest.byteLength, 32);
+      expect(digest.byteLength).toBe(32);
     });
   });
 });

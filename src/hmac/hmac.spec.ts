@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import { describe, it, expect } from "vitest";
 import { OperationError } from "../errors";
 import { HmacProvider } from "./index";
 
@@ -7,33 +7,33 @@ describe("HMAC", () => {
 
   describe("checkGenerateKeyParams", () => {
     it("error if `hash` is missing", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkGenerateKeyParams({} as any);
-      }, Error);
+      }).toThrow(Error);
     });
 
     it("error if `hash` is wrong", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkGenerateKeyParams({ hash: { name: "WRONG" } } as any);
-      }, OperationError);
+      }).toThrow(OperationError);
     });
 
     it("error if `length` is not of type Number", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkGenerateKeyParams({
           hash: { name: "SHA-256" },
           length: "128",
         } as any);
-      }, TypeError);
+      }).toThrow(TypeError);
     });
 
     it("error if `length` is less than 1", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkGenerateKeyParams({
           hash: { name: "SHA-256" },
           length: 0,
         } as any);
-      }, RangeError);
+      }).toThrow(RangeError);
     });
 
     it("default length", () => {
@@ -53,42 +53,42 @@ describe("HMAC", () => {
   describe("getDefaultLength", () => {
     it("SHA-1", () => {
       const len = provider.getDefaultLength("SHA-1");
-      assert.equal(len, 512);
+      expect(len).toBe(512);
     });
 
     it("SHA-256", () => {
       const len = provider.getDefaultLength("SHA-256");
-      assert.equal(len, 512);
+      expect(len).toBe(512);
     });
 
     it("SHA-384", () => {
       const len = provider.getDefaultLength("SHA-384");
-      assert.equal(len, 512);
+      expect(len).toBe(512);
     });
 
     it("SHA-512", () => {
       const len = provider.getDefaultLength("SHA-512");
-      assert.equal(len, 512);
+      expect(len).toBe(512);
     });
 
     it("error if unknown name", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.getDefaultLength("SHA-521");
-      }, Error);
+      }).toThrow(Error);
     });
   });
 
   describe("checkImportParams", () => {
     it("error if `hash` is missing", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkImportParams({} as any);
-      }, Error);
+      }).toThrow(Error);
     });
 
     it("error if `hash` is wrong", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkImportParams({ hash: { name: "WRONG" } } as any);
-      }, OperationError);
+      }).toThrow(OperationError);
     });
   });
 });

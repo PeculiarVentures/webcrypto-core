@@ -7,7 +7,7 @@
     "stripInternal": true,
     "skipLibCheck": true,
     "removeComments": true,
-    "types": ["vitest/globals"],
+    "types": ["node"],
     "strict": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,

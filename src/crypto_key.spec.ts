@@ -1,13 +1,13 @@
-import assert from "node:assert";
+import { describe, it, expect } from "vitest";
 import { CryptoKey } from "./crypto_key";
 
 describe("CryptoKey", () => {
   describe("isKeyType", () => {
     it("correct key type", () => {
-      assert.equal(CryptoKey.isKeyType("secret"), true);
+      expect(CryptoKey.isKeyType("secret")).toBe(true);
     });
     it("incorrect key type", () => {
-      assert.equal(CryptoKey.isKeyType("Secret"), false);
+      expect(CryptoKey.isKeyType("Secret")).toBe(false);
     });
   });
 });

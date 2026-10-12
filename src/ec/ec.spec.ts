@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import { describe, it, expect } from "vitest";
 import * as encoding from "@peculiar/utils/encoding";
 import * as bytes from "@peculiar/utils/bytes";
 import { EcdhEsProvider, EcdhProvider, EcdsaProvider, EcUtils, EdDsaProvider, EllipticProvider, OperationError, CryptoKey, ProviderKeyUsages } from "../index";
@@ -13,17 +13,17 @@ describe("EC", () => {
         };
         const encoded = EcUtils.encodePoint(point, 160);
 
-        assert.strictEqual(encoding.hex.encode(encoded), "0401010101010202020202030303030304040404040505050505060606060607070707070808080808");
+        expect(encoding.hex.encode(encoded)).toBe("0401010101010202020202030303030304040404040505050505060606060607070707070808080808");
 
         const decoded = EcUtils.decodePoint(bytes.toArrayBuffer(encoded), 160);
-        assert.strictEqual(encoding.hex.encode(decoded.x), encoding.hex.encode(point.x));
-        assert.strictEqual(encoding.hex.encode(decoded.y), encoding.hex.encode(point.y));
+        expect(encoding.hex.encode(decoded.x)).toBe(encoding.hex.encode(point.x));
+        expect(encoding.hex.encode(decoded.y)).toBe(encoding.hex.encode(point.y));
       });
       it("decode uncompressed point ", () => {
         const uncompressedPoint = new Uint8Array(encoding.hex.decode("0400010101010202020202030303030304040404040005050505060606060607070707070808080808"));
         const decoded = EcUtils.decodePoint(uncompressedPoint, 160);
-        assert.strictEqual(encoding.hex.encode(decoded.x), "0001010101020202020203030303030404040404");
-        assert.strictEqual(encoding.hex.encode(decoded.y), "0005050505060606060607070707070808080808");
+        expect(encoding.hex.encode(decoded.x)).toBe("0001010101020202020203030303030404040404");
+        expect(encoding.hex.encode(decoded.y)).toBe("0005050505060606060607070707070808080808");
       });
     });
     describe("signature point", () => {
@@ -31,11 +31,11 @@ describe("EC", () => {
         const encodedHex =
           "00f3e308185c2d6cb59ec216ba8ce31e0a27db431be250807e604cd858494eb9d1de066b0dc7964f64b31e2f8da7f00741b5ba7e3972fe476099d53f5c5a39905a1f009fc215304c42100a0eec7b9d0bbc5f59c838b604bcceb6ebffd4870c83e76d8eca92e689032caddc69aa87a833216163589f97ce6cb4d10c84b7d6a949e73ca1c5";
         const decoded = EcUtils.decodeSignature(encoding.hex.decode(encodedHex), 521);
-        assert.strictEqual(encoding.hex.encode(decoded.r), "f3e308185c2d6cb59ec216ba8ce31e0a27db431be250807e604cd858494eb9d1de066b0dc7964f64b31e2f8da7f00741b5ba7e3972fe476099d53f5c5a39905a1f");
-        assert.strictEqual(encoding.hex.encode(decoded.s), "9fc215304c42100a0eec7b9d0bbc5f59c838b604bcceb6ebffd4870c83e76d8eca92e689032caddc69aa87a833216163589f97ce6cb4d10c84b7d6a949e73ca1c5");
+        expect(encoding.hex.encode(decoded.r)).toBe("f3e308185c2d6cb59ec216ba8ce31e0a27db431be250807e604cd858494eb9d1de066b0dc7964f64b31e2f8da7f00741b5ba7e3972fe476099d53f5c5a39905a1f");
+        expect(encoding.hex.encode(decoded.s)).toBe("9fc215304c42100a0eec7b9d0bbc5f59c838b604bcceb6ebffd4870c83e76d8eca92e689032caddc69aa87a833216163589f97ce6cb4d10c84b7d6a949e73ca1c5");
 
         const encoded = EcUtils.encodeSignature(decoded, 521);
-        assert.strictEqual(encoding.hex.encode(encoded), encodedHex);
+        expect(encoding.hex.encode(encoded)).toBe(encodedHex);
       });
     });
   });
@@ -66,21 +66,21 @@ describe("EC", () => {
 
     describe("checkGenerateKeyParams", () => {
       it("error if `namedCurve` is missing", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkGenerateKeyParams({} as any);
-        }, Error);
+        }).toThrow(Error);
       });
 
       it("error if `namedCurve` is not of type String", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkGenerateKeyParams({ namedCurve: 123 } as any);
-        }, TypeError);
+        }).toThrow(TypeError);
       });
 
       it("error if `namedCurve` is not value from list", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkGenerateKeyParams({ namedCurve: "P-256" } as any);
-        }, OperationError);
+        }).toThrow(OperationError);
       });
 
       it("correct `namedCurve`", () => {
@@ -95,33 +95,33 @@ describe("EC", () => {
     describe("", () => {
       describe("checkAlgorithmParams", () => {
         it("error if `public` is missing", () => {
-          assert.throws(() => {
+          expect(() => {
             provider.checkAlgorithmParams({} as any);
-          }, Error);
+          }).toThrow(Error);
         });
 
         it("error if `public` is not instance of CryptoKey", () => {
-          assert.throws(() => {
+          expect(() => {
             const key = {};
             provider.checkAlgorithmParams({ public: key } as any);
-          }, Error);
+          }).toThrow(Error);
         });
 
         it("error if `public` is not public CryptoKey", () => {
-          assert.throws(() => {
+          expect(() => {
             const key = new CryptoKey();
             key.type = "secret";
             provider.checkAlgorithmParams({ public: key } as any);
-          }, Error);
+          }).toThrow(Error);
         });
 
         it("error if `public` is wrong CryptoKey alg", () => {
-          assert.throws(() => {
+          expect(() => {
             const key = new CryptoKey();
             key.type = "public";
             key.algorithm = { name: "ECDSA" };
             provider.checkAlgorithmParams({ public: key } as any);
-          }, Error);
+          }).toThrow(Error);
         });
 
         it("correct `public`", () => {
@@ -139,15 +139,15 @@ describe("EC", () => {
 
     describe("checkAlgorithmParams", () => {
       it("error if `hash` is missing", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({} as any);
-        }, Error);
+        }).toThrow(Error);
       });
 
       it("error if `hash` has wrong value", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({ hash: { name: "wrong" } } as any);
-        }, OperationError);
+        }).toThrow(OperationError);
       });
 
       it("correct `hash`", () => {
@@ -194,7 +194,7 @@ describe("EC", () => {
             false,
             ["deriveBits", "deriveKey"],
           );
-          assert.strictEqual(keys, null);
+          expect(keys).toBe(null);
         });
       });
     });
@@ -235,7 +235,7 @@ describe("EC", () => {
             false,
             ["sign", "verify"],
           );
-          assert.strictEqual(keys, null);
+          expect(keys).toBe(null);
         });
       });
     });

@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import { describe, it, expect } from "vitest";
 import { AsnConvert } from "@peculiar/asn1-schema";
 import { JsonSerializer } from "@peculiar/json-schema";
 import * as encoding from "@peculiar/utils/encoding";
@@ -10,11 +10,11 @@ describe("EdDSA and ECDH-ES keys", () => {
     const raw = Buffer.from(b64, "base64");
 
     const pki = AsnConvert.parse(raw, PrivateKeyInfo);
-    assert.strictEqual(pki.privateKeyAlgorithm.algorithm, idX448);
+    expect(pki.privateKeyAlgorithm.algorithm).toBe(idX448);
     const privateKey = AsnConvert.parse(pki.privateKey, CurvePrivateKey);
 
     const json = JsonSerializer.toJSON(privateKey);
-    assert.deepStrictEqual(json, { d: "-GbbS5kL_9zTCTUQRqk0NwgiWBIZXGdaHBEm9Pkrf6LCO1zJXaKe4SKEDlKhrkE7Y4eHmV7Odb4" });
+    expect(json).toStrictEqual({ d: "-GbbS5kL_9zTCTUQRqk0NwgiWBIZXGdaHBEm9Pkrf6LCO1zJXaKe4SKEDlKhrkE7Y4eHmV7Odb4" });
   });
 
   it("Public key", () => {
@@ -22,8 +22,8 @@ describe("EdDSA and ECDH-ES keys", () => {
     const raw = encoding.base64url.decode(b64);
 
     const spki = AsnConvert.parse(raw, PublicKeyInfo);
-    assert.strictEqual(spki.publicKeyAlgorithm.algorithm, idX25519);
+    expect(spki.publicKeyAlgorithm.algorithm).toBe(idX25519);
 
-    assert.strictEqual(encoding.base64url.encode(spki.publicKey), "R-a_Z6rz2HuBXn7m7v_pjef6nHfCWSIObVWCTr5nxjg");
+    expect(encoding.base64url.encode(spki.publicKey)).toBe("R-a_Z6rz2HuBXn7m7v_pjef6nHfCWSIObVWCTr5nxjg");
   });
 });

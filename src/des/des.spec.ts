@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import { describe, it, expect } from "vitest";
 import { CryptoKey, DesProvider, OperationError } from "../index";
 
 class DesTestProvider extends DesProvider {
@@ -32,21 +32,21 @@ describe("DES", () => {
 
   describe("checkAlgorithmParams", () => {
     it("error if `iv` is not present", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkAlgorithmParams({} as any);
-      }, Error);
+      }).toThrow(Error);
     });
 
     it("error if `iv` has wrong type", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkAlgorithmParams({ iv: "wrong type" } as any);
-      }, TypeError);
+      }).toThrow(TypeError);
     });
 
     it("error if `iv` has wrong length", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkAlgorithmParams({ iv: new ArrayBuffer(9) } as any);
-      }, TypeError);
+      }).toThrow(TypeError);
     });
 
     it("correct `iv` length", () => {
@@ -56,21 +56,21 @@ describe("DES", () => {
 
   describe("checkGenerateKeyParams", () => {
     it("error if `length` is not present", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkGenerateKeyParams({} as any);
-      }, Error);
+      }).toThrow(Error);
     });
 
     it("error if `length` has wrong type", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkGenerateKeyParams({ length: "8" } as any);
-      }, TypeError);
+      }).toThrow(TypeError);
     });
 
     it("error if `length` has wrong value", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkGenerateKeyParams({ length: 8 } as any);
-      }, OperationError);
+      }).toThrow(OperationError);
     });
 
     it("correct value", () => {

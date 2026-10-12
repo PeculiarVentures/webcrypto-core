@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import { describe, it, expect } from "vitest";
 import { AesCbcProvider, AesCmacProvider, AesCtrProvider, AesGcmProvider } from "./index";
 import { OperationError } from "../errors";
 
@@ -8,27 +8,27 @@ describe("AES", () => {
 
     describe("checkGenerateKeyParams", () => {
       it("error if `length` is not present", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkGenerateKeyParams({ name: "AES-CBC" } as any);
-        }, Error);
+        }).toThrow(Error);
       });
 
       it("error if `length` has wrong type", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkGenerateKeyParams({
             name: "AES-CBC",
             length: "s",
           } as any);
-        }, TypeError);
+        }).toThrow(TypeError);
       });
 
       it("error if `length` has wrong value", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkGenerateKeyParams({
             name: "AES-CBC",
             length: 1,
           } as any);
-        }, TypeError);
+        }).toThrow(TypeError);
       });
 
       [128, 192, 256].forEach((length) => {
@@ -47,21 +47,21 @@ describe("AES", () => {
 
     describe("checkAlgorithmParams", () => {
       it("error if parameter `iv` is not present", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({} as any);
-        }, Error);
+        }).toThrow(Error);
       });
 
       it("error if parameter `iv` has wrong type", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({ iv: "wrong type" } as any);
-        }, TypeError);
+        }).toThrow(TypeError);
       });
 
       it("error if parameter `iv` has wrong length", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({ iv: new Uint8Array(20) } as any);
-        }, TypeError);
+        }).toThrow(TypeError);
       });
 
       it("correct parameter `iv`", () => {
@@ -75,21 +75,21 @@ describe("AES", () => {
 
     describe("checkAlgorithmParams", () => {
       it("error if parameter `length` is not present", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({} as any);
-        }, Error);
+        }).toThrow(Error);
       });
 
       it("error if parameter `length` has wrong type", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({ length: "128" } as any);
-        }, TypeError);
+        }).toThrow(TypeError);
       });
 
       it("error if parameter `length` less than 1", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({ length: 0 } as any);
-        }, OperationError);
+        }).toThrow(OperationError);
       });
 
       it("correct parameter `length`", () => {
@@ -103,27 +103,27 @@ describe("AES", () => {
 
     describe("checkAlgorithmParams", () => {
       it("error if parameter `counter` is not present", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({ length: 1 } as any);
-        }, Error);
+        }).toThrow(Error);
       });
 
       it("error if parameter `counter` has wrong type", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({
             counter: "wrong type",
             length: 1,
           } as any);
-        }, TypeError);
+        }).toThrow(TypeError);
       });
 
       it("error if parameter `counter` has wrong length", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({
             counter: new ArrayBuffer(10),
             length: 1,
           } as any);
-        }, TypeError);
+        }).toThrow(TypeError);
       });
 
       it("counter is ArrayBuffer", () => {
@@ -141,27 +141,27 @@ describe("AES", () => {
       });
 
       it("error if parameter `length` is not present", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({ counter: new Uint8Array(16) } as any);
-        }, Error);
+        }).toThrow(Error);
       });
 
       it("error if parameter `length` has wrong type", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({
             counter: new Uint8Array(16),
             length: "1",
           } as any);
-        }, TypeError);
+        }).toThrow(TypeError);
       });
 
       it("error if parameter `length` less than 1", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({
             counter: new Uint8Array(16),
             length: 0,
           } as any);
-        }, OperationError);
+        }).toThrow(OperationError);
       });
 
       it("correct parameter `length`", () => {
@@ -178,21 +178,21 @@ describe("AES", () => {
 
     describe("checkAlgorithmParams", () => {
       it("error if parameter `iv` is not present", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({} as any);
-        }, Error);
+        }).toThrow(Error);
       });
 
       it("error if parameter `iv` has wrong type", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({ iv: "wrong type" } as any);
-        }, TypeError);
+        }).toThrow(TypeError);
       });
 
       it("error if parameter `iv` has wrong length", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({ iv: new Uint8Array(0) } as any);
-        }, OperationError);
+        }).toThrow(OperationError);
       });
 
       it("correct parameter `iv`", () => {
@@ -200,12 +200,12 @@ describe("AES", () => {
       });
 
       it("error if parameter `tagLength` has wrong value", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({
             iv: new ArrayBuffer(1),
             tagLength: 33,
           } as any);
-        }, OperationError);
+        }).toThrow(OperationError);
       });
 
       [32, 64, 96, 104, 112, 120, 128].forEach((tagLength) => {

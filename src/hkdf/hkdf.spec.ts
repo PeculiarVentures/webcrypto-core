@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import { describe, it, expect } from "vitest";
 import { HkdfProvider, OperationError } from "../index";
 
 describe("HKDF", () => {
@@ -6,60 +6,60 @@ describe("HKDF", () => {
 
   describe("checkAlgorithmParams", () => {
     it("error if `hash` is missing", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkAlgorithmParams({
           salt: new Uint8Array(4),
           info: new Uint8Array(4),
         } as any);
-      }, Error);
+      }).toThrow(Error);
     });
 
     it("error if `hash` is wrong", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkAlgorithmParams({
           hash: { name: "WRONG" },
           salt: new Uint8Array(4),
           info: new Uint8Array(4),
         } as any);
-      }, OperationError);
+      }).toThrow(OperationError);
     });
 
     it("error if `salt` is missing", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkAlgorithmParams({
           hash: { name: "SHA-256" },
           info: new Uint8Array(4),
         } as any);
-      }, Error);
+      }).toThrow(Error);
     });
 
     it("error if `salt` wrong type", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkAlgorithmParams({
           hash: { name: "SHA-256" },
           salt: "wrong",
           info: new Uint8Array(4),
         } as any);
-      }, TypeError);
+      }).toThrow(TypeError);
     });
 
     it("error if `info` is missing", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkAlgorithmParams({
           hash: { name: "SHA-256" },
           salt: new Uint8Array(4),
         } as any);
-      }, Error);
+      }).toThrow(Error);
     });
 
     it("error if `info` wrong type", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkAlgorithmParams({
           hash: { name: "SHA-256" },
           info: "wrong",
           salt: new Uint8Array(4),
         } as any);
-      }, TypeError);
+      }).toThrow(TypeError);
     });
 
     it("correct value", () => {
@@ -73,9 +73,9 @@ describe("HKDF", () => {
 
   describe("checkImportKey", () => {
     it("throw error if extractable is true", () => {
-      assert.throws(() => {
+      expect(() => {
         provider.checkImportKey("raw", new ArrayBuffer(0), { name: "HKDF" }, true, ["deriveBits"]);
-      }, SyntaxError);
+      }).toThrow(SyntaxError);
     });
 
     it("correct extractable value", () => {

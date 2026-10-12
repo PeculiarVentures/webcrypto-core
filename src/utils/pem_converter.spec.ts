@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import { describe, it, expect } from "vitest";
 import * as encoding from "@peculiar/utils/encoding";
 import * as bytes from "@peculiar/utils/bytes";
 import { PemConverter } from "../index";
@@ -18,82 +18,82 @@ describe("PemConverter", () => {
   it("fromBufferSource", () => {
     const pem = PemConverter.fromBufferSource(bytes.toArrayBuffer(raw), "public key");
 
-    assert.equal(pem, vector);
+    expect(pem).toBe(vector);
   });
 
   it("fromBufferSource multiple 64", () => {
     const pem = PemConverter.fromBufferSource(Buffer.from("1234567890abcdef1234567890abcdef1234567890abcdef"), "public key");
 
-    assert.equal(pem, ["-----BEGIN PUBLIC KEY-----", "MTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVm", "-----END PUBLIC KEY-----"].join("\n"));
+    expect(pem).toBe(["-----BEGIN PUBLIC KEY-----", "MTIzNDU2Nzg5MGFiY2RlZjEyMzQ1Njc4OTBhYmNkZWYxMjM0NTY3ODkwYWJjZGVm", "-----END PUBLIC KEY-----"].join("\n"));
   });
 
   it("toArrayBuffer", () => {
     const buf = PemConverter.toArrayBuffer(vector);
 
-    assert.equal(encoding.hex.encode(buf), encoding.hex.encode(raw));
+    expect(encoding.hex.encode(buf)).toBe(encoding.hex.encode(raw));
   });
 
   it("toUint8Array", () => {
     const buf = PemConverter.toUint8Array(vector);
 
-    assert.equal(encoding.hex.encode(buf), encoding.hex.encode(raw));
+    expect(encoding.hex.encode(buf)).toBe(encoding.hex.encode(raw));
   });
 
   describe("isPEM", () => {
     const pem = ["-----BEGIN CERTIFICATE------", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", "-----END CERTIFICATE------"].join("\n");
 
     it("return true if correct PEM", () => {
-      assert.equal(PemConverter.isPEM(pem), true);
+      expect(PemConverter.isPEM(pem)).toBe(true);
     });
 
     it("return true if inline PEM", () => {
-      assert.equal(PemConverter.isPEM(pem.replace(/\n/g, "")), true);
+      expect(PemConverter.isPEM(pem.replace(/\n/g, ""))).toBe(true);
     });
 
     it("return false if correct PEM", () => {
       const wrongPem = ["----- BEGIN CERTIFICATE ------", "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", "----- END CERTIFICATE ------"].join("\n");
-      assert.equal(PemConverter.isPEM(wrongPem), false);
+      expect(PemConverter.isPEM(wrongPem)).toBe(false);
     });
   });
 
   describe("getTagName", () => {
     it("get tag name from spki", () => {
       const tagName = PemConverter.getTagName(vector);
-      assert.equal(tagName, "PUBLIC KEY");
+      expect(tagName).toBe("PUBLIC KEY");
     });
 
     it("throw error if data is wrong PEM", () => {
-      assert.throws(() => PemConverter.getTagName("----- BEGIN CERTIFICATE ------"));
+      expect(() => PemConverter.getTagName("----- BEGIN CERTIFICATE ------")).toThrow();
     });
   });
 
   describe("hasTagName", () => {
     it("return true if tag names are equal", () => {
-      assert.equal(PemConverter.hasTagName(vector, "public key"), true);
+      expect(PemConverter.hasTagName(vector, "public key")).toBe(true);
     });
 
     it("return false if tag names are not equal", () => {
-      assert.equal(PemConverter.hasTagName(vector, "PRIVATE KEY"), false);
+      expect(PemConverter.hasTagName(vector, "PRIVATE KEY")).toBe(false);
     });
   });
 
   it("isCertificate", () => {
     const pem = PemConverter.fromBufferSource(new Uint8Array([1, 0, 1]), "certificate");
-    assert.equal(PemConverter.isCertificate(pem), true);
+    expect(PemConverter.isCertificate(pem)).toBe(true);
   });
 
   it("isCRL", () => {
     const pem = PemConverter.fromBufferSource(new Uint8Array([1, 0, 1]), "X509 CRL");
-    assert.equal(PemConverter.isCRL(pem), true);
+    expect(PemConverter.isCRL(pem)).toBe(true);
   });
 
   it("isCertificateRequest", () => {
     const pem = PemConverter.fromBufferSource(new Uint8Array([1, 0, 1]), "certificate request");
-    assert.equal(PemConverter.isCertificateRequest(pem), true);
+    expect(PemConverter.isCertificateRequest(pem)).toBe(true);
   });
 
   it("isPublicKey", () => {
     const pem = PemConverter.fromBufferSource(new Uint8Array([1, 0, 1]), "public key");
-    assert.equal(PemConverter.isPublicKey(pem), true);
+    expect(PemConverter.isPublicKey(pem)).toBe(true);
   });
 });
