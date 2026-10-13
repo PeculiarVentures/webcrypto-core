@@ -114,7 +114,8 @@ jobs:
           if npm view "$NAME@$VERSION" version > /dev/null 2>&1; then
             echo "$NAME@$VERSION is already published"
           else
-            npm publish
+            # Skip prepack: publish the build verified above instead of rebuilding.
+            npm publish --ignore-scripts
           fi
 
       - name: Push tags
