@@ -11,17 +11,13 @@ jobs:
   build:
     runs-on: ubuntu-24.04
 
-    strategy:
-      matrix:
-        node-version: [22, 24]
-
     steps:
       - uses: actions/checkout@v7
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v7
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
@@ -44,17 +40,3 @@ jobs:
 
       - name: Coveralls
         uses: coverallsapp/github-action@v2
-        with:
-          flag-name: run-${{ matrix.node-version }}.x
-          parallel: true
-
-  finish:
-    needs: build
-    runs-on: ubuntu-24.04
-
-    steps:
-      - name: Close parallel build
-        uses: coverallsapp/github-action@v2
-        with:
-          parallel-finished: true
-          carryforward: "run-24.x"
