@@ -1,5 +1,5 @@
-import assert from "node:assert";
-import { RsaOaepProvider, RsaPssProvider, RsaSsaProvider } from "../src";
+import { describe, it, expect } from "vitest";
+import { RsaOaepProvider, RsaPssProvider, RsaSsaProvider } from "../index";
 
 describe("RSA", () => {
   describe("RSASSA-PKCS1-v1_5", () => {
@@ -7,89 +7,89 @@ describe("RSA", () => {
 
     describe("checkGenerateKeyParams", () => {
       it("error if `hash` is missing", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkGenerateKeyParams({
             publicExponent: new Uint8Array([1, 0, 1]),
             modulusLength: 2048,
           } as any);
-        }, Error);
+        }).toThrow(Error);
       });
 
       it("error if `hash` is wrong", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkGenerateKeyParams({
             hash: { name: "SHA-WRONG" },
             publicExponent: new Uint8Array([1, 0, 1]),
             modulusLength: 2048,
           } as any);
-        }, Error);
+        }).toThrow(Error);
       });
 
       it("error if `publicExponent` is missing", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkGenerateKeyParams({
             hash: { name: "SHA-256" },
             modulusLength: 2048,
           } as any);
-        }, Error);
+        }).toThrow(Error);
       });
 
       it("error if `publicExponent` is wrong of type", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkGenerateKeyParams({
             hash: { name: "SHA-256" },
             publicExponent: [1, 0, 1],
             modulusLength: 2048,
           } as any);
-        }, TypeError);
+        }).toThrow(TypeError);
       });
 
       it("error if `publicExponent` is value", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkGenerateKeyParams({
             hash: { name: "SHA-256" },
             publicExponent: new Uint8Array([1, 1, 0]),
             modulusLength: 2048,
           } as any);
-        }, TypeError);
+        }).toThrow(TypeError);
       });
 
       it("error if `modulusLength` is missing", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkGenerateKeyParams({
             hash: { name: "SHA-256" },
             publicExponent: new Uint8Array([1, 0, 1]),
           } as any);
-        }, Error);
+        }).toThrow(Error);
       });
 
       describe("error if `modulusLength` is wrong value", () => {
         it("not multiple of 8 bits", () => {
-          assert.throws(() => {
+          expect(() => {
             provider.checkGenerateKeyParams({
               hash: { name: "SHA-256" },
               publicExponent: new Uint8Array([1, 0, 1]),
               modulusLength: 12345,
             } as any);
-          }, TypeError);
+          }).toThrow(TypeError);
         });
         it("less than 256", () => {
-          assert.throws(() => {
+          expect(() => {
             provider.checkGenerateKeyParams({
               hash: { name: "SHA-256" },
               publicExponent: new Uint8Array([1, 0, 1]),
               modulusLength: 256 - 8,
             } as any);
-          }, TypeError);
+          }).toThrow(TypeError);
         });
         it("more than 16384", () => {
-          assert.throws(() => {
+          expect(() => {
             provider.checkGenerateKeyParams({
               hash: { name: "SHA-256" },
               publicExponent: new Uint8Array([1, 0, 1]),
               modulusLength: 16384 + 8,
             } as any);
-          }, TypeError);
+          }).toThrow(TypeError);
         });
       });
 
@@ -104,22 +104,22 @@ describe("RSA", () => {
 
     describe("checkImportParams", () => {
       it("error if `hash` is missing", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkImportParams({
             publicExponent: new Uint8Array([1, 0, 1]),
             modulusLength: 2048,
           } as any);
-        }, Error);
+        }).toThrow(Error);
       });
 
       it("error if `hash` is wrong", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkImportParams({
             hash: { name: "SHA-WRONG" },
             publicExponent: new Uint8Array([1, 0, 1]),
             modulusLength: 2048,
           } as any);
-        }, Error);
+        }).toThrow(Error);
       });
     });
   });
@@ -129,9 +129,9 @@ describe("RSA", () => {
 
     describe("checkAlgorithmParams", () => {
       it("error if `label` is wrong type", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({ label: "WRONG" } as any);
-        }, TypeError);
+        }).toThrow(TypeError);
       });
 
       it("correct `label`", () => {
@@ -145,21 +145,21 @@ describe("RSA", () => {
 
     describe("checkAlgorithmParams", () => {
       it("error if `saltLength` is missing", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({} as any);
-        }, Error);
+        }).toThrow(Error);
       });
 
       it("error if `saltLength` is not of type Number", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({ saltLength: "123" } as any);
-        }, TypeError);
+        }).toThrow(TypeError);
       });
 
       it("error if `saltLength` is less than 0", () => {
-        assert.throws(() => {
+        expect(() => {
           provider.checkAlgorithmParams({ saltLength: -1 } as any);
-        }, RangeError);
+        }).toThrow(RangeError);
       });
 
       it("correct `saltLength`", () => {

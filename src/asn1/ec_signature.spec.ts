@@ -1,7 +1,7 @@
-import assert from "node:assert";
+import { describe, it, expect } from "vitest";
 import * as encoding from "@peculiar/utils/encoding";
 import { AsnSerializer, AsnParser } from "@peculiar/asn1-schema";
-import { EcDsaSignature } from "../../src/asn1";
+import { EcDsaSignature } from "./index";
 
 interface IEcSignatureTestVector {
   name: string;
@@ -53,7 +53,7 @@ describe("ASN1", () => {
         it(vector.name, () => {
           const value = EcDsaSignature.fromWebCryptoSignature(encoding.hex.decode(vector.webCrypto));
           const der = AsnSerializer.serialize(value);
-          assert.strictEqual(encoding.hex.encode(der), vector.asn1);
+          expect(encoding.hex.encode(der)).toBe(vector.asn1);
         });
       });
     });
@@ -63,7 +63,7 @@ describe("ASN1", () => {
         it(vector.name, () => {
           const value = AsnParser.parse(encoding.hex.decode(vector.asn1), EcDsaSignature);
           const signature = value.toWebCryptoSignature();
-          assert.strictEqual(encoding.hex.encode(signature), vector.webCrypto);
+          expect(encoding.hex.encode(signature)).toBe(vector.webCrypto);
         });
       });
     });
@@ -74,7 +74,7 @@ describe("ASN1", () => {
         signature.r = new ArrayBuffer(32);
         signature.s = new ArrayBuffer(32);
         const result = signature.toWebCryptoSignature();
-        assert.strictEqual(result.byteLength, 64);
+        expect(result.byteLength).toBe(64);
       });
 
       it("default point size should be 384", () => {
@@ -82,7 +82,7 @@ describe("ASN1", () => {
         signature.r = new ArrayBuffer(48);
         signature.s = new ArrayBuffer(48);
         const result = signature.toWebCryptoSignature();
-        assert.strictEqual(result.byteLength, 96);
+        expect(result.byteLength).toBe(96);
       });
 
       it("default point size should be 521", () => {
@@ -90,7 +90,7 @@ describe("ASN1", () => {
         signature.r = new ArrayBuffer(65);
         signature.s = new ArrayBuffer(65);
         const result = signature.toWebCryptoSignature();
-        assert.strictEqual(result.byteLength, 132);
+        expect(result.byteLength).toBe(132);
       });
 
       it("should be given point size", () => {
@@ -98,7 +98,7 @@ describe("ASN1", () => {
         signature.r = new ArrayBuffer(32);
         signature.s = new ArrayBuffer(32);
         const result = signature.toWebCryptoSignature(384);
-        assert.strictEqual(result.byteLength, 96);
+        expect(result.byteLength).toBe(96);
       });
     });
   });

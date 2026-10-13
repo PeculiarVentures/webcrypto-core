@@ -1,7 +1,7 @@
-import assert from "node:assert";
+import { describe, it, expect } from "vitest";
 import { AsnParser, AsnSerializer } from "@peculiar/asn1-schema";
 import { JsonParser, JsonSerializer } from "@peculiar/json-schema";
-import * as asn from "../../src/asn1";
+import * as asn from "./index";
 
 describe("ASN1", () => {
   describe("RSA", () => {
@@ -26,7 +26,7 @@ describe("ASN1", () => {
         const key = AsnParser.parse(keyInfo.privateKey, asn.RsaPrivateKey);
 
         const jsonKey = JsonSerializer.toJSON(key);
-        assert.deepEqual(jsonKey, json);
+        expect(jsonKey).toEqual(json);
       });
 
       it("serialize", () => {
@@ -38,7 +38,7 @@ describe("ASN1", () => {
         keyInfo.privateKey = AsnSerializer.serialize(key);
 
         const asnKeyInfo = Buffer.from(AsnSerializer.serialize(keyInfo));
-        assert.equal(asnKeyInfo.equals(bytes), true);
+        expect(asnKeyInfo.equals(bytes)).toBe(true);
       });
     });
 
@@ -57,7 +57,7 @@ describe("ASN1", () => {
         const key = AsnParser.parse(keyInfo.publicKey, asn.RsaPublicKey);
 
         const jsonKey = JsonSerializer.toJSON(key);
-        assert.deepEqual(jsonKey, json);
+        expect(jsonKey).toEqual(json);
       });
 
       it("serialize", () => {
@@ -69,7 +69,7 @@ describe("ASN1", () => {
         keyInfo.publicKey = AsnSerializer.serialize(key);
 
         const asnKeyInfo = Buffer.from(AsnSerializer.serialize(keyInfo));
-        assert.equal(asnKeyInfo.equals(bytes), true);
+        expect(asnKeyInfo.equals(bytes)).toBe(true);
       });
     });
   });
@@ -91,7 +91,7 @@ describe("ASN1", () => {
         const key = AsnParser.parse(keyInfo.privateKey, asn.EcPrivateKey);
 
         const jsonKey = JsonSerializer.toJSON(key);
-        assert.deepEqual(jsonKey, json);
+        expect(jsonKey).toEqual(json);
       });
 
       it("serialize", () => {
@@ -102,7 +102,7 @@ describe("ASN1", () => {
         keyInfo.privateKey = AsnSerializer.serialize(key);
 
         const asnKeyInfo = Buffer.from(AsnSerializer.serialize(keyInfo));
-        assert.equal(asnKeyInfo.equals(bytes), true);
+        expect(asnKeyInfo.equals(bytes)).toBe(true);
       });
     });
   });

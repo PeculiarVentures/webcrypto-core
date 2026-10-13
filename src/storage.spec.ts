@@ -1,6 +1,6 @@
-import assert from "node:assert";
-import { ProviderStorage, CryptoKey } from "../src";
-import * as rsa from "../src/rsa";
+import { describe, it, expect } from "vitest";
+import { ProviderStorage, CryptoKey } from "./index";
+import * as rsa from "./rsa";
 
 class RsaSsaProvider extends rsa.RsaSsaProvider {
   public onSign(_algorithm: rsa.RsaSsaParams, _key: CryptoKey, _data: ArrayBuffer): Promise<ArrayBuffer> {
@@ -50,13 +50,13 @@ describe("ProviderStorage", () => {
   it("set", () => {
     const storage = new ProviderStorage();
 
-    assert.equal(storage.length, 0);
+    expect(storage.length).toBe(0);
 
     storage.set(new RsaSsaProvider());
     storage.set(new RsaOaepProvider());
     storage.set(new RsaOaepProvider());
 
-    assert.equal(storage.length, 2);
+    expect(storage.length).toBe(2);
   });
 
   it("get", () => {
@@ -66,7 +66,7 @@ describe("ProviderStorage", () => {
     storage.set(new RsaOaepProvider());
 
     const provider = storage.get("rsa-oaep");
-    assert.equal(provider!.name, "RSA-OAEP");
+    expect(provider!.name).toBe("RSA-OAEP");
   });
 
   it("has", () => {
@@ -76,7 +76,7 @@ describe("ProviderStorage", () => {
     storage.set(new RsaOaepProvider());
 
     const ok = storage.has("rsa-oaep");
-    assert.equal(ok, true);
+    expect(ok).toBe(true);
   });
 
   it("algorithms", () => {
@@ -85,7 +85,7 @@ describe("ProviderStorage", () => {
     storage.set(new RsaSsaProvider());
     storage.set(new RsaOaepProvider());
 
-    assert.deepEqual(storage.algorithms, ["RSA-OAEP", "RSASSA-PKCS1-v1_5"]);
+    expect(storage.algorithms).toEqual(["RSA-OAEP", "RSASSA-PKCS1-v1_5"]);
   });
 
   it("removeAt", () => {
@@ -95,10 +95,10 @@ describe("ProviderStorage", () => {
     storage.set(new RsaOaepProvider());
 
     storage.removeAt("rsa-wrong");
-    assert.deepEqual(storage.length, 2);
+    expect(storage.length).toEqual(2);
 
     const removedProvider = storage.removeAt("rsa-oaep");
-    assert.deepEqual(removedProvider!.name, "RSA-OAEP");
-    assert.deepEqual(storage.length, 1);
+    expect(removedProvider!.name).toEqual("RSA-OAEP");
+    expect(storage.length).toEqual(1);
   });
 });

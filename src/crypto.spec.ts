@@ -1,6 +1,6 @@
-import assert from "node:assert";
+import { describe, it, expect } from "vitest";
 import * as nodeCrypto from "node:crypto";
-import { Crypto, SubtleCrypto } from "../src";
+import { Crypto, SubtleCrypto } from "./index";
 
 describe("Crypto", () => {
   class MyCrypto extends Crypto {
@@ -17,7 +17,7 @@ describe("Crypto", () => {
 
   it("Crypto matches to globalThis.Crypto", () => {
     const crypto = new MyCrypto();
-    assert.ok(crypto);
+    expect(crypto).toBeTruthy();
   });
 
   it("randomUUID", () => {
@@ -27,7 +27,7 @@ describe("Crypto", () => {
     const regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
     while (counter--) {
       const uuid = crypto.randomUUID();
-      assert.ok(new RegExp(regex).test(uuid), `UUID ${uuid} is incorrect`);
+      expect(new RegExp(regex).test(uuid), `UUID ${uuid} is incorrect`).toBeTruthy();
     }
   });
 });

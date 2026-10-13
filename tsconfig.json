@@ -7,8 +7,6 @@
     "stripInternal": true,
     "skipLibCheck": true,
     "removeComments": true,
-    "importHelpers": true,
-    "types": ["vitest/globals"],
     "strict": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,

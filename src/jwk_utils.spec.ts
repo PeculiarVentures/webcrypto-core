@@ -1,7 +1,7 @@
-import assert from "node:assert";
+import { describe, it, expect } from "vitest";
 import * as crypto from "node:crypto";
 import * as encoding from "@peculiar/utils/encoding";
-import { JwkUtils } from "../src";
+import { JwkUtils } from "./index";
 
 // crypto.webcrypto
 const ctx = crypto.webcrypto ? describe : describe.skip;
@@ -15,8 +15,7 @@ ctx("JWK utils", () => {
     };
 
     const formattedJwk = JwkUtils.format(jwk, true);
-    assert.strictEqual(
-      JSON.stringify(formattedJwk),
+    expect(JSON.stringify(formattedJwk)).toBe(
       JSON.stringify({
         e: "e value",
         n: "n value",
@@ -32,8 +31,7 @@ ctx("JWK utils", () => {
     };
 
     const formattedJwk = JwkUtils.format(jwk, false);
-    assert.strictEqual(
-      JSON.stringify(formattedJwk),
+    expect(JSON.stringify(formattedJwk)).toBe(
       JSON.stringify({
         e: "e value",
         ext: true,
@@ -52,6 +50,6 @@ ctx("JWK utils", () => {
       crypto.webcrypto as any,
     );
 
-    assert.strictEqual(encoding.base64.encode(digest), "MkHJT3yHfy0O9t4OHK/331Pb3HNa4LRG62yPa4NNnSc=");
+    expect(encoding.base64.encode(digest)).toBe("MkHJT3yHfy0O9t4OHK/331Pb3HNa4LRG62yPa4NNnSc=");
   });
 });
