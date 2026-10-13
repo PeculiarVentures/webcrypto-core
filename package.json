@@ -46,7 +46,7 @@
   "dependencies": {
     "@peculiar/asn1-schema": "^2.10.0",
     "@peculiar/json-schema": "^2.0.0",
-    "@peculiar/utils": "^3.0.0",
+    "@peculiar/utils": "^2.0.3",
     "asn1js": "^3.0.10"
   },
   "devDependencies": {
