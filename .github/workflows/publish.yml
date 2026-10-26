@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - master
-    paths:
-      - package.json
+  # Retries publishing a released version, e.g. after a failed npm publish; run it from the v<version> tag.
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -15,53 +15,78 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # Gates release-please, so a commit that fails checks never gets a tag or a GitHub Release.
   check:
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/test.yml
+
+  release-please:
     runs-on: ubuntu-24.04
+    needs: check
+
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
 
     outputs:
-      version: ${{ steps.version.outputs.version }}
-      release: ${{ steps.version.outputs.release }}
+      release_created: ${{ steps.release.outputs.release_created }}
+      sha: ${{ steps.release.outputs.sha }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v7
-
-      - name: Check for unreleased version
-        id: version
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-
-          # The GitHub Release is the last publish step, so its absence means the version is not fully released.
-          STATUS=$(curl -sS -o /dev/null -w '%{http_code}' \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases/tags/v$VERSION")
-
-          case "$STATUS" in
-            200) echo "release=false" >> "$GITHUB_OUTPUT" ;;
-            404) echo "release=true" >> "$GITHUB_OUTPUT" ;;
-            *) echo "::error::Unexpected HTTP $STATUS while checking release v$VERSION"; exit 1 ;;
-          esac
+      # Opens or updates the release PR from Conventional Commits; once that PR is merged,
+      # creates the v<version> tag and the GitHub Release with the notes from the PR.
+      - name: Release Please
+        id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+        with:
+          # PRs opened with GITHUB_TOKEN do not trigger other workflows; set RELEASE_TOKEN so Test runs on the release PR.
+          token: ${{ secrets.RELEASE_TOKEN || github.token }}
 
   publish:
     runs-on: ubuntu-24.04
-    needs: check
-    if: needs.check.outputs.release == 'true'
+    needs: release-please
+    # Manual runs skip check and release-please, so they must not depend on their results.
+    if: >-
+      !cancelled() && (
+        github.event_name == 'workflow_dispatch' ||
+        needs.release-please.outputs.release_created == 'true'
+      )
     environment: npm
 
     permissions:
       contents: write
       id-token: write
 
-    env:
-      VERSION: ${{ needs.check.outputs.version }}
-
     steps:
+      # npm provenance records GITHUB_SHA, so the published commit must be exactly that commit.
+      - name: Verify the release commit
+        env:
+          RELEASE_SHA: ${{ needs.release-please.outputs.sha }}
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ]; then
+            if [ "$GITHUB_REF_TYPE" != tag ] || [[ ! "$GITHUB_REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+              echo "::error::Run Publish from a v<version> release tag, not from $GITHUB_REF_NAME"
+              exit 1
+            fi
+          elif [ "$RELEASE_SHA" != "$GITHUB_SHA" ]; then
+            echo "::error::Release commit $RELEASE_SHA differs from $GITHUB_SHA; run Publish manually from the release tag"
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@v7
+
+      - name: Read the version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+
+          if [ "$GITHUB_EVENT_NAME" = workflow_dispatch ] && [ "v$VERSION" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::package.json version $VERSION does not match tag $GITHUB_REF_NAME"
+            exit 1
+          fi
+
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
 
       - name: Setup Node.js
         uses: actions/setup-node@v7
@@ -70,42 +95,15 @@ jobs:
           registry-url: https://registry.npmjs.org
           cache: npm
 
+      # This job holds id-token and contents: write, so dependency lifecycle scripts never run here.
       - name: Install dependencies
-        run: npm ci
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Check formatting
-        run: npm run format:check
-
-      - name: Typecheck
-        run: npm run typecheck
-
-      - name: Test
-        run: npm test
+        run: npm ci --ignore-scripts
 
       - name: Build package
         run: npm run build
 
       - name: Check generated package exports are committed
         run: git diff --exit-code package.json
-
-      - name: Extract release notes
-        run: |
-          # Angular preset headings: "# [x.y.0](...)" for minor/major, "## [x.y.z](...)" for patch.
-          awk -v version="$VERSION" '
-            /^##? \[?[0-9]+\.[0-9]+\.[0-9]+/ {
-              if (found) exit
-              if (index($0, "[" version "]") || index($0, " " version " ")) { found = 1; next }
-            }
-            found { print }
-          ' CHANGELOG.md > "$RUNNER_TEMP/release-notes.md"
-
-          if ! grep -q '[^[:space:]]' "$RUNNER_TEMP/release-notes.md"; then
-            echo "::error::No CHANGELOG.md section found for $VERSION"
-            exit 1
-          fi
 
       - name: Publish to npm via Trusted Publisher
         run: |
@@ -114,36 +112,24 @@ jobs:
           if npm view "$NAME@$VERSION" version > /dev/null 2>&1; then
             echo "$NAME@$VERSION is already published"
           else
-            # Skip prepack: publish the build verified above instead of rebuilding.
+            # Skips prepack: the build above is the one the exports check verified.
             npm publish --ignore-scripts
           fi
 
-      - name: Push tags
+      # Never moves the major tag backwards, e.g. when retrying an older version.
+      - name: Move major tag
         run: |
-          set +e
-          git ls-remote --exit-code --tags origin "refs/tags/v$VERSION" > /dev/null
-          STATUS=$?
-          set -e
+          MAJOR="v${VERSION%%.*}"
+          LATEST=$(git ls-remote --tags --refs origin "refs/tags/$MAJOR.*" \
+            | sed 's|.*refs/tags/||' \
+            | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' \
+            | sort -V \
+            | tail -n 1)
 
-          case "$STATUS" in
-            0)
-              echo "Tag v$VERSION already exists"
-              git fetch --no-tags origin "refs/tags/v$VERSION:refs/tags/v$VERSION"
-              ;;
-            2)
-              git tag "v$VERSION"
-              git push origin "v$VERSION"
-              ;;
-            *)
-              echo "::error::git ls-remote failed with exit code $STATUS"
-              exit 1
-              ;;
-          esac
+          if [ "$LATEST" != "v$VERSION" ]; then
+            echo "Leaving $MAJOR unchanged: v$VERSION is not the latest release ($LATEST)"
+            exit 0
+          fi
 
-          git tag -f "v${VERSION%%.*}" "v$VERSION^{commit}"
-          git push -f origin "v${VERSION%%.*}"
-
-      - name: Create GitHub Release
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: gh release create "v$VERSION" --verify-tag --title "v$VERSION" --notes-file "$RUNNER_TEMP/release-notes.md"
+          git tag -f "$MAJOR" HEAD
+          git push -f origin "$MAJOR"
