@@ -1,15 +1,14 @@
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
-  resolve: { tsconfigPaths: true },
   test: {
     environment: "node",
     include: ["src/**/*.spec.ts"],
     coverage: {
       provider: "v8",
-      reporter: ["text", "lcov", "text-summary"],
-      include: ["src/**/*.ts", "!src/**/*.spec.ts"],
-      exclude: ["**/*.d.ts"],
+      reporter: ["text", "lcov"],
+      include: ["src/**/*"],
+      exclude: ["src/**/*.spec.ts", "build/**"],
     },
   },
 });
