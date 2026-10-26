@@ -1,5 +1,5 @@
 import { OperationError } from "../errors";
-import { CryptoKey } from "../crypto_key";
+import type { CryptoKey } from "../crypto_key";
 import { ProviderCrypto } from "../provider";
 
 export abstract class EllipticProvider extends ProviderCrypto {

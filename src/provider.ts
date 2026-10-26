@@ -1,6 +1,6 @@
 import * as bytes from "@peculiar/utils/bytes";
 import { AlgorithmError, CryptoError, OperationError, RequiredPropertyError, UnsupportedOperationError } from "./errors";
-import { KeyUsages, ProviderKeyUsages } from "./types";
+import type { KeyUsages, ProviderKeyUsages } from "./types";
 import { isJWK } from "./utils";
 
 export interface IProviderCheckOptions {

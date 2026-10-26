@@ -1,5 +1,5 @@
 import { OperationError } from "../errors";
-import { KeyUsages } from "../types";
+import type { KeyUsages } from "../types";
 import { AesProvider } from "./base";
 
 export interface AesCmacParams extends Algorithm {

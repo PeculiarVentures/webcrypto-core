@@ -1,4 +1,4 @@
-import { IJsonConverter } from "@peculiar/json-schema";
+import type { IJsonConverter } from "@peculiar/json-schema";
 import * as encoding from "@peculiar/utils/encoding";
 import * as bytes from "@peculiar/utils/bytes";
 

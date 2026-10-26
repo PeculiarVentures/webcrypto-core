@@ -1,5 +1,5 @@
 import * as encoding from "@peculiar/utils/encoding";
-import { CryptoKey } from "../crypto_key";
+import type { CryptoKey } from "../crypto_key";
 import { ProviderCrypto } from "../provider";
 
 export abstract class RsaProvider extends ProviderCrypto {

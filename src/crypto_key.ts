@@ -1,4 +1,4 @@
-import { KeyUsages } from "./types";
+import type { KeyUsages } from "./types";
 
 export type KeyAlgorithm = Algorithm;
 

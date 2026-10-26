@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { toArrayBuffer } from "@peculiar/utils/bytes";
-import { Shake128Provider, Shake256Provider, ShakeParams } from "../index";
+import type { ShakeParams } from "../index";
+import { Shake128Provider, Shake256Provider } from "../index";
 
 class TestShake128Provider extends Shake128Provider {
   public async onDigest(algorithm: Required<ShakeParams>, _data: ArrayBuffer): Promise<ArrayBuffer> {

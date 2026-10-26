@@ -1,5 +1,5 @@
 import { AsnIntegerConverter, AsnProp, AsnPropTypes, AsnSerializer } from "@peculiar/asn1-schema";
-import { IJsonConvertible } from "@peculiar/json-schema";
+import type { IJsonConvertible } from "@peculiar/json-schema";
 import * as encoding from "@peculiar/utils/encoding";
 import * as bytes from "@peculiar/utils/bytes";
 import { EcPublicKey } from "./ec_public_key";

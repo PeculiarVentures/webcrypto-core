@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { ProviderKeyPairUsage } from "./index";
+import type { ProviderKeyPairUsage } from "./index";
 import { AlgorithmError, CryptoError, OperationError, UnsupportedOperationError } from "./errors";
 import { CryptoKey } from "./crypto_key";
 import { ProviderCrypto } from "./provider";

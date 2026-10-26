@@ -1,7 +1,7 @@
 import { OperationError } from "../errors";
-import { KeyAlgorithm, CryptoKey } from "../crypto_key";
+import type { KeyAlgorithm, CryptoKey } from "../crypto_key";
 import { ProviderCrypto } from "../provider";
-import { KeyUsages } from "../types";
+import type { KeyUsages } from "../types";
 
 export interface DesKeyAlgorithm extends KeyAlgorithm {
   length: number;

@@ -1,5 +1,5 @@
 import { ProviderCrypto } from "../provider";
-import { ProviderKeyUsages } from "../types";
+import type { ProviderKeyUsages } from "../types";
 
 export abstract class Ed25519Provider extends ProviderCrypto {
   public readonly name: string = "Ed25519";
