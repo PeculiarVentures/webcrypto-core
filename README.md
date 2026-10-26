@@ -16,30 +16,38 @@ We have created a number of WebCrypto polyfills including: [node-webcrypto-ossl]
 
 Unless you intend to create a WebCrypto polyfill this library is probably not useful to you.
 
-## Installing
+## Install
 
-```
+```sh
 npm install webcrypto-core
 ```
 
+The package is ESM-only with TypeScript declarations, and requires Node.js `^20.19.0 || >=22.12.0`. CommonJS code can still `require()` it on those versions. `@peculiar/asn1-schema`, `@peculiar/json-schema` and `asn1js` are peer dependencies; npm 7+ installs them automatically.
+
+## Breaking Changes In v2
+
+v2 is ESM-only and requires Node.js `^20.19.0 || >=22.12.0` (1.x declared no range). CommonJS code can still `require("webcrypto-core")` on these versions; Node.js 22.0–22.11 can't. The public API is unchanged: the same exports and type declarations as 1.9.2.
+
+- **TypeScript compiling to CommonJS:** use `"module": "node20"` or `"nodenext"` (`node16` fails with TS1479). ESM and bundler setups need no changes. Consumers don't need `experimentalDecorators`.
+- **Jest in CommonJS mode:** switch to ESM mode or Vitest, or add `webcrypto-core` and its `@peculiar/*` and `asn1js` dependencies to `transformIgnorePatterns`.
+- **Deep imports** (`webcrypto-core/build/...`) stay blocked by `exports`; import from `webcrypto-core`.
+- **Peer dependencies:** `@peculiar/asn1-schema` `^3.0.0`, `@peculiar/json-schema` `^3.0.0` and `asn1js` `^4.0.0`. webcrypto-core registers its ASN.1 and JWK classes in the schema storages of those packages, so an app needs exactly one copy of each; a conflicting major now fails at install (`ERESOLVE`) instead of at runtime. Libraries built on the older majors (`@peculiar/webcrypto` 1, `@peculiar/x509` 2) have to move together.
+- **`@peculiar/utils` 4** replaces 2 (same functions, ESM-only). JWK import still accepts only unpadded base64url, as in 1.x.
+
 ## Example
 
-Current examples shows how you can implement your own WebCrypt interface
+The example below implements a minimal WebCrypto interface with a SHA-1 provider.
 
 ```js
-const core = require(".");
-const crypto = require("crypto");
+import * as nodeCrypto from "node:crypto";
+import * as core from "webcrypto-core";
 
 class Sha1Provider extends core.ProviderCrypto {
-  constructor() {
-    super();
-
-    this.name = "SHA-1";
-    this.usages = [];
-  }
+  name = "SHA-1";
+  usages = [];
 
   async onDigest(algorithm, data) {
-    const hash = crypto.createHash("SHA1").update(Buffer.from(data)).digest();
+    const hash = nodeCrypto.createHash("sha1").update(new Uint8Array(data)).digest();
     return new Uint8Array(hash).buffer;
   }
 }
@@ -48,30 +56,24 @@ class SubtleCrypto extends core.SubtleCrypto {
   constructor() {
     super();
 
-    // Add SHA1 provider to SubtleCrypto
+    // Add SHA-1 provider to SubtleCrypto
     this.providers.set(new Sha1Provider());
   }
 }
 
 class Crypto extends core.Crypto {
-  constructor() {
-    this.subtle = new SubtleCrypto();
-  }
+  subtle = new SubtleCrypto();
 
   getRandomValues(array) {
-    const buffer = Buffer.from(array.buffer);
-    crypto.randomFillSync(buffer);
-    return array;
+    return nodeCrypto.getRandomValues(array);
   }
 }
 
-const webcrypto = new Crypto();
-webcrypto.subtle
-  .digest("SHA-1", Buffer.from("TEST MESSAGE"))
-  .then((hash) => {
-    console.log(Buffer.from(hash).toString("hex")); // dbca505deb07e1612d944a69c0c851f79f3a4a60
-  })
-  .catch((err) => {
-    console.error(err);
-  });
+const crypto = new Crypto();
+const hash = await crypto.subtle.digest("SHA-1", new TextEncoder().encode("TEST MESSAGE"));
+console.log(Buffer.from(hash).toString("hex")); // dbca505deb07e1612d944a69c0c851f79f3a4a60
 ```
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the development setup, checks and release process.
