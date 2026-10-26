@@ -14,7 +14,6 @@ export * from "./storage";
 export * from "./subtle";
 export * from "./crypto_key";
 export * from "./utils";
-export { BufferSourceConverter } from "@peculiar/utils/legacy";
 export * from "./types";
 import * as asn1 from "./asn1";
 import * as json from "./json";

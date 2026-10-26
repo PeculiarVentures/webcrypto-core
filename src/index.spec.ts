@@ -4,7 +4,7 @@ import { JsonParser, JsonSerializer } from "@peculiar/json-schema";
 import * as core from "./index";
 
 describe("public API", () => {
-  it("exports the same runtime names as 1.x", () => {
+  it("exports the 1.x runtime names except BufferSourceConverter", () => {
     expect(Object.keys(core).sort()).toEqual([
       "AesCbcProvider",
       "AesCmacProvider",
@@ -14,7 +14,6 @@ describe("public API", () => {
       "AesKwProvider",
       "AesProvider",
       "AlgorithmError",
-      "BufferSourceConverter",
       "Crypto",
       "CryptoError",
       "CryptoKey",
