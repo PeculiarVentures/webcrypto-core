@@ -1,6 +1,6 @@
-import { CryptoKey } from "../crypto_key";
+import type { CryptoKey } from "../crypto_key";
 import { ProviderCrypto } from "../provider";
-import { KeyUsages } from "../types";
+import type { KeyUsages } from "../types";
 
 export abstract class HmacProvider extends ProviderCrypto {
   public name = "HMAC";

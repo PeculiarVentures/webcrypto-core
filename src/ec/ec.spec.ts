@@ -1,7 +1,8 @@
 import { describe, it, expect } from "vitest";
 import * as encoding from "@peculiar/utils/encoding";
 import * as bytes from "@peculiar/utils/bytes";
-import { EcdhEsProvider, EcdhProvider, EcdsaProvider, EcUtils, EdDsaProvider, EllipticProvider, OperationError, CryptoKey, ProviderKeyUsages } from "../index";
+import type { ProviderKeyUsages } from "../index";
+import { EcdhEsProvider, EcdhProvider, EcdsaProvider, EcUtils, EdDsaProvider, EllipticProvider, OperationError, CryptoKey } from "../index";
 
 describe("EC", () => {
   describe("EcUtils", () => {

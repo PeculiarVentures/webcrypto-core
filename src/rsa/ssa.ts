@@ -1,4 +1,4 @@
-import { ProviderKeyUsages } from "../types";
+import type { ProviderKeyUsages } from "../types";
 import { RsaProvider } from "./base";
 
 export type RsaSsaParams = Algorithm;

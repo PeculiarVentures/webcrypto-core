@@ -1,4 +1,4 @@
-import { IAsnConverter } from "@peculiar/asn1-schema";
+import type { IAsnConverter } from "@peculiar/asn1-schema";
 import * as bytes from "@peculiar/utils/bytes";
 import * as asn1 from "asn1js";
 

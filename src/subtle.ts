@@ -1,9 +1,9 @@
 import * as bytes from "@peculiar/utils/bytes";
 import * as encoding from "@peculiar/utils/encoding";
 import { AlgorithmError } from "./errors";
-import { ProviderCrypto } from "./provider";
+import type { ProviderCrypto } from "./provider";
 import { ProviderStorage } from "./storage";
-import { HashedAlgorithm } from "./types";
+import type { HashedAlgorithm } from "./types";
 import { CryptoKey } from "./crypto_key";
 
 const keyFormatMap: Record<KeyFormat, KeyType[]> = {

@@ -1,4 +1,4 @@
-import { IAsnConverter } from "@peculiar/asn1-schema";
+import type { IAsnConverter } from "@peculiar/asn1-schema";
 import * as asn1 from "asn1js";
 
 export const AsnIntegerWithoutPaddingConverter: IAsnConverter<ArrayBuffer> = {

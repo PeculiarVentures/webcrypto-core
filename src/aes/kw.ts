@@ -1,4 +1,4 @@
-import { KeyUsages } from "../types";
+import type { KeyUsages } from "../types";
 import { AesProvider } from "./base";
 
 export abstract class AesKwProvider extends AesProvider {

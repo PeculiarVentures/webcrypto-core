@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { ProviderStorage, CryptoKey } from "./index";
+import type { CryptoKey } from "./index";
+import { ProviderStorage } from "./index";
 import * as rsa from "./rsa";
 
 class RsaSsaProvider extends rsa.RsaSsaProvider {

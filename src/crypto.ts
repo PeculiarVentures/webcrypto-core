@@ -1,5 +1,5 @@
 import * as encoding from "@peculiar/utils/encoding";
-import { SubtleCrypto } from "./subtle";
+import type { SubtleCrypto } from "./subtle";
 
 export abstract class Crypto implements globalThis.Crypto {
   /**

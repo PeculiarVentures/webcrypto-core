@@ -1,6 +1,6 @@
 import { OperationError } from "../errors";
 import { CryptoKey } from "../crypto_key";
-import { ProviderKeyUsages } from "../types";
+import type { ProviderKeyUsages } from "../types";
 import { EllipticProvider } from "./base";
 
 export abstract class EcdhProvider extends EllipticProvider {

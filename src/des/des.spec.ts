@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { CryptoKey, DesProvider, OperationError } from "../index";
+import type { CryptoKey } from "../index";
+import { DesProvider, OperationError } from "../index";
 
 class DesTestProvider extends DesProvider {
   public keySizeBits = 64;

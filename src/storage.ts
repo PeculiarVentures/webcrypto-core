@@ -1,4 +1,4 @@
-import { ProviderCrypto } from "./provider";
+import type { ProviderCrypto } from "./provider";
 
 export class ProviderStorage {
   private items: Record<string, ProviderCrypto> = {};

@@ -1,5 +1,5 @@
 import { AsnProp, AsnPropTypes, AsnType, AsnTypeTypes } from "@peculiar/asn1-schema";
-import { IJsonConvertible } from "@peculiar/json-schema";
+import type { IJsonConvertible } from "@peculiar/json-schema";
 import * as bytes from "@peculiar/utils/bytes";
 import * as encoding from "@peculiar/utils/encoding";
 import { CryptoError } from "../errors";
