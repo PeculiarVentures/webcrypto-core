@@ -31,7 +31,6 @@ describe("public API", () => {
       "JwkUtils",
       "OperationError",
       "Pbkdf2Provider",
-      "PemConverter",
       "ProviderCrypto",
       "ProviderStorage",
       "RequiredPropertyError",
