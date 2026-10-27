@@ -42,15 +42,20 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@peculiar/asn1-schema": "^2.10.0",
-    "@peculiar/json-schema": "^2.0.0",
-    "@peculiar/utils": "^2.0.3",
-    "asn1js": "^3.0.10"
+    "@peculiar/utils": "^4.1.0"
+  },
+  "peerDependencies": {
+    "@peculiar/asn1-schema": "^3.0.0",
+    "@peculiar/json-schema": "^3.0.0",
+    "asn1js": "^4.0.0"
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.5",
+    "@peculiar/asn1-schema": "^3.0.0",
+    "@peculiar/json-schema": "^3.0.0",
     "@types/node": "^26.6.5",
     "@vitest/coverage-v8": "^5.0.5",
+    "asn1js": "^4.0.0",
     "oxfmt": "^0.74.0",
     "oxlint": "^1.89.0",
     "tsdown": "^0.23.2",
