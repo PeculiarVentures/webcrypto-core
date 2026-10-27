@@ -26,13 +26,17 @@ The package is ESM-only with TypeScript declarations, and requires Node.js `^20.
 
 ## Breaking Changes In v2
 
-v2 is ESM-only and requires Node.js `^20.19.0 || >=22.12.0` (1.x declared no range). CommonJS code can still `require("webcrypto-core")` on these versions; Node.js 22.0–22.11 can't. Apart from `BufferSourceConverter`, the public API is unchanged: the same exports and type declarations as 1.9.2.
+v2 is ESM-only and requires Node.js `^20.19.0 || >=22.12.0` (1.x declared no range). CommonJS code can still `require("webcrypto-core")` on these versions; Node.js 22.0–22.11 can't. Apart from `BufferSourceConverter` and `PemConverter`, the public API is unchanged: the same exports and type declarations as 1.9.2.
 
 - **TypeScript compiling to CommonJS:** use `"module": "node20"` or `"nodenext"` (`node16` fails with TS1479). ESM and bundler setups need no changes. Consumers don't need `experimentalDecorators`.
 - **Jest in CommonJS mode:** switch to ESM mode or Vitest, or add `webcrypto-core` and its `@peculiar/*` and `asn1js` dependencies to `transformIgnorePatterns`.
 - **Deep imports** (`webcrypto-core/build/...`) stay blocked by `exports`; import from `webcrypto-core`.
 - **Peer dependencies:** `@peculiar/asn1-schema` `^3.0.0`, `@peculiar/json-schema` `^3.0.0` and `asn1js` `^4.0.0`. webcrypto-core registers its ASN.1 and JWK classes in the schema storages of those packages, so an app needs exactly one copy of each; a conflicting major now fails at install (`ERESOLVE`) instead of at runtime. Libraries built on the older majors (`@peculiar/webcrypto` 1, `@peculiar/x509` 2) have to move together.
 - **`BufferSourceConverter` is no longer exported.** It was a re-export of the deprecated `@peculiar/utils/legacy` class. Use the functions from `@peculiar/utils/bytes` instead: `toArrayBuffer`, `toUint8Array`, `isBufferSource`, `equal` (was `isEqual`) and `concat` (takes an array).
+- **`PemConverter` is removed.** Use `pem` from `@peculiar/utils/pem`:
+  - `toArrayBuffer(text)` / `toUint8Array(text)` → `pem.decodeFirst(text)`. It returns a `Uint8Array`, reads the first block of a bundle, skips text before the block and throws if there's no block. Base64 with no BEGIN/END lines, or mismatched BEGIN/END labels, now throw. Single-line PEM, which `PemConverter` decoded to empty bytes, now decodes correctly.
+  - `fromBufferSource(data, tag)` → `pem.encode(label, data)`. The label is used as given (pass `"PUBLIC KEY"`, not `"public key"`) and the output ends with a newline.
+  - `isPEM`, `getTagName`, `hasTagName`, `isCertificate`, `isCertificateRequest`, `isCRL`, `isPublicKey` → `pem.decode(text)` returns the blocks with their `label`, and `pem.find(text, "CERTIFICATE")` finds a block by label. Labels compare case-sensitively.
 - **`@peculiar/utils` 4** replaces 2 (same functions, ESM-only). JWK import still accepts only unpadded base64url, as in 1.x.
 
 ## Example
