@@ -2,25 +2,26 @@
   "name": "webcrypto-core",
   "version": "1.9.2",
   "description": "Common layer to be used by crypto libraries based on WebCrypto API for input validation.",
+  "type": "module",
+  "sideEffects": false,
   "main": "./build/index.js",
-  "module": "./build/index.mjs",
+  "module": "./build/index.js",
   "types": "./build/index.d.ts",
   "files": [
-    "build",
+    "build/",
     "README.md",
     "LICENSE"
   ],
   "scripts": {
     "test": "vitest run",
-    "test:watch": "vitest",
     "coverage": "vitest run --coverage",
     "build": "tsdown",
+    "prepack": "npm run build",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix",
     "format": "oxfmt",
-    "format:check": "oxfmt --check",
-    "prepack": "npm run build"
+    "format:check": "oxfmt --check"
   },
   "repository": {
     "type": "git",
@@ -37,10 +38,7 @@
     "shake"
   ],
   "exports": {
-    ".": {
-      "import": "./build/index.mjs",
-      "require": "./build/index.js"
-    },
+    ".": "./build/index.js",
     "./package.json": "./package.json"
   },
   "dependencies": {
@@ -66,6 +64,6 @@
   },
   "homepage": "https://github.com/PeculiarVentures/webcrypto-core#readme",
   "engines": {
-    "node": ">=16.0.0"
+    "node": "^20.19.0 || >=22.12.0"
   }
 }
