@@ -51,13 +51,13 @@
   },
   "devDependencies": {
     "@arethetypeswrong/core": "^0.18.5",
-    "@types/node": "^25.9.9",
-    "@vitest/coverage-v8": "^5.0.3",
-    "oxfmt": "^0.72.0",
-    "oxlint": "^1.87.0",
-    "tsdown": "^0.23.1",
+    "@types/node": "^26.6.5",
+    "@vitest/coverage-v8": "^5.0.5",
+    "oxfmt": "^0.74.0",
+    "oxlint": "^1.89.0",
+    "tsdown": "^0.23.2",
     "typescript": "^6.0.3",
-    "vitest": "^5.0.3"
+    "vitest": "^5.0.5"
   },
   "author": "PeculiarVentures",
   "license": "MIT",
