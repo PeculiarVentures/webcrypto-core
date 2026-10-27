@@ -59,7 +59,7 @@ The package is ESM-only; there is no CommonJS build, and CommonJS consumers load
 
 Use named exports only (no `export default`) and no top-level `await`, so `require()` of the package keeps working on supported Node.js versions.
 
-`@peculiar/asn1-schema`, `@peculiar/json-schema` and `asn1js` are peer dependencies (and devDependencies): the ASN.1 and JWK classes register in their module-level schema storages, so the app must load a single copy. Keep the peer and dev ranges in sync. `@peculiar/utils` is a regular dependency; import it from `@peculiar/utils/bytes` and `@peculiar/utils/encoding`; new code must not import from `@peculiar/utils/legacy`.
+`@peculiar/asn1-schema`, `@peculiar/json-schema` and `asn1js` are peer dependencies (and devDependencies): the ASN.1 and JWK classes register in their module-level schema storages, so the app must load a single copy. Keep the peer and dev ranges in sync. `@peculiar/utils` is a regular dependency; import it from `@peculiar/utils/bytes` and `@peculiar/utils/encoding`, never from `@peculiar/utils/legacy`.
 
 The package is `"sideEffects": false`. Import-time work (`EcCurves.register(...)`, decorator registration) must stay in the module that defines the class it writes to, so a bundler that keeps the class also keeps the registration.
 
