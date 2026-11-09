@@ -15,15 +15,27 @@ export abstract class HmacProvider extends ProviderCrypto {
    */
   public getDefaultLength(algName: string): number {
     switch (algName.toUpperCase()) {
-      // Chrome, Safari and Firefox returns 512
       case "SHA-1":
       case "SHA-256":
+        return 512;
       case "SHA-384":
       case "SHA-512":
-        return 512;
+        return 1024;
       default:
         throw new Error(`Unknown algorithm name '${algName}'`);
     }
+  }
+
+  /** Returns the explicit HMAC key length, or the hash block size when omitted. */
+  public override getKeyLength(algorithm: HmacKeyGenParams): number {
+    this.checkImportParams(algorithm);
+    if (algorithm.length === undefined) {
+      return this.getDefaultLength((algorithm.hash as Algorithm).name);
+    }
+    if (!Number.isInteger(algorithm.length) || algorithm.length <= 0 || algorithm.length > 0xffffffff) {
+      throw new TypeError("length: Must be a positive unsigned long");
+    }
+    return algorithm.length;
   }
 
   public override checkGenerateKeyParams(algorithm: HmacKeyGenParams): void {

@@ -9,6 +9,11 @@ export abstract class HkdfProvider extends ProviderCrypto {
   public hashAlgorithms = ["SHA-1", "SHA-256", "SHA-384", "SHA-512"];
   public usages: KeyUsages = ["deriveKey", "deriveBits"];
 
+  /** HKDF imports the full secret when used as the target of deriveKey. */
+  public override getKeyLength(_algorithm: Algorithm): null {
+    return null;
+  }
+
   public override checkAlgorithmParams(algorithm: HkdfParams): void {
     // hash
     this.checkRequiredProperty(algorithm, "hash");

@@ -233,6 +233,15 @@ export abstract class ProviderCrypto {
     // nothing
   }
 
+  /**
+   * Returns the number of bits needed to import a derived key, or null for the full secret.
+   * The default preserves the legacy `length || 512` behavior for existing custom providers.
+   * Override this method to implement the algorithm's Get key length operation.
+   */
+  public getKeyLength(algorithm: Algorithm): number | null {
+    return (algorithm as Algorithm & { length?: number }).length || 512;
+  }
+
   public checkKeyUsages(usages: KeyUsages, allowed: KeyUsages): void {
     for (const usage of usages) {
       if (allowed.indexOf(usage) === -1) {

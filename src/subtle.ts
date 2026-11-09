@@ -205,13 +205,14 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
     const provider = this.getProvider(preparedAlgorithm.name);
     provider.checkCryptoKey(baseKey, "deriveKey");
+    const length = importProvider.getKeyLength(preparedDerivedKeyType);
     const derivedBits = await provider.deriveBits(
       {
         ...preparedAlgorithm,
         name: provider.name,
       },
       baseKey,
-      (derivedKeyType as any).length || 512,
+      length,
       { keyUsage: false },
       ...params,
     );

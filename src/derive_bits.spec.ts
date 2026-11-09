@@ -3,21 +3,25 @@ import { CryptoKey, EcdhEsProvider, EcdhProvider, HkdfProvider, OperationError, 
 
 describe("deriveBits lengths", () => {
   it.each([
-    { name: "ECDH", Provider: EcdhProvider },
-    { name: "ECDH-ES", Provider: EcdhEsProvider },
-    { name: "X25519", Provider: X25519Provider },
-  ])("passes a null length through $name and returns its full secret", async ({ Provider }) => {
+    { name: "ECDH", Provider: EcdhProvider, namedCurve: "P-256", secretBytes: 32, backendLength: null },
+    { name: "ECDH-ES X25519", Provider: EcdhEsProvider, namedCurve: "X25519", secretBytes: 32, backendLength: 256 },
+    { name: "ECDH-ES X448", Provider: EcdhEsProvider, namedCurve: "X448", secretBytes: 56, backendLength: 448 },
+    { name: "X25519", Provider: X25519Provider, namedCurve: "X25519", secretBytes: 32, backendLength: 256 },
+  ])("returns the full secret for a null length with $name", async ({ Provider, namedCurve, secretBytes, backendLength }) => {
     const provider = Reflect.construct(Provider, []) as ProviderCrypto;
     const subtle = new SubtleCrypto();
     subtle.providers.set(provider);
-    const publicKey = CryptoKey.create({ name: provider.name }, "public", true, []);
-    const privateKey = CryptoKey.create({ name: provider.name }, "private", false, ["deriveBits"]);
+    const keyAlgorithm: EcKeyAlgorithm = { name: provider.name, namedCurve };
+    const publicKey = CryptoKey.create(keyAlgorithm, "public", true, []);
+    const privateKey = CryptoKey.create(keyAlgorithm, "private", false, ["deriveBits"]);
     const algorithm: EcdhKeyDeriveParams = { name: provider.name, public: publicKey };
-    const secret = new Uint8Array(32).fill(0xa5).buffer;
-    const deriveBits = vi.spyOn(provider, "onDeriveBits").mockResolvedValueOnce(secret);
+    const secret = new Uint8Array(secretBytes).fill(0xa5).buffer;
+    const deriveBits = vi.spyOn(provider, "onDeriveBits").mockImplementationOnce(async (_algorithm, _key, length) => {
+      return length === null && provider.name === "ECDH" ? secret : secret.slice(0, (length as number) >> 3);
+    });
 
-    await expect(subtle.deriveBits(algorithm, privateKey, null)).resolves.toBe(secret);
-    expect(deriveBits).toHaveBeenCalledWith(algorithm, privateKey, null, { keyUsage: true });
+    await expect(subtle.deriveBits(algorithm, privateKey, null)).resolves.toEqual(secret);
+    expect(deriveBits).toHaveBeenCalledWith(algorithm, privateKey, backendLength, { keyUsage: true });
   });
 
   it("uses the returned secret length rather than the curve's bit size", async () => {

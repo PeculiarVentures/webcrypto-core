@@ -10,6 +10,11 @@ export abstract class Pbkdf2Provider extends ProviderCrypto {
 
   public usages: KeyUsages = ["deriveBits", "deriveKey"];
 
+  /** PBKDF2 imports the full secret when used as the target of deriveKey. */
+  public override getKeyLength(_algorithm: Algorithm): null {
+    return null;
+  }
+
   public override checkAlgorithmParams(algorithm: Pbkdf2Params): void {
     // hash
     this.checkRequiredProperty(algorithm, "hash");
