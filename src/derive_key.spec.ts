@@ -23,17 +23,29 @@ function setup(target: ProviderCrypto, secretBytes = 32) {
 }
 
 describe("deriveKey target lengths", () => {
-  it.each([HkdfProvider, Pbkdf2Provider])("preserves the secret through a numeric-only ECDH backend into %s", async (Provider) => {
+  it.each([
+    { Provider: HkdfProvider, namedCurve: "P-256", secretBytes: 32, rejectNull: false },
+    { Provider: Pbkdf2Provider, namedCurve: "P-256", secretBytes: 32, rejectNull: false },
+    { Provider: HkdfProvider, namedCurve: "secp224r1", secretBytes: 28, rejectNull: false },
+    { Provider: Pbkdf2Provider, namedCurve: "secp224r1", secretBytes: 28, rejectNull: false },
+    { Provider: HkdfProvider, namedCurve: "secp224r1", secretBytes: 28, rejectNull: true },
+    { Provider: Pbkdf2Provider, namedCurve: "secp224r1", secretBytes: 28, rejectNull: true },
+  ])("preserves the secret from numeric-only ECDH ($namedCurve, rejects null: $rejectNull) into $Provider", async ({ Provider, namedCurve, secretBytes, rejectNull }) => {
     const subtle = new SubtleCrypto();
     const source = Reflect.construct(EcdhProvider, []) as EcdhProvider;
     const target = Reflect.construct(Provider, []) as ProviderCrypto;
     subtle.providers.set(source);
     subtle.providers.set(target);
-    const keyAlgorithm: EcKeyAlgorithm = { name: "ECDH", namedCurve: "P-256" };
+    const keyAlgorithm: EcKeyAlgorithm = { name: "ECDH", namedCurve };
     const privateKey = CryptoKey.create(keyAlgorithm, "private", false, ["deriveKey"]);
     const publicKey = CryptoKey.create(keyAlgorithm, "public", true, []);
-    const secret = new Uint8Array(32).fill(0xa5).buffer;
-    vi.spyOn(source, "onDeriveBits").mockImplementation(async (_algorithm, _key, length) => secret.slice(0, (length as number) >> 3));
+    const secret = new Uint8Array(secretBytes).fill(0xa5).buffer;
+    vi.spyOn(source, "onDeriveBits").mockImplementation(async (_algorithm, _key, length) => {
+      if (rejectNull && length === null) {
+        throw new RangeError("Legacy backend requires a numeric length");
+      }
+      return secret.slice(0, (length as number) >> 3);
+    });
     let imported = new ArrayBuffer(0);
     vi.spyOn(target, "onImportKey").mockImplementation(async (_format, data, algorithm, extractable, usages) => {
       imported = data as ArrayBuffer;
@@ -59,7 +71,7 @@ describe("deriveKey target lengths", () => {
     const key = await subtle.deriveKey(source.name, baseKey, target.name, false, ["deriveBits"]);
 
     expect(key.algorithm).toMatchObject({ name: target.name, length: 256 });
-    expect(deriveBits).toHaveBeenCalledWith({ name: source.name }, baseKey, null, { keyUsage: false });
+    expect(deriveBits).toHaveBeenCalledWith({ name: source.name }, baseKey, 512, { keyUsage: false, deriveKey: true });
     expect(importKey).toHaveBeenCalledWith("raw", secret, { name: target.name }, false, ["deriveBits"]);
   });
 
@@ -115,7 +127,7 @@ describe("deriveKey target lengths", () => {
     const key = await subtle.deriveKey(source.name, baseKey, algorithm, true, ["sign"]);
 
     expect(key.algorithm).toMatchObject({ name: target.name, hash: { name: hash }, length });
-    expect(deriveBits).toHaveBeenCalledWith({ name: source.name }, baseKey, length, { keyUsage: false });
+    expect(deriveBits).toHaveBeenCalledWith({ name: source.name }, baseKey, length, { keyUsage: false, deriveKey: true });
   });
 
   it("honors an explicit HMAC length", async () => {
@@ -153,7 +165,7 @@ describe("deriveKey target lengths", () => {
 
     await subtle.deriveKey(source.name, baseKey, algorithm, true, ["sign"]);
 
-    expect(deriveBits).toHaveBeenCalledWith({ name: source.name }, baseKey, length || 512, { keyUsage: false });
+    expect(deriveBits).toHaveBeenCalledWith({ name: source.name }, baseKey, length || 512, { keyUsage: false, deriveKey: true });
   });
 
   it.each([160, null])("allows custom target providers to resolve a key length of %s", async (length) => {
@@ -168,6 +180,15 @@ describe("deriveKey target lengths", () => {
     const key = await subtle.deriveKey(source.name, baseKey, target.name, true, ["sign"]);
 
     expect(key.algorithm).toMatchObject({ length: length ?? 256 });
-    expect(deriveBits).toHaveBeenCalledWith({ name: source.name }, baseKey, length, { keyUsage: false });
+    expect(deriveBits).toHaveBeenCalledWith({ name: source.name }, baseKey, length ?? 512, { keyUsage: false, deriveKey: true });
+  });
+
+  it("preserves the historical request for an existing custom source and a full-secret target", async () => {
+    const target = Reflect.construct(HkdfProvider, []) as HkdfProvider;
+    const { subtle, source, baseKey } = setup(target, 128);
+
+    const key = await subtle.deriveKey(source.name, baseKey, target.name, false, ["deriveBits"]);
+
+    expect(key.algorithm).toMatchObject({ length: 512 });
   });
 });

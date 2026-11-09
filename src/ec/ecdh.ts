@@ -29,16 +29,17 @@ export abstract class EcdhProvider extends EllipticProvider {
     }
   }
 
-  /** Resolves null to the full byte-rounded secret size for registered curves and numeric-only backends. */
-  public override async deriveBits(algorithm: Algorithm, baseKey: globalThis.CryptoKey, length: number | null, options?: IProviderCheckOptions, ...args: any[]): Promise<ArrayBuffer> {
+  /** Resolves full-secret requests while preserving legacy deriveKey behavior for unregistered curves. */
+  public override getDeriveBitsLength(_algorithm: Algorithm, baseKey: globalThis.CryptoKey, length: number | null, options: IProviderCheckOptions = {}): number | null {
     if (length === null) {
       const namedCurve = (baseKey.algorithm as EcKeyAlgorithm).namedCurve;
       const curve = typeof namedCurve === "string" ? EcCurves.find(namedCurve) : null;
       if (curve) {
-        length = Math.ceil(curve.size / 8) * 8;
+        return Math.ceil(curve.size / 8) * 8;
       }
+      return super.getDeriveBitsLength(_algorithm, baseKey, length, options);
     }
-    return super.deriveBits(algorithm, baseKey, length, options, ...args);
+    return length;
   }
 
   public abstract override onDeriveBits(algorithm: EcdhKeyDeriveParams, baseKey: CryptoKey, length: number | null, ...args: any[]): Promise<ArrayBuffer>;

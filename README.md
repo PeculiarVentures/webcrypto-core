@@ -85,7 +85,9 @@ console.log(Buffer.from(hash).toString("hex")); // dbca505deb07e1612d944a69c0c85
 
 Custom providers can override `getKeyLength()` and register through `subtle.providers.set(provider)` without changing `SubtleCrypto`. The method receives the normalized target algorithm and returns a bit length or `null`. Existing providers inherit the previous `algorithm.length || 512` behavior, so this API does not require an implementation change in existing extensions. New providers should override it with their algorithm's length rules.
 
-The common derivation wrapper rejects results shorter than an explicitly requested length with `OperationError`, including when derivation is called internally by `deriveKey()`. The ECDH, X25519 and ECDH-ES providers translate `null` to the full secret's bit length to support existing numeric-only backends. ECDH uses the byte-rounded size from `EcCurves`; custom ECDH curves can be registered there, or their backend can handle `null` directly when the curve is unregistered. HKDF/PBKDF2 source operations require an explicit length.
+The common derivation wrapper rejects results shorter than an explicitly requested length with `OperationError`, including when derivation is called internally by `deriveKey()`. A separate overridable `getDeriveBitsLength()` hook resolves the backend request while validation uses the original requested length. Its options identify internal `deriveKey()` calls with `deriveKey: true`. By default, internal full-secret requests retain the historical 512-bit request for existing custom source providers; direct `deriveBits(null)` calls still pass `null` through.
+
+ECDH uses the byte-rounded size from `EcCurves` for full-secret requests, and X25519/ECDH-ES use their fixed secret sizes. For unregistered ECDH curves, internal `deriveKey()` calls retain the historical 512-bit backend request; direct `deriveBits(null)` calls still pass `null` through. Registering curve metadata or overriding the source hook enables exact full-secret sizing for custom curves without changing existing extensions. HKDF/PBKDF2 source operations require an explicit length.
 
 ## Contributing
 

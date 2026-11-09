@@ -117,6 +117,15 @@ describe("ProviderCrypto", () => {
 
       await expect(provider.deriveBits(algorithm, key, 256)).rejects.toBe(error);
     });
+
+    it("validates the caller's length when a source hook changes the backend request", async () => {
+      const provider = new TestProvider();
+      vi.spyOn(provider, "getDeriveBitsLength").mockReturnValueOnce(128);
+      const deriveBits = vi.spyOn(provider, "onDeriveBits").mockResolvedValueOnce(new ArrayBuffer(16));
+
+      await expect(provider.deriveBits(algorithm, key, 256)).rejects.toThrow(OperationError);
+      expect(deriveBits).toHaveBeenCalledWith(algorithm, key, 128);
+    });
   });
 
   describe("checkKeyFormat", () => {

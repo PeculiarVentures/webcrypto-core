@@ -9,10 +9,10 @@ export abstract class EcdhEsProvider extends EcdhProvider {
   public override namedCurves = ["X25519", "X448"];
 
   /** Resolves null to the full secret length for existing X25519/X448 backends. */
-  public override async deriveBits(algorithm: Algorithm, baseKey: globalThis.CryptoKey, length: number | null, options?: IProviderCheckOptions, ...args: any[]): Promise<ArrayBuffer> {
+  public override getDeriveBitsLength(algorithm: Algorithm, baseKey: globalThis.CryptoKey, length: number | null, options?: IProviderCheckOptions): number | null {
     if (length === null) {
       length = secretLengths[(baseKey.algorithm as EcKeyAlgorithm).namedCurve.toUpperCase()] ?? null;
     }
-    return super.deriveBits(algorithm, baseKey, length, options, ...args);
+    return super.getDeriveBitsLength(algorithm, baseKey, length, options);
   }
 }

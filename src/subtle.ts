@@ -213,7 +213,7 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
       },
       baseKey,
       length,
-      { keyUsage: false },
+      { keyUsage: false, deriveKey: true },
       ...params,
     );
 

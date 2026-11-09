@@ -5,6 +5,8 @@ import { isJWK } from "./utils";
 
 export interface IProviderCheckOptions {
   keyUsage?: boolean;
+  /** Identifies an internal deriveKey call when resolving legacy backend lengths. */
+  deriveKey?: boolean;
 }
 
 export abstract class ProviderCrypto {
@@ -148,12 +150,22 @@ export abstract class ProviderCrypto {
   public async deriveBits(algorithm: Algorithm, baseKey: CryptoKey, length: number | null, options?: IProviderCheckOptions, ...args: any[]): Promise<ArrayBuffer>;
   public async deriveBits(...args: any[]): Promise<ArrayBuffer> {
     this.checkDeriveBits.apply(this, args as [Algorithm, CryptoKey, number | null, IProviderCheckOptions]);
-    const result = await this.onDeriveBits.apply(this, args as [Algorithm, CryptoKey, number | null, IProviderCheckOptions]);
     const length = args[2] as number | null;
+    args[2] = this.getDeriveBitsLength(args[0], args[1], length, args[3]);
+    const result = await this.onDeriveBits.apply(this, args as [Algorithm, CryptoKey, number | null, IProviderCheckOptions]);
     if (length !== null && result.byteLength * 8 < length) {
       throw new OperationError("Derived bit length is too small");
     }
     return result;
+  }
+
+  /**
+   * Resolves the length passed to the backend without changing the caller's requested length.
+   * Internal full-secret requests retain the legacy 512-bit request for existing custom backends.
+   * Override to implement algorithm-specific full-secret sizing.
+   */
+  public getDeriveBitsLength(_algorithm: Algorithm, _baseKey: CryptoKey, length: number | null, _options?: IProviderCheckOptions): number | null {
+    return length === null && _options?.deriveKey ? 512 : length;
   }
 
   public checkDeriveBits(algorithm: Algorithm, baseKey: CryptoKey, length: number | null, options: IProviderCheckOptions = {}, ..._args: any[]): void {
