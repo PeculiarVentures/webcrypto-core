@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { CryptoKey, ProviderCrypto, SubtleCrypto } from "./index";
+import { describe, it, expect, vi } from "vitest";
+import { CryptoKey, OperationError, ProviderCrypto, SubtleCrypto } from "./index";
 
 describe("SubtleCrypto", () => {
   class TestProvider extends ProviderCrypto {
@@ -30,8 +30,8 @@ describe("SubtleCrypto", () => {
       return new ArrayBuffer(0);
     }
 
-    public override async onDeriveBits(_algorithm: Algorithm, _sKey: CryptoKey, _length: number): Promise<ArrayBuffer> {
-      return new ArrayBuffer(0);
+    public override async onDeriveBits(_algorithm: Algorithm, _sKey: CryptoKey, length: number | null): Promise<ArrayBuffer> {
+      return new ArrayBuffer(length === null ? 32 : length / 8);
     }
 
     public override async onExportKey(_format: KeyFormat, _sKey: CryptoKey): Promise<JsonWebKey | ArrayBuffer> {
@@ -120,6 +120,15 @@ describe("SubtleCrypto", () => {
       const res = await subtle.deriveBits("test", key, 128);
       expect(!!res).toBe(true);
     });
+
+    it("rejects a provider result shorter than requested", async () => {
+      const provider = new TestProvider();
+      const subtle = new SubtleCrypto();
+      subtle.providers.set(provider);
+      vi.spyOn(provider, "onDeriveBits").mockResolvedValueOnce(new ArrayBuffer(32));
+
+      await expect(subtle.deriveBits("test", key, 512)).rejects.toThrow(OperationError);
+    });
   });
 
   describe("deriveKey", () => {
@@ -135,6 +144,18 @@ describe("SubtleCrypto", () => {
         ["verify"],
       );
       expect(!!res).toBe(true);
+    });
+
+    it("rejects short derived bits before importing the target key", async () => {
+      const provider = new TestProvider();
+      const subtle = new SubtleCrypto();
+      subtle.providers.set(provider);
+      const baseKey = CryptoKey.create({ name: "TEST" }, "secret", false, ["deriveKey"]);
+      vi.spyOn(provider, "onDeriveBits").mockResolvedValueOnce(new ArrayBuffer(32));
+      const importKey = vi.spyOn(provider, "onImportKey");
+
+      await expect(subtle.deriveKey("test", baseKey, { name: "test", length: 512 } as HmacKeyGenParams, true, ["sign"])).rejects.toThrow(OperationError);
+      expect(importKey).not.toHaveBeenCalled();
     });
   });
 

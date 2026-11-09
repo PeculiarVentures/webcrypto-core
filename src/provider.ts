@@ -141,22 +141,31 @@ export abstract class ProviderCrypto {
   // #endregion
 
   // #region Derive bits
-  public async deriveBits(algorithm: Algorithm, baseKey: CryptoKey, length: number, options?: IProviderCheckOptions, ...args: any[]): Promise<ArrayBuffer>;
+  /**
+   * Derives bits and rejects provider results shorter than the requested length.
+   * Algorithms that support a null length return the full shared secret.
+   */
+  public async deriveBits(algorithm: Algorithm, baseKey: CryptoKey, length: number | null, options?: IProviderCheckOptions, ...args: any[]): Promise<ArrayBuffer>;
   public async deriveBits(...args: any[]): Promise<ArrayBuffer> {
-    this.checkDeriveBits.apply(this, args as [Algorithm, CryptoKey, number, IProviderCheckOptions]);
-    return this.onDeriveBits.apply(this, args as [Algorithm, CryptoKey, number, IProviderCheckOptions]);
+    this.checkDeriveBits.apply(this, args as [Algorithm, CryptoKey, number | null, IProviderCheckOptions]);
+    const result = await this.onDeriveBits.apply(this, args as [Algorithm, CryptoKey, number | null, IProviderCheckOptions]);
+    const length = args[2] as number | null;
+    if (length !== null && result.byteLength * 8 < length) {
+      throw new OperationError("Derived bit length is too small");
+    }
+    return result;
   }
 
-  public checkDeriveBits(algorithm: Algorithm, baseKey: CryptoKey, length: number, options: IProviderCheckOptions = {}, ..._args: any[]): void {
+  public checkDeriveBits(algorithm: Algorithm, baseKey: CryptoKey, length: number | null, options: IProviderCheckOptions = {}, ..._args: any[]): void {
     this.checkAlgorithmName(algorithm);
     this.checkAlgorithmParams(algorithm);
     this.checkCryptoKey(baseKey, options.keyUsage ? "deriveBits" : void 0);
-    if (length % 8 !== 0) {
+    if (length !== null && length % 8 !== 0) {
       throw new OperationError("length: Is not multiple of 8");
     }
   }
 
-  public async onDeriveBits(_algorithm: Algorithm, _baseKey: CryptoKey, _length: number, ..._args: any[]): Promise<ArrayBuffer> {
+  public async onDeriveBits(_algorithm: Algorithm, _baseKey: CryptoKey, _length: number | null, ..._args: any[]): Promise<ArrayBuffer> {
     throw new UnsupportedOperationError("deriveBits");
   }
   // #endregion

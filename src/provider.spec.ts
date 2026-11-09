@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import type { ProviderKeyPairUsage } from "./index";
 import { AlgorithmError, CryptoError, OperationError, UnsupportedOperationError } from "./errors";
 import { CryptoKey } from "./crypto_key";
@@ -88,6 +88,34 @@ describe("ProviderCrypto", () => {
       expect(() => {
         crypto.checkDeriveBits(algorithm, key, 7);
       }).toThrow(OperationError);
+    });
+  });
+
+  describe("deriveBits", () => {
+    const algorithm = { name: "custom-alg" };
+    const key = CryptoKey.create(algorithm, "secret", false, ["deriveBits"]);
+
+    it.each([384, 512])("rejects a 256-bit result when %i bits were requested", async (length) => {
+      const provider = new TestProvider();
+      vi.spyOn(provider, "onDeriveBits").mockResolvedValueOnce(new ArrayBuffer(32));
+
+      await expect(provider.deriveBits(algorithm, key, length)).rejects.toThrow(OperationError);
+    });
+
+    it.each([0, 128, 256])("returns a valid %i-bit result unchanged", async (length) => {
+      const provider = new TestProvider();
+      const result = new Uint8Array(length / 8).fill(0xa5).buffer;
+      vi.spyOn(provider, "onDeriveBits").mockResolvedValueOnce(result);
+
+      await expect(provider.deriveBits(algorithm, key, length)).resolves.toBe(result);
+    });
+
+    it("preserves provider errors", async () => {
+      const provider = new TestProvider();
+      const error = new OperationError("Cannot compute shared secret");
+      vi.spyOn(provider, "onDeriveBits").mockRejectedValueOnce(error);
+
+      await expect(provider.deriveBits(algorithm, key, 256)).rejects.toBe(error);
     });
   });
 

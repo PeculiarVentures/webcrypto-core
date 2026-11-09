@@ -27,5 +27,5 @@ export abstract class EcdhProvider extends EllipticProvider {
     }
   }
 
-  public abstract override onDeriveBits(algorithm: EcdhKeyDeriveParams, baseKey: CryptoKey, length: number, ...args: any[]): Promise<ArrayBuffer>;
+  public abstract override onDeriveBits(algorithm: EcdhKeyDeriveParams, baseKey: CryptoKey, length: number | null, ...args: any[]): Promise<ArrayBuffer>;
 }

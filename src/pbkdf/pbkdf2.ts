@@ -1,5 +1,6 @@
 import type { CryptoKey } from "../crypto_key";
-import { ProviderCrypto } from "../provider";
+import { ProviderCrypto, type IProviderCheckOptions } from "../provider";
+import { OperationError } from "../errors";
 import type { KeyUsages } from "../types";
 
 export abstract class Pbkdf2Provider extends ProviderCrypto {
@@ -35,6 +36,13 @@ export abstract class Pbkdf2Provider extends ProviderCrypto {
     if (extractable) {
       // If extractable is not false, then throw a SyntaxError
       throw new SyntaxError("extractable: Must be 'false'");
+    }
+  }
+
+  public override checkDeriveBits(algorithm: Pbkdf2Params, baseKey: CryptoKey, length: number | null, options: IProviderCheckOptions = {}, ...args: any[]): void {
+    super.checkDeriveBits(algorithm, baseKey, length, options, ...args);
+    if (length === null) {
+      throw new OperationError("length: Must not be null");
     }
   }
 
