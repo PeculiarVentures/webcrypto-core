@@ -85,7 +85,7 @@ console.log(Buffer.from(hash).toString("hex")); // dbca505deb07e1612d944a69c0c85
 
 Custom providers can override `getKeyLength()` and register through `subtle.providers.set(provider)` without changing `SubtleCrypto`. The method receives the normalized target algorithm and returns a bit length or `null`. Existing providers inherit the previous `algorithm.length || 512` behavior, so this API does not require an implementation change in existing extensions. New providers should override it with their algorithm's length rules.
 
-The common derivation wrapper rejects results shorter than an explicitly requested length with `OperationError`, including when derivation is called internally by `deriveKey()`. For a `null` length, ECDH backends must return the full secret. The X25519 and ECDH-ES providers translate `null` to the full X25519/X448 bit length to support existing numeric-only backends. HKDF/PBKDF2 source operations require an explicit length.
+The common derivation wrapper rejects results shorter than an explicitly requested length with `OperationError`, including when derivation is called internally by `deriveKey()`. The ECDH, X25519 and ECDH-ES providers translate `null` to the full secret's bit length to support existing numeric-only backends. ECDH uses the byte-rounded size from `EcCurves`; custom ECDH curves can be registered there, or their backend can handle `null` directly when the curve is unregistered. HKDF/PBKDF2 source operations require an explicit length.
 
 ## Contributing
 

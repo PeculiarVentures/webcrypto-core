@@ -3,7 +3,10 @@ import { CryptoKey, EcdhEsProvider, EcdhProvider, HkdfProvider, OperationError, 
 
 describe("deriveBits lengths", () => {
   it.each([
-    { name: "ECDH", Provider: EcdhProvider, namedCurve: "P-256", secretBytes: 32, backendLength: null },
+    { name: "ECDH P-256", Provider: EcdhProvider, namedCurve: "P-256", secretBytes: 32, backendLength: 256 },
+    { name: "ECDH P-521", Provider: EcdhProvider, namedCurve: "P-521", secretBytes: 66, backendLength: 528 },
+    { name: "ECDH Brainpool", Provider: EcdhProvider, namedCurve: "brainpoolP160r1", secretBytes: 20, backendLength: 160 },
+    { name: "ECDH unregistered curve", Provider: EcdhProvider, namedCurve: "CUSTOM", secretBytes: 20, backendLength: null },
     { name: "ECDH-ES X25519", Provider: EcdhEsProvider, namedCurve: "X25519", secretBytes: 32, backendLength: 256 },
     { name: "ECDH-ES X448", Provider: EcdhEsProvider, namedCurve: "X448", secretBytes: 56, backendLength: 448 },
     { name: "X25519", Provider: X25519Provider, namedCurve: "X25519", secretBytes: 32, backendLength: 256 },
@@ -17,7 +20,7 @@ describe("deriveBits lengths", () => {
     const algorithm: EcdhKeyDeriveParams = { name: provider.name, public: publicKey };
     const secret = new Uint8Array(secretBytes).fill(0xa5).buffer;
     const deriveBits = vi.spyOn(provider, "onDeriveBits").mockImplementationOnce(async (_algorithm, _key, length) => {
-      return length === null && provider.name === "ECDH" ? secret : secret.slice(0, (length as number) >> 3);
+      return length === null && backendLength === null ? secret : secret.slice(0, (length as number) >> 3);
     });
 
     await expect(subtle.deriveBits(algorithm, privateKey, null)).resolves.toEqual(secret);

@@ -20,7 +20,7 @@ export abstract class AesProvider extends ProviderCrypto {
   }
 
   public override checkDerivedKeyParams(algorithm: AesKeyGenParams): void {
-    this.getKeyLength(algorithm);
+    this.checkGenerateKeyParams(algorithm);
   }
 
   /** Returns the requested AES key length in bits. */

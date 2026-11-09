@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { AesGcmProvider, CryptoKey, HkdfProvider, HmacProvider, OperationError, Pbkdf2Provider, ProviderCrypto, SubtleCrypto } from "./index";
+import { hkdfSync, pbkdf2Sync } from "node:crypto";
+import { AesGcmProvider, CryptoKey, EcdhProvider, HkdfProvider, HmacProvider, OperationError, Pbkdf2Provider, ProviderCrypto, SubtleCrypto } from "./index";
 
 class CustomProvider extends ProviderCrypto {
   public name = "CUSTOM";
@@ -22,6 +23,35 @@ function setup(target: ProviderCrypto, secretBytes = 32) {
 }
 
 describe("deriveKey target lengths", () => {
+  it.each([HkdfProvider, Pbkdf2Provider])("preserves the secret through a numeric-only ECDH backend into %s", async (Provider) => {
+    const subtle = new SubtleCrypto();
+    const source = Reflect.construct(EcdhProvider, []) as EcdhProvider;
+    const target = Reflect.construct(Provider, []) as ProviderCrypto;
+    subtle.providers.set(source);
+    subtle.providers.set(target);
+    const keyAlgorithm: EcKeyAlgorithm = { name: "ECDH", namedCurve: "P-256" };
+    const privateKey = CryptoKey.create(keyAlgorithm, "private", false, ["deriveKey"]);
+    const publicKey = CryptoKey.create(keyAlgorithm, "public", true, []);
+    const secret = new Uint8Array(32).fill(0xa5).buffer;
+    vi.spyOn(source, "onDeriveBits").mockImplementation(async (_algorithm, _key, length) => secret.slice(0, (length as number) >> 3));
+    let imported = new ArrayBuffer(0);
+    vi.spyOn(target, "onImportKey").mockImplementation(async (_format, data, algorithm, extractable, usages) => {
+      imported = data as ArrayBuffer;
+      return CryptoKey.create(algorithm, "secret", extractable, usages);
+    });
+    const derive = (data: ArrayBuffer, length: number) =>
+      target.name === "HKDF" ? hkdfSync("sha256", Buffer.from(data), Buffer.alloc(4), Buffer.alloc(4), length / 8) : pbkdf2Sync(Buffer.from(data), Buffer.alloc(4), 1, length / 8, "sha256");
+    vi.spyOn(target, "onDeriveBits").mockImplementation(async (_algorithm, _key, length) => new Uint8Array(derive(imported, length as number)).buffer);
+
+    const key = await subtle.deriveKey({ name: "ECDH", public: publicKey } as EcdhKeyDeriveParams, privateKey, target.name, false, ["deriveBits"]);
+    const algorithm = { name: target.name, hash: "SHA-256", salt: new Uint8Array(4), info: new Uint8Array(4), iterations: 1 };
+    const result = await subtle.deriveBits(algorithm, key, 128);
+
+    expect(imported).toEqual(secret);
+    expect(new Uint8Array(result)).toEqual(new Uint8Array(derive(secret, 128)));
+    expect(new Uint8Array(result)).not.toEqual(new Uint8Array(derive(new ArrayBuffer(0), 128)));
+  });
+
   it.each([HkdfProvider, Pbkdf2Provider])("imports the full source secret into %s", async (Provider) => {
     const target = Reflect.construct(Provider, []) as ProviderCrypto;
     const { subtle, source, secret, baseKey, deriveBits, importKey } = setup(target);
@@ -48,8 +78,28 @@ describe("deriveKey target lengths", () => {
     const { subtle, source, baseKey, deriveBits } = setup(target);
     const algorithm: AesKeyGenParams = { name: target.name, length: 64 };
 
-    await expect(subtle.deriveKey(source.name, baseKey, algorithm, true, ["encrypt"])).rejects.toThrow(OperationError);
+    await expect(subtle.deriveKey(source.name, baseKey, algorithm, true, ["encrypt"])).rejects.toThrow(TypeError);
     expect(deriveBits).not.toHaveBeenCalled();
+  });
+
+  it("preserves existing AES subclass validation during derivation", async () => {
+    abstract class RestrictedAesProvider extends AesGcmProvider {
+      public override checkGenerateKeyParams(algorithm: AesKeyGenParams): void {
+        super.checkGenerateKeyParams(algorithm);
+        if (algorithm.length !== 128) {
+          throw new OperationError("Backend only supports AES-128");
+        }
+      }
+    }
+    const target = Reflect.construct(RestrictedAesProvider, []) as RestrictedAesProvider;
+    const { subtle, source, baseKey, deriveBits } = setup(target);
+    const algorithm: AesKeyGenParams = { name: target.name, length: 256 };
+
+    await expect(subtle.deriveKey(source.name, baseKey, algorithm, true, ["encrypt"])).rejects.toThrow("Backend only supports AES-128");
+    expect(deriveBits).not.toHaveBeenCalled();
+    const supportedAlgorithm = { ...algorithm, length: 128 };
+    const key = await subtle.deriveKey(source.name, baseKey, supportedAlgorithm, true, ["encrypt"]);
+    expect(key.algorithm).toMatchObject({ length: 128 });
   });
 
   it.each([
