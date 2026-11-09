@@ -106,6 +106,8 @@ To retry a failed npm publish, run **Publish** manually from the `vX.Y.Z` tag. S
 
 Release notes live only in [GitHub Releases](https://github.com/PeculiarVentures/webcrypto-core/releases); there is no `CHANGELOG.md`. Only `feat`, `fix`, `perf`, `build`, `revert`, and breaking changes are listed. Force a version with a `Release-As: x.y.z` line in a commit body. To fix the notes for a merged change, add a `BEGIN_COMMIT_OVERRIDE` … `END_COMMIT_OVERRIDE` block with the corrected commit message to that pull request's description; edits to the release pull request description are overwritten when new commits land.
 
+For runtime behavior corrections, describe the old and new behavior and migration steps in the source PR and README. Include copy-ready release text in the PR. Ordinary PR prose or a squash commit's descriptive body is not guaranteed to appear in generated notes: use separate Conventional Commit entries in the squash message or its commit-override block for each user-visible correction, and verify the generated release notes before publishing. Keep the override's `feat` entry when the change adds a compatible API for a minor release.
+
 ## License
 
 By contributing to this project, you agree that your contributions will be licensed under the MIT License.

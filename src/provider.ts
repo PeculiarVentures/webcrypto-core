@@ -5,7 +5,10 @@ import { isJWK } from "./utils";
 
 export interface IProviderCheckOptions {
   keyUsage?: boolean;
-  /** Identifies an internal deriveKey call when resolving legacy backend lengths. */
+  /**
+   * Internal call context set by SubtleCrypto.deriveKey when resolving legacy backend lengths.
+   * Providers may inspect it; application callers should not set it themselves.
+   */
   deriveKey?: boolean;
 }
 
@@ -162,6 +165,8 @@ export abstract class ProviderCrypto {
   /**
    * Resolves the length passed to the backend without changing the caller's requested length.
    * Internal full-secret requests retain the legacy 512-bit request for existing custom backends.
+   * Direct null requests are passed through. Source validation receives the resolved backend length;
+   * result validation uses the original requested length. Resolution does not retry backend operations.
    * Override to implement algorithm-specific full-secret sizing.
    */
   public getDeriveBitsLength(_algorithm: Algorithm, _baseKey: CryptoKey, length: number | null, _options?: IProviderCheckOptions): number | null {

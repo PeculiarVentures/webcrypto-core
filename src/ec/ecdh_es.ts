@@ -11,8 +11,18 @@ export abstract class EcdhEsProvider extends EcdhProvider {
   /** Resolves null to the full secret length for existing X25519/X448 backends. */
   public override getDeriveBitsLength(algorithm: Algorithm, baseKey: globalThis.CryptoKey, length: number | null, options?: IProviderCheckOptions): number | null {
     if (length === null) {
-      length = secretLengths[(baseKey.algorithm as EcKeyAlgorithm).namedCurve.toUpperCase()] ?? null;
+      const namedCurve = (baseKey.algorithm as EcKeyAlgorithm).namedCurve;
+      length = typeof namedCurve === "string" ? (secretLengths[namedCurve.toUpperCase()] ?? null) : null;
     }
     return super.getDeriveBitsLength(algorithm, baseKey, length, options);
+  }
+
+  /** Rejects missing curve metadata during key validation, before calling the backend. */
+  public override checkCryptoKey(key: globalThis.CryptoKey, keyUsage?: KeyUsage): void {
+    super.checkCryptoKey(key, keyUsage);
+    const namedCurve = (key.algorithm as EcKeyAlgorithm).namedCurve;
+    if (typeof namedCurve !== "string" || !namedCurve.length) {
+      throw new DOMException("Key algorithm must specify a named curve", "InvalidAccessError");
+    }
   }
 }

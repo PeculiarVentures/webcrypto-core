@@ -42,6 +42,22 @@ describe("deriveBits lengths", () => {
     await expect(subtle.deriveBits(algorithm, privateKey, 536)).rejects.toThrow(OperationError);
   });
 
+  it.each([undefined, null, 123, ""])("rejects invalid ECDH-ES curve metadata (%s) through key validation", async (namedCurve) => {
+    const provider = Reflect.construct(EcdhEsProvider, []) as EcdhEsProvider;
+    const subtle = new SubtleCrypto();
+    subtle.providers.set(provider);
+    const privateKey = CryptoKey.create({ name: provider.name, namedCurve } as EcKeyAlgorithm, "private", false, ["deriveBits"]);
+    const publicKey = CryptoKey.create({ name: provider.name, namedCurve: "X25519" } as EcKeyAlgorithm, "public", true, []);
+    const algorithm: EcdhKeyDeriveParams = { name: provider.name, public: publicKey };
+    const validateKey = vi.spyOn(provider, "checkCryptoKey");
+    const deriveBits = vi.spyOn(provider, "onDeriveBits").mockResolvedValue(new ArrayBuffer(32));
+
+    await expect(subtle.deriveBits(algorithm, privateKey, null)).rejects.toMatchObject({ name: "InvalidAccessError" });
+    await expect(subtle.deriveBits(algorithm, privateKey, 256)).rejects.toMatchObject({ name: "InvalidAccessError" });
+    expect(validateKey).toHaveBeenCalledWith(privateKey, "deriveBits");
+    expect(deriveBits).not.toHaveBeenCalled();
+  });
+
   describe.each([
     { name: "HKDF", Provider: HkdfProvider, algorithm: { name: "HKDF", hash: { name: "SHA-256" }, salt: new Uint8Array(4), info: new Uint8Array(4) } },
     { name: "PBKDF2", Provider: Pbkdf2Provider, algorithm: { name: "PBKDF2", hash: { name: "SHA-256" }, salt: new Uint8Array(4), iterations: 1 } },
