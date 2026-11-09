@@ -79,6 +79,21 @@ const hash = await crypto.subtle.digest("SHA-1", new TextEncoder().encode("TEST 
 console.log(Buffer.from(hash).toString("hex")); // dbca505deb07e1612d944a69c0c851f79f3a4a60
 ```
 
+## Derived Key Lengths
+
+`SubtleCrypto.deriveKey()` asks the target provider's `getKeyLength(algorithm)` how many bits to request from the source provider. AES uses the requested key size, HMAC uses an explicit size or the hash block size, and HKDF/PBKDF2 return `null` to import the full shared secret.
+
+Custom providers can override `getKeyLength()` for target sizing and `getDeriveBitsLength()` for backend sizing, then register through `subtle.providers.set(provider)` without changing `SubtleCrypto`. Both hooks have concrete compatibility defaults, so existing extensions do not need to implement new methods. See their TSDoc for normalization order and legacy fallback details.
+
+## Upgrading From 2.0.x
+
+The provider API additions preserve existing extension hooks, but the following standards corrections change runtime behavior. Applications that re-derive keys for stored data or existing MACs should retain a versioned derivation profile rather than silently adopting new defaults.
+
+- **HMAC SHA-384/SHA-512 defaults change from 512 to 1024 bits.** This affects `getDefaultLength()` and downstream `generateKey()` and `deriveKey()` calls that omit `length`. Re-derived keys and MACs can change. Specify `length: 512` to retain the old default size for key generation or KDF-based derivation. For old ECDH calls that silently returned a shorter key, use the actual previous key length instead (see below).
+- **ECDH P-521 to HKDF/PBKDF2 uses all 66 bytes of the shared secret instead of the previous 64-byte truncation.** Subsequent keys change, so previously encrypted data requires the original derivation profile. To reproduce that profile, explicitly call `deriveBits(..., 512)`, then import those bytes as the HKDF/PBKDF2 key. New profiles should use the full secret.
+- **Requests exceeding the shared secret now reject with `OperationError`.** This includes `deriveKey(ECDH P-256 → HMAC SHA-256)` without a length, which requests the 512-bit HMAC default from a 256-bit secret. To reproduce a previously shortened key, explicitly request its actual old length (256 bits in this example). For new profiles, use an explicit supported key length, or a KDF when the protocol requires a longer key.
+- **HKDF/PBKDF2 to HKDF/PBKDF2 through `deriveKey()` now rejects with `OperationError`.** The target requests a `null` length, which these source KDFs prohibit. For an explicitly defined KDF chain, call `deriveBits()` with a numeric length and import the result as the target key. Use 512 bits to reproduce the old internal request.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the development setup, checks and release process.

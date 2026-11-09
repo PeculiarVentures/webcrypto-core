@@ -159,7 +159,10 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     return result;
   }
 
-  public async deriveBits(algorithm: AlgorithmIdentifier, baseKey: globalThis.CryptoKey, length: number, ...args: any[]): Promise<ArrayBuffer>;
+  /**
+   * Derives the requested number of bits, or the full secret when the algorithm supports a null length.
+   */
+  public async deriveBits(algorithm: AlgorithmIdentifier, baseKey: globalThis.CryptoKey, length: number | null, ...args: any[]): Promise<ArrayBuffer>;
   public async deriveBits(...args: any[]): Promise<ArrayBuffer> {
     this.checkRequiredArguments(args, 3, "deriveBits");
     const [algorithm, baseKey, length, ...params] = args;
@@ -202,14 +205,15 @@ export class SubtleCrypto implements globalThis.SubtleCrypto {
     const preparedAlgorithm = this.prepareAlgorithm(algorithm);
     const provider = this.getProvider(preparedAlgorithm.name);
     provider.checkCryptoKey(baseKey, "deriveKey");
+    const length = importProvider.getKeyLength(preparedDerivedKeyType);
     const derivedBits = await provider.deriveBits(
       {
         ...preparedAlgorithm,
         name: provider.name,
       },
       baseKey,
-      (derivedKeyType as any).length || 512,
-      { keyUsage: false },
+      length,
+      { keyUsage: false, deriveKey: true },
       ...params,
     );
 

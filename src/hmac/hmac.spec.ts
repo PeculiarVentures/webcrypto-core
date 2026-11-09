@@ -63,12 +63,12 @@ describe("HMAC", () => {
 
     it("SHA-384", () => {
       const len = provider.getDefaultLength("SHA-384");
-      expect(len).toBe(512);
+      expect(len).toBe(1024);
     });
 
     it("SHA-512", () => {
       const len = provider.getDefaultLength("SHA-512");
-      expect(len).toBe(512);
+      expect(len).toBe(1024);
     });
 
     it("error if unknown name", () => {

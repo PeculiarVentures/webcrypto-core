@@ -1,5 +1,6 @@
 import { ProviderCrypto } from "../provider";
 import type { CryptoKey } from "../crypto_key";
+import { OperationError } from "../errors";
 
 export abstract class AesProvider extends ProviderCrypto {
   public override checkGenerateKeyParams(algorithm: AesKeyGenParams): void {
@@ -20,6 +21,18 @@ export abstract class AesProvider extends ProviderCrypto {
 
   public override checkDerivedKeyParams(algorithm: AesKeyGenParams): void {
     this.checkGenerateKeyParams(algorithm);
+  }
+
+  /** Returns the requested AES key length in bits. */
+  public override getKeyLength(algorithm: AesKeyGenParams): number {
+    this.checkRequiredProperty(algorithm, "length");
+    if (typeof algorithm.length !== "number") {
+      throw new TypeError("length: Is not of type Number");
+    }
+    if (algorithm.length !== 128 && algorithm.length !== 192 && algorithm.length !== 256) {
+      throw new OperationError("length: Must be 128, 192, or 256");
+    }
+    return algorithm.length;
   }
 
   public abstract override onGenerateKey(algorithm: AesKeyGenParams, extractable: boolean, keyUsages: KeyUsage[], ...args: any[]): Promise<CryptoKey>;
