@@ -40,6 +40,13 @@ describe("deriveKey target lengths", () => {
     const privateKey = CryptoKey.create(keyAlgorithm, "private", false, ["deriveKey"]);
     const publicKey = CryptoKey.create(keyAlgorithm, "public", true, []);
     const secret = new Uint8Array(secretBytes).fill(0xa5).buffer;
+    const originalCheck = source.checkDeriveBits.bind(source);
+    const checkDeriveBits = vi.spyOn(source, "checkDeriveBits").mockImplementation((algorithm, key, length, options) => {
+      if (!Number.isInteger(length) || (length as number) <= 0) {
+        throw new RangeError("Legacy source validation requires a positive integer length");
+      }
+      originalCheck(algorithm, key, length, options);
+    });
     vi.spyOn(source, "onDeriveBits").mockImplementation(async (_algorithm, _key, length) => {
       if (rejectNull && length === null) {
         throw new RangeError("Legacy backend requires a numeric length");
@@ -60,6 +67,7 @@ describe("deriveKey target lengths", () => {
     const result = await subtle.deriveBits(algorithm, key, 128);
 
     expect(imported).toEqual(secret);
+    expect(checkDeriveBits).toHaveBeenCalledTimes(1);
     expect(new Uint8Array(result)).toEqual(new Uint8Array(derive(secret, 128)));
     expect(new Uint8Array(result)).not.toEqual(new Uint8Array(derive(new ArrayBuffer(0), 128)));
   });

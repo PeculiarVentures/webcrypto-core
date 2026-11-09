@@ -149,9 +149,9 @@ export abstract class ProviderCrypto {
    */
   public async deriveBits(algorithm: Algorithm, baseKey: CryptoKey, length: number | null, options?: IProviderCheckOptions, ...args: any[]): Promise<ArrayBuffer>;
   public async deriveBits(...args: any[]): Promise<ArrayBuffer> {
-    this.checkDeriveBits.apply(this, args as [Algorithm, CryptoKey, number | null, IProviderCheckOptions]);
     const length = args[2] as number | null;
     args[2] = this.getDeriveBitsLength(args[0], args[1], length, args[3]);
+    this.checkDeriveBits.apply(this, args as [Algorithm, CryptoKey, number | null, IProviderCheckOptions]);
     const result = await this.onDeriveBits.apply(this, args as [Algorithm, CryptoKey, number | null, IProviderCheckOptions]);
     if (length !== null && result.byteLength * 8 < length) {
       throw new OperationError("Derived bit length is too small");

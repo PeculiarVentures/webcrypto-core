@@ -14,6 +14,14 @@ export abstract class HkdfProvider extends ProviderCrypto {
     return null;
   }
 
+  /** Rejects null source lengths before backend length normalization. */
+  public override getDeriveBitsLength(algorithm: Algorithm, baseKey: globalThis.CryptoKey, length: number | null, options?: IProviderCheckOptions): number | null {
+    if (length === null) {
+      this.checkDeriveBits(algorithm, baseKey, length, options);
+    }
+    return length;
+  }
+
   public override checkAlgorithmParams(algorithm: HkdfParams): void {
     // hash
     this.checkRequiredProperty(algorithm, "hash");
@@ -40,7 +48,7 @@ export abstract class HkdfProvider extends ProviderCrypto {
     }
   }
 
-  public override checkDeriveBits(algorithm: HkdfParams, baseKey: CryptoKey, length: number | null, options: IProviderCheckOptions = {}, ...args: any[]): void {
+  public override checkDeriveBits(algorithm: Algorithm, baseKey: globalThis.CryptoKey, length: number | null, options: IProviderCheckOptions = {}, ...args: any[]): void {
     super.checkDeriveBits(algorithm, baseKey, length, options, ...args);
     if (length === null) {
       throw new OperationError("length: Must not be null");

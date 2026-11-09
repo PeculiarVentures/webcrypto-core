@@ -46,6 +46,14 @@ describe("deriveBits lengths", () => {
     { name: "HKDF", Provider: HkdfProvider, algorithm: { name: "HKDF", hash: { name: "SHA-256" }, salt: new Uint8Array(4), info: new Uint8Array(4) } },
     { name: "PBKDF2", Provider: Pbkdf2Provider, algorithm: { name: "PBKDF2", hash: { name: "SHA-256" }, salt: new Uint8Array(4), iterations: 1 } },
   ])("$name", ({ name, Provider, algorithm }) => {
+    it("preserves the inherited Algorithm and CryptoKey parameter types", () => {
+      const provider = Reflect.construct(Provider, []) as HkdfProvider | Pbkdf2Provider;
+      const parameters: Algorithm = algorithm;
+      const key: globalThis.CryptoKey = CryptoKey.create({ name }, "secret", false, ["deriveBits"]);
+
+      provider.checkDeriveBits(parameters, key, 128);
+    });
+
     it("rejects null before calling the backend", async () => {
       const provider = Reflect.construct(Provider, []) as ProviderCrypto;
       const subtle = new SubtleCrypto();
